@@ -5,14 +5,20 @@ public class MemberDto
     public int Id { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string? Phone { get; set; }
+    public string? PhotoUrl { get; set; }
     public string Faculty { get; set; } = null!;
     public short? YearOfStudy { get; set; }
     public bool IsActive { get; set; }
     public DateTime JoinedAt { get; set; }
+    public List<string> Roles { get; set; } = new List<string>();
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+}
+
+public class MemberDetailDto : MemberDto
+{
+    public string Email { get; set; } = null!;
+    public string? Phone { get; set; }
 }
 
 public class CreateMemberDto
@@ -21,6 +27,7 @@ public class CreateMemberDto
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string? Phone { get; set; }
+    public string? PhotoUrl { get; set; }
     public string Faculty { get; set; } = null!;
     public short? YearOfStudy { get; set; }
     public DateTime JoinedAt { get; set; }
@@ -32,6 +39,7 @@ public class UpdateMemberDto
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string? Phone { get; set; }
+    public string? PhotoUrl { get; set; }
     public string Faculty { get; set; } = null!;
     public short? YearOfStudy { get; set; }
     public bool IsActive { get; set; }

@@ -23,7 +23,10 @@ public class MembersController : ControllerBase
         [FromQuery] short? yearOfStudy,
         [FromQuery] bool? isActive)
     {
-        var query = _context.Members.AsQueryable();
+        var query = _context.Members
+            .Include(m => m.MemberRoles)
+                .ThenInclude(mr => mr.Role)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(faculty))
         {
@@ -40,6 +43,8 @@ public class MembersController : ControllerBase
             query = query.Where(m => m.IsActive == isActive.Value);
         }
 
+        var now = DateTime.UtcNow;
+
         var members = await query
             .OrderBy(m => m.LastName)
             .ThenBy(m => m.FirstName)
@@ -48,12 +53,15 @@ public class MembersController : ControllerBase
                 Id = m.Id,
                 FirstName = m.FirstName,
                 LastName = m.LastName,
-                Email = m.Email,
-                Phone = m.Phone,
+                PhotoUrl = m.PhotoUrl,
                 Faculty = m.Faculty,
                 YearOfStudy = m.YearOfStudy,
                 IsActive = m.IsActive,
                 JoinedAt = m.JoinedAt,
+                Roles = m.MemberRoles
+                    .Where(mr => mr.ValidUntil == null || mr.ValidUntil > now)
+                    .Select(mr => mr.Role.Name)
+                    .ToList(),
                 CreatedAt = m.CreatedAt,
                 UpdatedAt = m.UpdatedAt
             })
@@ -65,7 +73,12 @@ public class MembersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<MemberDto>> GetMember(int id)
     {
-        var member = await _context.Members.FindAsync(id);
+        var now = DateTime.UtcNow;
+        var member = await _context.Members
+            .Include(m => m.MemberRoles)
+                .ThenInclude(mr => mr.Role)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
         if (member == null)
         {
             return NotFound(new { message = $"Member with ID {id} was not found." });
@@ -76,12 +89,52 @@ public class MembersController : ControllerBase
             Id = member.Id,
             FirstName = member.FirstName,
             LastName = member.LastName,
-            Email = member.Email,
-            Phone = member.Phone,
+            PhotoUrl = member.PhotoUrl,
             Faculty = member.Faculty,
             YearOfStudy = member.YearOfStudy,
             IsActive = member.IsActive,
             JoinedAt = member.JoinedAt,
+            Roles = member.MemberRoles
+                .Where(mr => mr.ValidUntil == null || mr.ValidUntil > now)
+                .Select(mr => mr.Role.Name)
+                .ToList(),
+            CreatedAt = member.CreatedAt,
+            UpdatedAt = member.UpdatedAt
+        };
+
+        return Ok(dto);
+    }
+
+    [HttpGet("{id}/detail")]
+    public async Task<ActionResult<MemberDetailDto>> GetMemberDetail(int id)
+    {
+        var now = DateTime.UtcNow;
+        var member = await _context.Members
+            .Include(m => m.MemberRoles)
+                .ThenInclude(mr => mr.Role)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (member == null)
+        {
+            return NotFound(new { message = $"Member with ID {id} was not found." });
+        }
+
+        var dto = new MemberDetailDto
+        {
+            Id = member.Id,
+            FirstName = member.FirstName,
+            LastName = member.LastName,
+            Email = member.Email,
+            Phone = member.Phone,
+            PhotoUrl = member.PhotoUrl,
+            Faculty = member.Faculty,
+            YearOfStudy = member.YearOfStudy,
+            IsActive = member.IsActive,
+            JoinedAt = member.JoinedAt,
+            Roles = member.MemberRoles
+                .Where(mr => mr.ValidUntil == null || mr.ValidUntil > now)
+                .Select(mr => mr.Role.Name)
+                .ToList(),
             CreatedAt = member.CreatedAt,
             UpdatedAt = member.UpdatedAt
         };
@@ -97,13 +150,18 @@ public class MembersController : ControllerBase
             return BadRequest(new { message = $"A member with the email '{dto.Email}' already exists." });
         }
 
+        if (!string.IsNullOrWhiteSpace(dto.Phone) && await _context.Members.AnyAsync(m => m.Phone == dto.Phone))
+        {
+            return BadRequest(new { message = $"A member with the phone number '{dto.Phone}' already exists." });
+        }
+
         var member = new Member
         {
-            // Id is auto-incremented by PostgreSQL
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Email = dto.Email,
             Phone = dto.Phone,
+            PhotoUrl = dto.PhotoUrl,
             Faculty = dto.Faculty,
             YearOfStudy = dto.YearOfStudy,
             IsActive = true,
@@ -120,12 +178,12 @@ public class MembersController : ControllerBase
             Id = member.Id,
             FirstName = member.FirstName,
             LastName = member.LastName,
-            Email = member.Email,
-            Phone = member.Phone,
+            PhotoUrl = member.PhotoUrl,
             Faculty = member.Faculty,
             YearOfStudy = member.YearOfStudy,
             IsActive = member.IsActive,
             JoinedAt = member.JoinedAt,
+            Roles = new List<string>(),
             CreatedAt = member.CreatedAt,
             UpdatedAt = member.UpdatedAt
         };
@@ -148,10 +206,17 @@ public class MembersController : ControllerBase
             return BadRequest(new { message = $"A member with the email '{dto.Email}' already exists." });
         }
 
+        if (!string.IsNullOrWhiteSpace(dto.Phone) && member.Phone != dto.Phone && 
+            await _context.Members.AnyAsync(m => m.Phone == dto.Phone))
+        {
+            return BadRequest(new { message = $"A member with the phone number '{dto.Phone}' already exists." });
+        }
+
         member.FirstName = dto.FirstName;
         member.LastName = dto.LastName;
         member.Email = dto.Email;
         member.Phone = dto.Phone;
+        member.PhotoUrl = dto.PhotoUrl;
         member.Faculty = dto.Faculty;
         member.YearOfStudy = dto.YearOfStudy;
         member.IsActive = dto.IsActive;

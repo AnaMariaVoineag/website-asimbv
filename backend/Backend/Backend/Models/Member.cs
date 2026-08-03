@@ -30,6 +30,10 @@ public class Member
     [MaxLength(50)]
     public string? Phone { get; set; }
 
+    [Column("photo_url")]
+    [MaxLength(500)]
+    public string? PhotoUrl { get; set; }
+
     [Required]
     [Column("faculty")]
     [MaxLength(255)]

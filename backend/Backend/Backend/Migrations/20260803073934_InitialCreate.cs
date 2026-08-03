@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -39,6 +39,7 @@ namespace Backend.Migrations
                     last_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     phone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    photo_url = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     faculty = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     year_of_study = table.Column<short>(type: "smallint", nullable: true),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),

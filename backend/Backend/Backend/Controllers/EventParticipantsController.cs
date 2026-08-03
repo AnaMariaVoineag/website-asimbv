@@ -35,7 +35,7 @@ public class EventParticipantsController : ControllerBase
                 EventTitle = ep.Event.Title,
                 MemberId = ep.MemberId,
                 MemberName = $"{ep.Member.FirstName} {ep.Member.LastName}",
-                MemberEmail = ep.Member.Email,
+                MemberPhotoUrl = ep.Member.PhotoUrl,
                 RoleAtEvent = ep.RoleAtEvent,
                 AttendanceStatus = ep.AttendanceStatus,
                 RegisteredAt = ep.RegisteredAt
@@ -92,7 +92,7 @@ public class EventParticipantsController : ControllerBase
             EventTitle = created.Event.Title,
             MemberId = created.MemberId,
             MemberName = $"{created.Member.FirstName} {created.Member.LastName}",
-            MemberEmail = created.Member.Email,
+            MemberPhotoUrl = created.Member.PhotoUrl,
             RoleAtEvent = created.RoleAtEvent,
             AttendanceStatus = created.AttendanceStatus,
             RegisteredAt = created.RegisteredAt

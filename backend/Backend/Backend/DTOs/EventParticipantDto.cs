@@ -6,7 +6,7 @@ public class EventParticipantDto
     public string EventTitle { get; set; } = null!;
     public int MemberId { get; set; }
     public string MemberName { get; set; } = null!;
-    public string MemberEmail { get; set; } = null!;
+    public string? MemberPhotoUrl { get; set; }
     public string RoleAtEvent { get; set; } = null!;
     public string AttendanceStatus { get; set; } = null!;
     public DateTime RegisteredAt { get; set; }

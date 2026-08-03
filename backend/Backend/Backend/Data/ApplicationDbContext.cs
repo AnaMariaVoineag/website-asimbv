@@ -34,6 +34,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Member>(entity =>
         {
             entity.HasIndex(m => m.Email).IsUnique();
+            entity.HasIndex(m => m.Phone).IsUnique();
         });
 
         // 3. Member Roles
