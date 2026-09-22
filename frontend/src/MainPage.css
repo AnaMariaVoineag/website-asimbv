@@ -7,22 +7,6 @@
   padding: 0;
 }
 
-.top-bar {
-  background-color: #003977;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  position: relative;
-  z-index: 10;
-}
-
-.header-logo {
-  height: 120px;
-  object-fit: contain;
-}
-
 .hero-section {
   position: relative;
   flex-grow: 1;
@@ -32,7 +16,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: calc(100vh - 60px); 
+  min-height: 100vh;
+  padding-top: 75px;
+  box-sizing: border-box;
 }
 
 .hero-overlay {

@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import './MainPage.css';
-import { Link } from 'react-router-dom';
-
-import logoText from './assets/logo_asimbv.png';
+import Navbar from './Navbar';
 import logoCircle from './assets/logo_asimbv_circle.png';
 import bgImage from './assets/Corp_P.jpg';
 
@@ -13,11 +11,7 @@ const MainPage = () => {
   
   return (
     <div className="main-page">
-      <header className="top-bar">
-        <Link to="/">
-          <img src={logoText} alt="ASIMBV Logo Text" className="header-logo" />
-        </Link>
-      </header>
+      <Navbar />
 
       <main 
         className="hero-section" 
