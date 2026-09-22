@@ -1,0 +1,223 @@
+.past-events-section {
+  padding: 80px 24px;
+  background-color: #f1f5f9;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+}
+
+.past-events-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.past-events-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 52px auto;
+}
+
+.past-events-badge {
+  display: inline-block;
+  background-color: rgba(26, 86, 219, 0.1);
+  color: #1A56DB;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+}
+
+.past-events-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 16px;
+  line-height: 1.25;
+}
+
+.past-events-subtitle {
+  font-size: 1.025rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* 4-Card Milestone Grid */
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.milestone-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.milestone-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px rgba(26, 86, 219, 0.14);
+  border-color: rgba(26, 86, 219, 0.3);
+}
+
+.milestone-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.milestone-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background-color: rgba(26, 86, 219, 0.08);
+  color: #1A56DB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.milestone-card:hover .milestone-icon-wrapper {
+  background-color: #1A56DB;
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.milestone-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.milestone-step-number {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  letter-spacing: 1px;
+}
+
+/* Meta info (tag + date) */
+.milestone-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.milestone-tag {
+  display: inline-block;
+  background-color: rgba(26, 86, 219, 0.08);
+  color: #1A56DB;
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.milestone-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.date-mini-icon {
+  width: 13px;
+  height: 13px;
+  color: #64748b;
+}
+
+.milestone-title {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+.milestone-description {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* Call to action button at bottom */
+.past-events-cta-container {
+  display: flex;
+  justify-content: center;
+}
+
+.past-events-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #1A56DB;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 14px 32px;
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba(26, 86, 219, 0.25);
+  transition: all 0.3s ease;
+}
+
+.past-events-btn:hover {
+  background-color: #1546b3;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(26, 86, 219, 0.35);
+}
+
+.btn-cta-arrow {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease;
+}
+
+.past-events-btn:hover .btn-cta-arrow {
+  transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .milestones-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .past-events-section {
+    padding: 60px 20px;
+  }
+
+  .past-events-title {
+    font-size: 1.85rem;
+  }
+
+  .milestones-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .milestone-card {
+    padding: 24px 20px;
+  }
+}
