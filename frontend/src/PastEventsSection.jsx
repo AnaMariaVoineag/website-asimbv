@@ -44,7 +44,7 @@ const milestonesData = [
   {
     id: 'hackathon',
     badge: 'Competiție & Inovație',
-    date: '24-25 Aprilie 2025',
+    date: '24-25 Aprilie 2026',
     title: 'Hackathon Transilvania CodeStorm@MI',
     description: 'Competiție tehnică unde zeci de studenți au dezvoltat soluții software inovatoare în echipă.',
     icon: (
