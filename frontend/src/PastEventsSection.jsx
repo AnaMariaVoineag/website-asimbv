@@ -18,7 +18,7 @@ const milestonesData = [
   },
   {
     id: 'student-login',
-    badge: 'Orientare Boboci',
+    badge: 'Îndrumare Boboci',
     date: '1 Octombrie 2025',
     title: 'Student LogIn',
     description: 'Evenimentul emblematic dedicat noilor studenți din anul 1, menit să le ofere ghidare în cadrul mediului universitar, networking și un start excelent în viața de facultate.',
