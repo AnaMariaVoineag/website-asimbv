@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import './App.css'
+import React from 'react';
+import MainPage from './MainPage';
 
 function App() {
   return (
-   <div>App</div>
-  )
+    <MainPage />
+  );
 }
 
-export default App
+export default App;
