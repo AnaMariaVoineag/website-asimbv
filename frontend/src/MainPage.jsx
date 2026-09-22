@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import './MainPage.css';
 import Navbar from './Navbar';
+import AboutSection from './AboutSection';
 import FeatureCards from './FeatureCards';
 import Footer from './Footer';
 import logoCircle from './assets/logo_asimbv_circle.png';
@@ -28,6 +29,7 @@ const MainPage = () => {
         </div>
       </main>
 
+      <AboutSection />
       <FeatureCards />
       <Footer />
     </div>
