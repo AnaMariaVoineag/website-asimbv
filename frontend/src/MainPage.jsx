@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import './MainPage.css';
 import Navbar from './Navbar';
+import FeatureCards from './FeatureCards';
+import Footer from './Footer';
 import logoCircle from './assets/logo_asimbv_circle.png';
 import bgImage from './assets/Corp_P.jpg';
 
@@ -25,6 +27,9 @@ const MainPage = () => {
           <h2 className="sub-title">ASOCIAȚIA STUDENȚILOR LA INFORMATICĂ ȘI MATEMATICĂ BRAȘOV</h2>
         </div>
       </main>
+
+      <FeatureCards />
+      <Footer />
     </div>
   );
 };
