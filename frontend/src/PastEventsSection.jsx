@@ -34,7 +34,7 @@ const milestonesData = [
     badge: 'Parteneriat Oficial',
     date: '28 Noiembrie 2025',
     title: 'Afilierea cu UNI (Uniunea Studenților Români)',
-    description: 'Recunoașterea și afilierea oficială în cadrul regiunii Centru Vest a Uniunii Studenților Români.',
+    description: 'Recunoașterea și afilierea oficială în cadrul regiunii Centru Nord a Uniunii Studenților Români.',
     icon: (
       <svg className="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
@@ -46,7 +46,7 @@ const milestonesData = [
     badge: 'Competiție & Inovație',
     date: '24-25 Aprilie 2025',
     title: 'Hackathon Transilvania CodeStorm@MI',
-    description: 'Eveniment tehnic de anvergură unde zeci de studenți au dezvoltat soluții software inovatoare în echipă.',
+    description: 'Competiție tehnică unde zeci de studenți au dezvoltat soluții software inovatoare în echipă.',
     icon: (
       <svg className="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
