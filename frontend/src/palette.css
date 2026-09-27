@@ -1,0 +1,16 @@
+:root {
+  --bg-page: #E0E6E5;
+  --bg-card: #ffffff;
+  --bg-image-fallback: #A7A19E;
+
+  --text-page-title: #003977;
+  --text-event-title: #543956;
+  --text-event-date: #5B6987;
+  --text-event-desc: #5D4A5E;
+
+  --accent-primary: #73A5AA;
+  --accent-secondary: #69879B;
+
+  --carousel-overlay: rgba(33, 42, 62, 0.9);
+  --timeline-dot-shadow: rgba(84, 57, 86, 0.25);
+}
