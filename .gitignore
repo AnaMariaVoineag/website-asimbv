@@ -148,10 +148,15 @@ ServiceFabricBackup/
 *- [Bb]ackup ([0-9]).rdl
 *- [Bb]ackup ([0-9][0-9]).rdl
 
-# SQL Server files
+# SQL Server & SQLite files
 *.mdf
 *.ldf
 *.ndf
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
 
 # Business Intelligence projects
 *.rdl.data
