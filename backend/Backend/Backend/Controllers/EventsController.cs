@@ -16,11 +16,27 @@ public class EventsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/events
+    // GET: api/events?category=Workshop&search=hackathon&page=1&pageSize=6
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EventItem>>> GetEvents()
+    public async Task<ActionResult<IEnumerable<EventItem>>> GetEvents(
+        [FromQuery] string? category,
+        [FromQuery] string? search)
     {
-        return await _context.Events.OrderBy(e => e.Id).ToListAsync();
+        IQueryable<EventItem> query = _context.Events.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(category) && !category.Equals("All", StringComparison.OrdinalIgnoreCase) && !category.Equals("Toate", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(e => e.Category.ToLower() == category.Trim().ToLower());
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(e => e.Title.ToLower().Contains(term) || e.Description.ToLower().Contains(term) || e.Date.ToLower().Contains(term));
+        }
+
+        var events = await query.OrderBy(e => e.Id).ToListAsync();
+        return Ok(events);
     }
 
     // GET: api/events/5

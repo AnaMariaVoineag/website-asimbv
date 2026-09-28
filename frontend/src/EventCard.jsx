@@ -4,10 +4,9 @@ const EventCard = ({ event }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = [
-    `https://picsum.photos/seed/${event.id}A/800/600`,
+    event.imageUrl || `https://picsum.photos/seed/${event.id}A/800/600`,
     `https://picsum.photos/seed/${event.id}B/800/600`,
     `https://picsum.photos/seed/${event.id}C/800/600`,
-    `https://picsum.photos/seed/${event.id}D/800/600`,
   ];
 
   useEffect(() => {
@@ -15,10 +14,13 @@ const EventCard = ({ event }) => {
       setCurrentIndex((prevIndex) => 
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000);
+    }, 6000);
 
     return () => clearInterval(timer);
   }, [images.length]);
+
+  const category = event.category || 'Social';
+  const categoryClass = `badge-${category.toLowerCase()}`;
 
   return (
     <div className="event-card">
@@ -27,21 +29,43 @@ const EventCard = ({ event }) => {
           src={images[currentIndex]} 
           alt={event.title} 
           className="event-image"
+          loading="lazy"
         />
         
+        <div className="event-badge-overlay">
+          <span className={`event-category-badge ${categoryClass}`}>
+            {category}
+          </span>
+        </div>
+
         <div className="event-dots">
           {images.map((_, idx) => (
             <button
               key={idx}
               className={`dot ${idx === currentIndex ? 'active' : ''}`}
               onClick={() => setCurrentIndex(idx)}
+              aria-label={`Go to image ${idx + 1}`}
             />
           ))}
         </div>
       </div>
 
       <div className="event-text-section">
-        <div className="event-date">{event.date}</div>
+        <div className="event-meta-header">
+          <div className="event-date">
+            <svg className="event-date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{event.date}</span>
+          </div>
+          <span className={`event-inline-badge ${categoryClass}`}>
+            {category}
+          </span>
+        </div>
+
         <h2 className="event-title">{event.title}</h2>
         <p className="event-description">{event.description}</p>
       </div>
