@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import EventCard from './EventCard';
-import fallbackEvents from './events.json';
 import './palette.css';
 import './EventsPage.css';
 
 const EventsPage = () => {
-  const [events, setEvents] = useState(fallbackEvents);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // Try fetching via relative proxy URL or direct backend URL
         const response = await fetch('/api/events');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP ${response.status}: Failed to fetch events from backend`);
         }
         const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setEvents(data);
-        }
+        setEvents(data);
       } catch (err) {
-        console.warn("Could not fetch from /api/events, attempting direct port 5197 or fallback:", err);
-        try {
-          const directResponse = await fetch('http://localhost:5197/api/events');
-          if (directResponse.ok) {
-            const directData = await directResponse.json();
-            if (Array.isArray(directData) && directData.length > 0) {
-              setEvents(directData);
-            }
-          }
-        } catch (directErr) {
-          console.info("Using local fallback events dataset.");
-        }
+        console.error("Error fetching events from database:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -44,21 +31,41 @@ const EventsPage = () => {
   return (
     <div className="events-page-container">
       <h1 className="events-page-title">Evenimentele Noastre</h1>
-      
-      <div className="events-list">
-        {events.map((event, index) => (
-          <React.Fragment key={event.id || index}>
-            <EventCard event={event} />
 
-            {index < events.length - 1 && (
-              <div className="timeline-divider">
-                <div className="timeline-line"></div>
-                <div className="timeline-dot"></div>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#666', fontSize: '1.2rem' }}>
+          Se încarcă evenimentele din baza de date...
+        </div>
+      )}
+
+      {error && (
+        <div style={{ textAlign: 'center', padding: '2rem', color: '#e53e3e', fontSize: '1.1rem' }}>
+          A apărut o eroare la încărcarea evenimentelor: {error}
+        </div>
+      )}
+
+      {!loading && !error && events.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#666', fontSize: '1.2rem' }}>
+          Nu există evenimente în baza de date.
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="events-list">
+          {events.map((event, index) => (
+            <React.Fragment key={event.id}>
+              <EventCard event={event} />
+
+              {index < events.length - 1 && (
+                <div className="timeline-divider">
+                  <div className="timeline-line"></div>
+                  <div className="timeline-dot"></div>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
