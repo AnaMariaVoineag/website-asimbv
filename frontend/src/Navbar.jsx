@@ -59,20 +59,20 @@ const Navbar = () => {
           >
             Despre Noi
           </a>
-          <a 
-            href="/#contact" 
-            className="nav-link"
+          <NavLink 
+            to="/contact" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
           >
             Contact
-          </a>
-          <a 
-            href="/#contact" 
+          </NavLink>
+          <NavLink 
+            to="/contact" 
             className="nav-link nav-cta"
             onClick={closeMenu}
           >
             Înscrie-te
-          </a>
+          </NavLink>
         </div>
 
         {/* Mobile Hamburger Toggle */}

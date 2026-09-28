@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<EventItem> Events => Set<EventItem>();
+    public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

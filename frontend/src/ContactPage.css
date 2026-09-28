@@ -1,0 +1,504 @@
+.contact-page-container {
+  font-family: 'Poppins', sans-serif;
+  padding: 6.5rem 8% 4rem;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Header */
+.contact-header {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 2.75rem;
+}
+
+.contact-badge {
+  display: inline-block;
+  background-color: rgba(0, 57, 119, 0.1);
+  color: #003977;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.contact-title {
+  color: var(--text-page-title);
+  font-size: 2.75rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: 1px;
+}
+
+.contact-subtitle {
+  color: #4a5568;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 auto;
+}
+
+/* 2-Column Grid Layout */
+.contact-layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.95fr;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ============================================
+   CONTACT FORM CARD
+   ============================================ */
+.contact-form-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 2.75rem;
+  box-shadow: 0 12px 35px rgba(0, 57, 119, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header-block {
+  margin-bottom: 2rem;
+}
+
+.form-heading {
+  color: #003977;
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+}
+
+.form-subheading {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Status Alert Banner */
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.status-banner.success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.status-banner.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.status-icon {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Groups & Validation */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.req {
+  color: #e11d48;
+}
+
+.label-with-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-counter {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  background-color: #ffffff;
+  border-color: #003977;
+  box-shadow: 0 0 0 3px rgba(0, 57, 119, 0.12);
+}
+
+/* Valid / Error States */
+.form-group.has-error .form-input,
+.form-group.has-error .form-select,
+.form-group.has-error .form-textarea {
+  border-color: #e11d48;
+  background-color: #fff1f2;
+}
+
+.form-group.has-error .form-input:focus,
+.form-group.has-error .form-select:focus,
+.form-group.has-error .form-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
+}
+
+.form-group.is-valid .form-input,
+.form-group.is-valid .form-select {
+  border-color: #16a34a;
+}
+
+.valid-icon {
+  position: absolute;
+  right: 14px;
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.error-text {
+  font-size: 0.8rem;
+  color: #e11d48;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Submit Button */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 0.75rem;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #003977, #1A56DB);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 57, 119, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 57, 119, 0.35);
+  background: linear-gradient(135deg, #002e60, #1546b3);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-send-icon {
+  transition: transform 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) .btn-send-icon {
+  transform: translateX(3px) translateY(-2px);
+}
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ============================================
+   RIGHT SIDEBAR: QR CODE ACCESS & QUICK INFO
+   ============================================ */
+.contact-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* QR Code Card */
+.qr-access-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 12px 35px rgba(0, 57, 119, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.qr-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.qr-header-icon {
+  font-size: 2rem;
+}
+
+.qr-title {
+  color: #003977;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0 0 2px 0;
+}
+
+.qr-subtitle {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Social Platform Tabs */
+.social-tabs-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.social-tab-btn:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.social-tab-btn.active {
+  background-color: #003977;
+  color: #ffffff;
+  border-color: #003977;
+  box-shadow: 0 4px 10px rgba(0, 57, 119, 0.2);
+}
+
+/* QR Display Box */
+.qr-display-box {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 2px dashed #cbd5e1;
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.qr-image-wrapper {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.qr-code-img {
+  width: 170px;
+  height: 170px;
+  display: block;
+}
+
+.qr-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.qr-social-badge {
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qr-handle {
+  color: #1e293b;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.qr-direct-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #003977;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.qr-direct-link:hover {
+  color: #1A56DB;
+  text-decoration: underline;
+}
+
+/* Quick Contact Info Card */
+.quick-info-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 12px 35px rgba(0, 57, 119, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-card-title {
+  color: #003977;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.info-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: rgba(0, 57, 119, 0.08);
+  color: #003977;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.info-value.link {
+  color: #003977;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.info-value.link:hover {
+  color: #1A56DB;
+  text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 960px) {
+  .contact-layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-title {
+    font-size: 2.2rem;
+  }
+
+  .contact-form-card,
+  .qr-access-card,
+  .quick-info-card {
+    padding: 1.75rem;
+  }
+}
