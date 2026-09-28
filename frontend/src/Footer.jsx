@@ -36,7 +36,7 @@ const Footer = () => {
             <ul className="footer-links">
               <li><Link to="/">Acasă</Link></li>
               <li><Link to="/events">Evenimente</Link></li>
-              <li><Link to="/volunteering">Voluntariat</Link></li>
+              <li><Link to="/formular-230">Redirecționează 3.5%</Link></li>
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/get-involved">Parteneriat</Link></li>
             </ul>

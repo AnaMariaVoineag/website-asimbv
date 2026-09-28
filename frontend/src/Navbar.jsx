@@ -60,6 +60,13 @@ const Navbar = () => {
             Despre Noi
           </a>
           <NavLink 
+            to="/formular-230" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
+            onClick={closeMenu}
+          >
+            Susține
+          </NavLink>
+          <NavLink 
             to="/contact" 
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
