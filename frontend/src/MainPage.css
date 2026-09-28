@@ -2,7 +2,7 @@
   font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   margin: 0;
   padding: 0;
 }
@@ -54,6 +54,20 @@
   margin: 0 0 10px 0;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   letter-spacing: 2px;
+  text-align: center;
+  color: white;
+}
+
+#text {
+  border-right: solid white 4px;
+  width: 11.5ch;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: type 2s steps(11);
+}
+
+@keyframes type { 
+  from { width: 0; } 
 }
 
 .sub-title {
@@ -63,7 +77,6 @@
   margin: 0;
   text-transform: uppercase;
 }
-
 
 @media (max-width: 768px) {
   .main-title {

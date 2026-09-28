@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './MainPage.css';
-import Navbar from './Navbar';
 import AboutSection from './AboutSection';
 import PastEventsSection from './PastEventsSection';
 import FeatureCards from './FeatureCards';
@@ -15,8 +14,6 @@ const MainPage = () => {
   
   return (
     <div className="main-page">
-      <Navbar />
-
       <main 
         className="hero-section" 
         style={{ backgroundImage: `url(${bgImage})` }}
@@ -24,8 +21,8 @@ const MainPage = () => {
         <div className="hero-overlay"></div>
         
         <div className="hero-content">
-          <img src={logoCircle} alt="Siga ASIMBV" className="center-seal" />
-          <h1 className="main-title">ASIM BRAȘOV</h1>
+          <img src={logoCircle} alt="Sigla ASIMBV" className="center-seal" />
+          <h1 id="text" className="main-title">ASIM BRAȘOV</h1>
           <h2 className="sub-title">ASOCIAȚIA STUDENȚILOR LA INFORMATICĂ ȘI MATEMATICĂ BRAȘOV</h2>
         </div>
       </main>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import logoText from './assets/logo_asimbv.png';
 import './Navbar.css';
 
@@ -33,29 +33,49 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Left: Brand Logo */}
         <Link to="/" className="navbar-logo-link" onClick={closeMenu}>
-          <img src={logoText} alt="ASIMBV Logo" className="navbar-logo" />
+          <img src={logoText} alt="ASIMBV Logo" className="navbar-logo-img" />
         </Link>
 
-        {/* Center: Navigation Links */}
-        <ul className={`navbar-links ${menuOpen ? 'active' : ''}`}>
-          <li className="nav-item">
-            <Link to="/events" className="nav-link" onClick={closeMenu}>
-              Evenimente
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/contact" className="nav-link" onClick={closeMenu}>
-              Contact
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/get-involved" className="nav-link nav-cta" onClick={closeMenu}>
-              Înscrie-te
-            </Link>
-          </li>
-        </ul>
+        {/* Navigation Links */}
+        <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>
+          <NavLink 
+            to="/" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
+            onClick={closeMenu}
+          >
+            Acasă
+          </NavLink>
+          <NavLink 
+            to="/events" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
+            onClick={closeMenu}
+          >
+            Evenimente
+          </NavLink>
+          <a 
+            href="/#about" 
+            className="nav-link"
+            onClick={closeMenu}
+          >
+            Despre Noi
+          </a>
+          <a 
+            href="/#contact" 
+            className="nav-link"
+            onClick={closeMenu}
+          >
+            Contact
+          </a>
+          <a 
+            href="/#contact" 
+            className="nav-link nav-cta"
+            onClick={closeMenu}
+          >
+            Înscrie-te
+          </a>
+        </div>
 
-        {/* Right: Hamburger Toggle (Mobile) */}
+        {/* Mobile Hamburger Toggle */}
         <button 
           className={`hamburger ${menuOpen ? 'is-active' : ''}`} 
           onClick={toggleMenu}
