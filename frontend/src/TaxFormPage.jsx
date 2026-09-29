@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './palette.css';
 import './TaxFormPage.css';
 
@@ -41,6 +41,22 @@ const TaxFormPage = () => {
   const [activeTab, setActiveTab] = useState('data'); // 'data' | 'preview'
 
   const fileInputRef = useRef(null);
+
+  // Inject formular230.ro API script dynamically (React-safe)
+  useEffect(() => {
+    const scriptId = 'f230ro-script';
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://formular230.ro/share/99010913cf6';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    return () => {
+      const existing = document.getElementById(scriptId);
+      if (existing) existing.remove();
+    };
+  }, []);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -348,6 +364,66 @@ const TaxFormPage = () => {
            ========================================================= */}
         {processState === 'idle' && (
           <div className="upload-view">
+
+            {/* ── OPTION A: Complete Online via formular230.ro API ── */}
+            <div className="f230-online-section">
+              <div className="f230-online-header">
+                <div className="f230-online-badge">✦ Recomandat</div>
+                <h2 className="f230-online-title">Completează Formularul Online</h2>
+                <p className="f230-online-desc">
+                  Nu ai formularul tipărit? Completează-l direct aici în câteva minute.
+                  Datele ASIMBV sunt precompletate automat — tu doar semnezi digital.
+                </p>
+              </div>
+
+              {/* formular230.ro button trigger (Method 3) */}
+              <div className="f230-button-wrapper">
+                <button
+                  type="button"
+                  className="f230ro-lansare f230-primary-cta"
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  <span>Completează Formularul 230 Online</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cta-arrow">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+                {/* formular230.ro embed container (Method 2 / anchor) */}
+                <div id="f230ro-formular"></div>
+              </div>
+
+              <div className="f230-steps-inline">
+                <div className="f230-step-inline">
+                  <span className="f230-step-num">1</span>
+                  <span>Apasă butonul de mai sus</span>
+                </div>
+                <div className="f230-step-sep">→</div>
+                <div className="f230-step-inline">
+                  <span className="f230-step-num">2</span>
+                  <span>Completează datele personale</span>
+                </div>
+                <div className="f230-step-sep">→</div>
+                <div className="f230-step-inline">
+                  <span className="f230-step-num">3</span>
+                  <span>Trimite direct la ANAF</span>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Divider ── */}
+            <div className="upload-divider">
+              <div className="divider-line"></div>
+              <span className="divider-label">SAU încarcă formularul deja completat</span>
+              <div className="divider-line"></div>
+            </div>
+
+            {/* ── OPTION B: Upload existing PDF ── */}
             <div
               className={`dropzone-box ${isDragging ? 'is-dragging' : ''}`}
               onDragOver={handleDragOver}
