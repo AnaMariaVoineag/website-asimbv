@@ -1,10 +1,13 @@
 using Backend.Data;
+using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
 
 // Configure SQLite Database
 builder.Services.AddDbContext<AppDbContext>(options =>

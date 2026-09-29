@@ -463,7 +463,7 @@ const ContactPage = () => {
               </div>
               <div className="info-content">
                 <span className="info-label">Email Oficial</span>
-                <a href="mailto:contact@asimbv.ro" className="info-value link">contact@asimbv.ro</a>
+                <a href="mailto:asociatiainfomatebv@gmail.com" className="info-value link">asociatiainfomatebv@gmail.com</a>
               </div>
             </div>
 

@@ -52,13 +52,7 @@ const Navbar = () => {
           >
             Evenimente
           </NavLink>
-          <a 
-            href="/#about" 
-            className="nav-link"
-            onClick={closeMenu}
-          >
-            Despre Noi
-          </a>
+
           <NavLink 
             to="/formular-230" 
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
