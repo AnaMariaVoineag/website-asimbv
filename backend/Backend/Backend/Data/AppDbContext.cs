@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
 
     public DbSet<EventItem> Events => Set<EventItem>();
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

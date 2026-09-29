@@ -28,11 +28,36 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Ensure the database and initial seed data are created
+// Ensure the database and all tables exist
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Create DB + seed data if it doesn't exist at all
     dbContext.Database.EnsureCreated();
+
+    // CREATE TABLE IF NOT EXISTS for any tables added after initial DB creation.
+    // EnsureCreated is a no-op on an existing DB, so we handle new tables explicitly.
+    dbContext.Database.ExecuteSqlRaw(@"
+        CREATE TABLE IF NOT EXISTS NewsletterSubscribers (
+            Id                INTEGER PRIMARY KEY AUTOINCREMENT,
+            Email             TEXT NOT NULL DEFAULT '',
+            Name              TEXT NOT NULL DEFAULT '',
+            IsActive          INTEGER NOT NULL DEFAULT 1,
+            SubscribedAt      TEXT NOT NULL DEFAULT '',
+            UnsubscribedAt    TEXT,
+            UnsubscribeToken  TEXT NOT NULL DEFAULT ''
+        )");
+
+    dbContext.Database.ExecuteSqlRaw(@"
+        CREATE TABLE IF NOT EXISTS ContactMessages (
+            Id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name        TEXT NOT NULL DEFAULT '',
+            Email       TEXT NOT NULL DEFAULT '',
+            Subject     TEXT NOT NULL DEFAULT '',
+            Message     TEXT NOT NULL DEFAULT '',
+            CreatedAt   TEXT NOT NULL DEFAULT ''
+        )");
 }
 
 // Configure the HTTP request pipeline.

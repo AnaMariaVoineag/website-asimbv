@@ -4,17 +4,46 @@ import logoText from './assets/logo_asimbv.png';
 import './Footer.css';
 
 const Footer = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState(null); // { type: 'success'|'error'|'duplicate', text: '' }
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
+    if (!email.trim()) return;
+
+    setIsLoading(true);
+    setStatus(null);
+
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), name: name.trim() })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus({ type: 'success', text: data.message });
+        setEmail('');
+        setName('');
+      } else if (res.status === 409) {
+        setStatus({ type: 'duplicate', text: data.message });
+      } else {
+        setStatus({ type: 'error', text: data.message || 'Eroare la abonare. Încearcă din nou.' });
+      }
+    } catch {
+      setStatus({ type: 'error', text: 'Nu s-a putut conecta la server. Încearcă mai târziu.' });
+    } finally {
+      setIsLoading(false);
+      if (status?.type === 'success') {
+        setTimeout(() => setStatus(null), 6000);
+      }
     }
   };
+
 
   return (
     <footer className="site-footer">
@@ -98,16 +127,25 @@ const Footer = () => {
             <p className="footer-newsletter-text">
               Abonează-te pentru a primi vești despre workshop-uri, oportunități de voluntariat și evenimente viitoare.
             </p>
-            {subscribed ? (
+
+            {status?.type === 'success' ? (
               <div className="newsletter-success">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="success-icon">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
-                <span>Mulțumim pentru abonare!</span>
+                <span>{status.text}</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="newsletter-form">
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Numele tău (opțional)"
+                  className="newsletter-input newsletter-name-input"
+                  disabled={isLoading}
+                />
                 <div className="newsletter-input-group">
                   <input
                     type="email"
@@ -116,17 +154,29 @@ const Footer = () => {
                     placeholder="Adresa ta de email"
                     required
                     className="newsletter-input"
+                    disabled={isLoading}
                   />
-                  <button type="submit" className="newsletter-submit-btn" aria-label="Subscribe">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="newsletter-send-icon">
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                  <button type="submit" className="newsletter-submit-btn" aria-label="Subscribe" disabled={isLoading}>
+                    {isLoading ? (
+                      <span className="newsletter-spinner"></span>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="newsletter-send-icon">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                      </svg>
+                    )}
                   </button>
                 </div>
+                {status && status.type !== 'success' && (
+                  <p className={`newsletter-status-msg newsletter-status-${status.type}`}>
+                    {status.type === 'duplicate' ? '📬 ' : '⚠️ '}
+                    {status.text}
+                  </p>
+                )}
               </form>
             )}
           </div>
+
         </div>
 
         {/* Bottom Bar: Copyright & Privacy Policy */}
