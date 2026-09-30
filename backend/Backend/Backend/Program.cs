@@ -9,10 +9,22 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 
-// Configure SQLite Database
+// Configure Database (Dual-Provider: PostgreSQL when configured, SQLite fallback)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? "Data Source=asimbv.db";
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? "Data Source=asimbv.db"));
+{
+    if (connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase) ||
+        connectionString.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseNpgsql(connectionString);
+    }
+    else
+    {
+        options.UseSqlite(connectionString);
+    }
+});
 
 // Configure CORS for Frontend
 builder.Services.AddCors(options =>
@@ -39,28 +51,30 @@ using (var scope = app.Services.CreateScope())
     // Create DB + seed data if it doesn't exist at all
     dbContext.Database.EnsureCreated();
 
-    // CREATE TABLE IF NOT EXISTS for any tables added after initial DB creation.
-    // EnsureCreated is a no-op on an existing DB, so we handle new tables explicitly.
-    dbContext.Database.ExecuteSqlRaw(@"
-        CREATE TABLE IF NOT EXISTS NewsletterSubscribers (
-            Id                INTEGER PRIMARY KEY AUTOINCREMENT,
-            Email             TEXT NOT NULL DEFAULT '',
-            Name              TEXT NOT NULL DEFAULT '',
-            IsActive          INTEGER NOT NULL DEFAULT 1,
-            SubscribedAt      TEXT NOT NULL DEFAULT '',
-            UnsubscribedAt    TEXT,
-            UnsubscribeToken  TEXT NOT NULL DEFAULT ''
-        )");
+    // SQLite fallback tables if DB was created before these models existed
+    if (dbContext.Database.IsSqlite())
+    {
+        dbContext.Database.ExecuteSqlRaw(@"
+            CREATE TABLE IF NOT EXISTS NewsletterSubscribers (
+                Id                INTEGER PRIMARY KEY AUTOINCREMENT,
+                Email             TEXT NOT NULL DEFAULT '',
+                Name              TEXT NOT NULL DEFAULT '',
+                IsActive          INTEGER NOT NULL DEFAULT 1,
+                SubscribedAt      TEXT NOT NULL DEFAULT '',
+                UnsubscribedAt    TEXT,
+                UnsubscribeToken  TEXT NOT NULL DEFAULT ''
+            )");
 
-    dbContext.Database.ExecuteSqlRaw(@"
-        CREATE TABLE IF NOT EXISTS ContactMessages (
-            Id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            Name        TEXT NOT NULL DEFAULT '',
-            Email       TEXT NOT NULL DEFAULT '',
-            Subject     TEXT NOT NULL DEFAULT '',
-            Message     TEXT NOT NULL DEFAULT '',
-            CreatedAt   TEXT NOT NULL DEFAULT ''
-        )");
+        dbContext.Database.ExecuteSqlRaw(@"
+            CREATE TABLE IF NOT EXISTS ContactMessages (
+                Id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name        TEXT NOT NULL DEFAULT '',
+                Email       TEXT NOT NULL DEFAULT '',
+                Subject     TEXT NOT NULL DEFAULT '',
+                Message     TEXT NOT NULL DEFAULT '',
+                CreatedAt   TEXT NOT NULL DEFAULT ''
+            )");
+    }
 }
 
 // Configure the HTTP request pipeline.
