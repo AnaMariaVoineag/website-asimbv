@@ -339,6 +339,45 @@
   margin: 0;
 }
 
+/* Event Action / Form Link Button */
+.event-action-wrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.event-form-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #003977 0%, #0056b3 100%);
+  color: #ffffff !important;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0, 57, 119, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.event-form-link-btn:hover {
+  background: linear-gradient(135deg, #002b5c 0%, #004494 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 57, 119, 0.35);
+  color: #ffffff !important;
+}
+
+.event-link-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.event-form-link-btn:hover .event-link-icon {
+  transform: translate(2px, -2px);
+}
+
 /* Timeline Divider between cards */
 .timeline-divider {
   width: 100%;

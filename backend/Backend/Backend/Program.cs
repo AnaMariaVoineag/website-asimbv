@@ -61,6 +61,45 @@ using (var scope = app.Services.CreateScope())
             Message     TEXT NOT NULL DEFAULT '',
             CreatedAt   TEXT NOT NULL DEFAULT ''
         )");
+
+    try
+    {
+        using var connection = dbContext.Database.GetDbConnection();
+        connection.Open();
+        
+        using var pragmaCmd = connection.CreateCommand();
+        pragmaCmd.CommandText = "PRAGMA table_info(Events);";
+        using var reader = pragmaCmd.ExecuteReader();
+        bool hasFormUrl = false;
+        while (reader.Read())
+        {
+            var colName = reader["name"]?.ToString();
+            if (string.Equals(colName, "FormUrl", StringComparison.OrdinalIgnoreCase))
+            {
+                hasFormUrl = true;
+                break;
+            }
+        }
+        reader.Close();
+
+        if (!hasFormUrl)
+        {
+            using var alterCmd = connection.CreateCommand();
+            alterCmd.CommandText = "ALTER TABLE Events ADD COLUMN FormUrl TEXT;";
+            alterCmd.ExecuteNonQuery();
+        }
+
+        using var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE Events 
+            SET FormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfCEd2yubl7p6Zh-fH2nwbRa0A2lX3ecQldH_Kiq-fvC-mdgw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio'
+            WHERE (Title LIKE '%CNDOS%' OR Id = 12) AND (FormUrl IS NULL OR FormUrl = '');";
+        updateCmd.ExecuteNonQuery();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Database Migration Notice] {ex.Message}");
+    }
 }
 
 // Configure the HTTP request pipeline.

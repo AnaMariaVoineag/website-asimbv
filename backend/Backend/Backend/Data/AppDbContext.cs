@@ -113,7 +113,8 @@ public class AppDbContext : DbContext
                 Date = "Septembrie 2026",
                 Title = "Concurs Național de Dezbateri CNDOS",
                 Category = "Competition",
-                Description = "Participarea și susținerea studenților brașoveni în cadrul competiției academice de dezbateri și argumentare structurată."
+                Description = "Participarea și susținerea studenților brașoveni în cadrul competiției academice de dezbateri și argumentare structurată.",
+                FormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfCEd2yubl7p6Zh-fH2nwbRa0A2lX3ecQldH_Kiq-fvC-mdgw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
             },
             new EventItem
             {

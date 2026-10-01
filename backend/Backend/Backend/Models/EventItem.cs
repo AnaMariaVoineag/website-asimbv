@@ -8,4 +8,5 @@ public class EventItem
     public string Description { get; set; } = string.Empty;
     public string Category { get; set; } = "Social";
     public string? ImageUrl { get; set; }
+    public string? FormUrl { get; set; }
 }
