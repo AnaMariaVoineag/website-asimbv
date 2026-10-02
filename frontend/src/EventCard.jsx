@@ -1,6 +1,56 @@
 import React, { useState, useEffect } from 'react';
 
-const EventCard = ({ event }) => {
+const HighlightText = ({ text, highlight }) => {
+  if (!text || !highlight || !highlight.trim()) {
+    return <>{text}</>;
+  }
+
+  const cleanHighlight = highlight.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const chars = Array.from(text);
+  const normalizedStr = chars.map((c) => c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()).join('');
+
+  const parts = [];
+  let lastIdx = 0;
+  let matchIdx = normalizedStr.indexOf(cleanHighlight, lastIdx);
+
+  while (matchIdx !== -1) {
+    if (matchIdx > lastIdx) {
+      parts.push({
+        text: chars.slice(lastIdx, matchIdx).join(''),
+        isMatch: false,
+      });
+    }
+    parts.push({
+      text: chars.slice(matchIdx, matchIdx + cleanHighlight.length).join(''),
+      isMatch: true,
+    });
+    lastIdx = matchIdx + cleanHighlight.length;
+    matchIdx = normalizedStr.indexOf(cleanHighlight, lastIdx);
+  }
+
+  if (lastIdx < chars.length) {
+    parts.push({
+      text: chars.slice(lastIdx).join(''),
+      isMatch: false,
+    });
+  }
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.isMatch ? (
+          <mark key={i} className="event-search-highlight">
+            {part.text}
+          </mark>
+        ) : (
+          <React.Fragment key={i}>{part.text}</React.Fragment>
+        )
+      )}
+    </>
+  );
+};
+
+const EventCard = ({ event, searchTerm }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = [
@@ -66,8 +116,12 @@ const EventCard = ({ event }) => {
           </span>
         </div>
 
-        <h2 className="event-title">{event.title}</h2>
-        <p className="event-description">{event.description}</p>
+        <h2 className="event-title">
+          <HighlightText text={event.title} highlight={searchTerm} />
+        </h2>
+        <p className="event-description">
+          <HighlightText text={event.description} highlight={searchTerm} />
+        </p>
 
         {event.formUrl && (
           <div className="event-action-wrapper">

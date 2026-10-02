@@ -32,7 +32,7 @@ public class EventsController : ControllerBase
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim().ToLower();
-            query = query.Where(e => e.Title.ToLower().Contains(term) || e.Description.ToLower().Contains(term) || e.Date.ToLower().Contains(term));
+            query = query.Where(e => e.Title.ToLower().Contains(term) || e.Description.ToLower().Contains(term));
         }
 
         var events = await query.OrderBy(e => e.Id).ToListAsync();

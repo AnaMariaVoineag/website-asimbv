@@ -6,6 +6,13 @@ import './EventsPage.css';
 const CATEGORIES = ['Toate', 'Workshop', 'Social', 'Competition'];
 const ITEMS_PER_PAGE = 5;
 
+const normalizeText = (text) =>
+  (text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,18 +45,19 @@ const EventsPage = () => {
     fetchEvents();
   }, []);
 
-  // Filter events based on Category and Search Term
+  // Filter events based on Category and Search Term (Title + Description)
   const filteredEvents = useMemo(() => {
+    const normalizedSearch = normalizeText(searchTerm);
+
     return events.filter((event) => {
       const matchesCategory =
         selectedCategory === 'Toate' ||
         (event.category && event.category.toLowerCase() === selectedCategory.toLowerCase());
 
       const matchesSearch =
-        searchTerm.trim() === '' ||
-        (event.title && event.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (event.description && event.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (event.date && event.date.toLowerCase().includes(searchTerm.toLowerCase()));
+        normalizedSearch === '' ||
+        normalizeText(event.title).includes(normalizedSearch) ||
+        normalizeText(event.description).includes(normalizedSearch);
 
       return matchesCategory && matchesSearch;
     });
@@ -98,7 +106,7 @@ const EventsPage = () => {
           <input
             type="text"
             className="events-search-input"
-            placeholder="Caută după nume sau cuvânt cheie..."
+            placeholder="Caută după titlu sau cuvinte cheie..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -147,7 +155,14 @@ const EventsPage = () => {
       {/* Error state */}
       {error && !loading && (
         <div className="events-status-message error-message">
-          <p>⚠️ {error}</p>
+          <div className="error-icon-wrapper">
+            <svg className="error-state-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <p>{error}</p>
           <button 
             className="retry-btn"
             onClick={() => window.location.reload()}
@@ -160,7 +175,13 @@ const EventsPage = () => {
       {/* Empty Search Results */}
       {!loading && !error && filteredEvents.length === 0 && (
         <div className="events-empty-state">
-          <div className="empty-icon">🔍</div>
+          <div className="empty-icon-wrapper">
+            <svg className="empty-state-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
           <h3>Nu a fost găsit niciun eveniment</h3>
           <p>Încearcă să ajustezi filtrele sau termenul de căutare.</p>
           <button 
@@ -181,7 +202,7 @@ const EventsPage = () => {
           <div className="events-list">
             {paginatedEvents.map((event, index) => (
               <React.Fragment key={event.id || index}>
-                <EventCard event={event} />
+                <EventCard event={event} searchTerm={searchTerm} />
 
                 {index < paginatedEvents.length - 1 && (
                   <div className="timeline-divider">
