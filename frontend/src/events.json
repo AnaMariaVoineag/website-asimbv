@@ -1,0 +1,141 @@
+[
+  {
+    "id": "infiintare-asimbv",
+    "title": "Înființare ASIMBv",
+    "date": "6 Octombrie 2024",
+    "category": "Social",
+    "description": "Momentul fondării asociației.",
+    "images": [
+      "/poze_evenimente/Infiintare_ASIMBV.png"
+    ]
+  },
+  {
+    "id": "student-login-2025",
+    "title": "Student Login",
+    "date": "1 Octombrie 2025",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/Student_Login_2025/img1.png",
+      "/poze_evenimente/Student_Login_2025/img4.png",
+      "/poze_evenimente/Student_Login_2025/img3.png"
+    ]
+  },
+  {
+    "id": "afiliere-usr",
+    "title": "Afiliere Uniunea Studenților din România UNI",
+    "date": "28 Noiembrie 2025",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img1.png",
+      "/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img2.png"
+    ]
+  },
+  {
+    "id": "campanie-feedback-2025",
+    "title": "Campanie Feedback Profesori",
+    "date": "Decembrie 2025",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/Campanie_feedback_profesori/img1.png"
+    ]
+  },
+  {
+    "id": "targ-practica-2026",
+    "title": "Promovare Târg Practică Anul II",
+    "date": "3 Martie 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/Promovare_targ_practica_anul_II/img1.png",
+      "/poze_evenimente/Promovare_targ_practica_anul_II/img2.png",
+      "/poze_evenimente/Promovare_targ_practica_anul_II/img3.png"
+    ]
+  },
+  {
+    "id": "hackathon-transilvania-2026",
+    "title": "Voluntariat Hackathon Transilvania Codestorm@MI",
+    "date": "24-25 Aprilie 2026",
+    "category": "Competition",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img1.png",
+      "/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img2.png",
+      "/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img3.png",
+      "/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img4.png"
+    ]
+  },
+  {
+    "id": "workshop-best-2026",
+    "title": "Workshop ASIMBv x BEST Brașov",
+    "date": "21 Mai 2026",
+    "category": "Workshop",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/workshop_asimbv_best/img1.png"
+    ]
+  },
+  {
+    "id": "ag-uni-bucuresti",
+    "title": "AG UNI București",
+    "date": "21-24 Mai 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/AG_UNI_Bucuresti/img1.png",
+      "/poze_evenimente/AG_UNI_Bucuresti/img2.png"
+    ]
+  },
+  {
+    "id": "zilele-uni-2026",
+    "title": "Voluntariat Zilele UNI x ASIMBv x ASSM",
+    "date": "17-19 Iulie 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img1.png",
+      "/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img2.png"
+    ]
+  },
+  {
+    "id": "bootcamp-uni-nord",
+    "title": "Bootcamp Teamwork & Leadership UNI Zona Centru-Nord",
+    "date": "21-23 August 2026",
+    "category": "Workshop",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/bootcamp_uni_centru_vest/img1.png",
+      "/poze_evenimente/bootcamp_uni_centru_vest/img2.png"
+    ]
+  },
+  {
+    "id": "promovare-cndos",
+    "title": "Promovare CNDOS",
+    "date": "Septembrie 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului..."
+  },
+  {
+    "id": "ag-uni-alba-iulia",
+    "title": "AG UNI Alba Iulia",
+    "date": "10-13 Septembrie 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/AG_UNI_Alba_Iulia/img1.png"
+    ]
+  },
+  {
+    "id": "student-login-2026",
+    "title": "Student Login",
+    "date": "1 Octombrie 2026",
+    "category": "Social",
+    "description": "Descrierea evenimentului...",
+    "images": [
+      "/poze_evenimente/Student_Login_2026/img2.png",
+      "/poze_evenimente/Student_Login_2026/img3.png"
+    ]
+  }
+]

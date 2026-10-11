@@ -2,43 +2,20 @@ import React, { useState, useEffect, useMemo } from 'react';
 import EventCard from './EventCard';
 import './palette.css';
 import './EventsPage.css';
+import eventsData from './events'; 
 
 const CATEGORIES = ['Toate', 'Workshop', 'Social', 'Competition'];
 const ITEMS_PER_PAGE = 5;
 
 const EventsPage = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState(eventsData);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  // Filter & Search states
   const [selectedCategory, setSelectedCategory] = useState('Toate');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/events');
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: Nu s-au putut încărca evenimentele`);
-        }
-        const data = await response.json();
-        setEvents(data);
-        setError(null);
-      } catch (err) {
-        console.error("Eroare la preluarea evenimentelor:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  // Filter events based on Category and Search Term
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
       const matchesCategory =
@@ -55,12 +32,10 @@ const EventsPage = () => {
     });
   }, [events, selectedCategory, searchTerm]);
 
-  // Reset to page 1 whenever filter or search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, searchTerm]);
 
-  // Pagination calculation
   const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE) || 1;
   const paginatedEvents = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -87,9 +62,7 @@ const EventsPage = () => {
         </p>
       </header>
 
-      {/* Search and Category Filter Controls */}
       <div className="events-controls-wrapper">
-        {/* Search Bar */}
         <div className="search-box-container">
           <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
@@ -113,7 +86,6 @@ const EventsPage = () => {
           )}
         </div>
 
-        {/* Category Filters */}
         <div className="category-filters-container">
           {CATEGORIES.map((category) => (
             <button
@@ -126,7 +98,6 @@ const EventsPage = () => {
           ))}
         </div>
 
-        {/* Results summary */}
         {!loading && (
           <div className="results-counter">
             {filteredEvents.length === 1 
@@ -136,7 +107,6 @@ const EventsPage = () => {
         )}
       </div>
 
-      {/* Loading state */}
       {loading && (
         <div className="events-status-message">
           <div className="spinner"></div>
@@ -144,7 +114,6 @@ const EventsPage = () => {
         </div>
       )}
 
-      {/* Error state */}
       {error && !loading && (
         <div className="events-status-message error-message">
           <p>⚠️ {error}</p>
@@ -157,7 +126,6 @@ const EventsPage = () => {
         </div>
       )}
 
-      {/* Empty Search Results */}
       {!loading && !error && filteredEvents.length === 0 && (
         <div className="events-empty-state">
           <div className="empty-icon">🔍</div>
@@ -175,7 +143,6 @@ const EventsPage = () => {
         </div>
       )}
 
-      {/* Events List */}
       {!loading && !error && filteredEvents.length > 0 && (
         <>
           <div className="events-list">
@@ -193,7 +160,6 @@ const EventsPage = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
           {totalPages > 1 && (
             <nav className="pagination-container" aria-label="Navigare pagini">
               <button

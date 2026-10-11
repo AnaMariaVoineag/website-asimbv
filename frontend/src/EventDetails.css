@@ -1,0 +1,115 @@
+.event-details-page {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #0076be;
+  font-weight: bold;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.event-header-top h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-weight: normal;
+}
+
+.event-details-container {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.event-details-left {
+  flex: 0 0 350px;
+}
+
+.event-poster {
+  width: 100%;
+  height: auto;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border: 4px solid #fff;
+  background-color: #000;
+}
+
+.event-details-right {
+  flex: 1;
+}
+
+.lorem-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-align: justify;
+}
+
+.meta-info {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.meta-info span {
+  font-weight: normal;
+}
+
+.cast-list {
+  margin-top: 30px;
+}
+
+.cast-list p {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.cast-list ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.cast-list li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.star {
+  font-size: 1.2rem;
+}
+
+.star.solid {
+  color: #555;
+}
+
+.star.outline {
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .event-details-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .event-details-left {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 30px;
+  }
+}
