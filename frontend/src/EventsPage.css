@@ -1,3 +1,10 @@
+/* Smooth Page-Level Scroll Snapping */
+html.events-scroll-snap-enabled {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-top: 95px;
+}
+
 .events-page-container {
   font-family: 'Poppins', sans-serif;
   padding: 6.5rem 8% 4rem;
@@ -7,12 +14,15 @@
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  scroll-padding-top: 95px;
 }
 
 .events-header {
   text-align: center;
   max-width: 800px;
   margin-bottom: 2.5rem;
+  scroll-snap-align: start;
+  scroll-margin-top: 95px;
 }
 
 .events-page-title {
@@ -182,6 +192,8 @@
   min-height: 380px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(226, 232, 240, 0.8);
+  scroll-snap-align: start;
+  scroll-margin-top: 95px;
 }
 
 .event-card:hover {

@@ -27,6 +27,14 @@ const EventsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    // Enable scroll-snap on html/body while on EventsPage
+    document.documentElement.classList.add('events-scroll-snap-enabled');
+    return () => {
+      document.documentElement.classList.remove('events-scroll-snap-enabled');
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
