@@ -2,19 +2,54 @@ import React, { useState, useEffect, useMemo } from 'react';
 import EventCard from './EventCard';
 import './palette.css';
 import './EventsPage.css';
-import eventsData from './events'; 
 
 const CATEGORIES = ['Toate', 'Workshop', 'Social', 'Competition'];
 const ITEMS_PER_PAGE = 5;
 
+// Parse the Images JSON string from the backend into an array
+const parseImages = (imagesJson) => {
+  if (!imagesJson) return [];
+  try {
+    const parsed = JSON.parse(imagesJson);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 const EventsPage = () => {
-  const [events, setEvents] = useState(eventsData);
-  const [loading, setLoading] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   const [selectedCategory, setSelectedCategory] = useState('Toate');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch('/api/events');
+        if (!response.ok) throw new Error(`Eroare server: ${response.status}`);
+        const data = await response.json();
+        // Normalize backend shape → what EventCard expects
+        const normalized = data.map((e) => ({
+          ...e,
+          images: parseImages(e.images),
+          formUrl: e.formUrl ?? null,
+        }));
+        setEvents(normalized);
+      } catch (err) {
+        setError('Nu s-au putut încărca evenimentele. Verifică conexiunea sau reîncarcă pagina.');
+        console.error('[EventsPage] fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
