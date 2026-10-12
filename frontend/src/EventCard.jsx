@@ -35,7 +35,7 @@ const EventCard = ({ event }) => {
             loading="lazy"
             onError={(e) => {
               e.target.onerror = null; 
-              e.target.src = `https://picsum.photos/seed/${event.id || 'fallback'}/800/600`;
+              e.target.src = '/logo_asimbv_circle.png';
             }}
           />
           
