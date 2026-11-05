@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { assetUrl } from './assetUrl';
 import './EventsPage.css'; 
 
 const EventCard = ({ event }) => {
@@ -35,7 +36,7 @@ const EventCard = ({ event }) => {
             loading="lazy"
             onError={(e) => {
               e.target.onerror = null; 
-              e.target.src = '/logo_asimbv_circle.png';
+              e.target.src = assetUrl('/logo_asimbv_circle.png');
             }}
           />
           

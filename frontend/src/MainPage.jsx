@@ -3,7 +3,6 @@ import './MainPage.css';
 import AboutSection from './AboutSection';
 import PastEventsSection from './PastEventsSection';
 import FeatureCards from './FeatureCards';
-import Footer from './Footer';
 import logoCircle from './assets/logo_asimbv_circle.png';
 import bgImage from './assets/Corp_P.jpg';
 
@@ -30,7 +29,6 @@ const MainPage = () => {
       <AboutSection />
       <PastEventsSection />
       <FeatureCards />
-      <Footer />
     </div>
   );
 };

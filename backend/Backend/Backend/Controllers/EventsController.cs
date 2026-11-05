@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
+public record EventPartnerDto(string Name, string? LogoUrl, string? WebsiteUrl, string Role);
+
 [ApiController]
 [Route("api/[controller]")]
 public class EventsController : ControllerBase
@@ -51,6 +53,21 @@ public class EventsController : ControllerBase
         }
 
         return eventItem;
+    }
+
+    // GET: api/events/5/partners
+    [HttpGet("{id}/partners")]
+    public async Task<ActionResult<IEnumerable<EventPartnerDto>>> GetEventPartners(int id)
+    {
+        var partners = await _context.EventPartners
+            .AsNoTracking()
+            .Where(l => l.EventId == id)
+            .OrderBy(l => l.DisplayOrder)
+            .ThenBy(l => l.Partner!.Name)
+            .Select(l => new EventPartnerDto(l.Partner!.Name, l.Partner.LogoUrl, l.Partner.WebsiteUrl, l.Role))
+            .ToListAsync();
+
+        return Ok(partners);
     }
 
     // POST: api/events

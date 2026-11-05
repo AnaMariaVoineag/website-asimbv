@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logoText from './assets/logo_asimbv.png';
+import PartnerTile from './PartnerTile';
 import './Footer.css';
 
 const Footer = () => {
@@ -8,6 +9,17 @@ const Footer = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState(null); // { type: 'success'|'error'|'duplicate', text: '' }
+  const [partners, setPartners] = useState([]);
+
+  // If this fails the footer simply has no partners band.
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/api/partners?featured=true', { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : []))
+      .then((data) => setPartners(Array.isArray(data) ? data : []))
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -67,7 +79,7 @@ const Footer = () => {
               <li><Link to="/events">Evenimente</Link></li>
               <li><Link to="/formular-230">Redirecționează 3.5%</Link></li>
               <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/get-involved">Parteneriat</Link></li>
+              <li><Link to="/parteneri">Parteneri</Link></li>
             </ul>
           </div>
 
@@ -178,6 +190,18 @@ const Footer = () => {
           </div>
 
         </div>
+
+        {/* Partners Band */}
+        {partners.length > 0 && (
+          <div className="footer-partners">
+            <Link to="/parteneri" className="footer-partners-title">Partenerii noștri</Link>
+            <div className="partner-tiles-row">
+              {partners.map((partner) => (
+                <PartnerTile key={partner.name} partner={partner} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bottom Bar: Copyright & Privacy Policy */}
         <div className="footer-bottom">

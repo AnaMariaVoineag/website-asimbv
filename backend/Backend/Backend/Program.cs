@@ -51,6 +51,21 @@ using (var scope = app.Services.CreateScope())
     // Create DB + seed data if it doesn't exist at all
     dbContext.Database.EnsureCreated();
 
+    // EnsureCreated() never alters an existing table, so add the LongDescription column
+    // to Postgres databases created before it existed.
+    if (dbContext.Database.IsNpgsql())
+    {
+        try
+        {
+            dbContext.Database.ExecuteSqlRaw(
+                "ALTER TABLE \"Events\" ADD COLUMN IF NOT EXISTS \"LongDescription\" text;");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Database Migration Notice] {ex.Message}");
+        }
+    }
+
     // SQLite fallback tables if DB was created before these models existed
     if (dbContext.Database.IsSqlite())
     {
@@ -86,6 +101,7 @@ using (var scope = app.Services.CreateScope())
             using var reader = pragmaCmd.ExecuteReader();
             bool hasFormUrl = false;
             bool hasImages = false;
+            bool hasLongDescription = false;
             while (reader.Read())
             {
                 var colName = reader["name"]?.ToString();
@@ -93,6 +109,8 @@ using (var scope = app.Services.CreateScope())
                     hasFormUrl = true;
                 if (string.Equals(colName, "Images", StringComparison.OrdinalIgnoreCase))
                     hasImages = true;
+                if (string.Equals(colName, "LongDescription", StringComparison.OrdinalIgnoreCase))
+                    hasLongDescription = true;
             }
             reader.Close();
 
@@ -110,6 +128,14 @@ using (var scope = app.Services.CreateScope())
                 using var alterImagesCmd = connection.CreateCommand();
                 alterImagesCmd.CommandText = "ALTER TABLE Events ADD COLUMN Images TEXT;";
                 alterImagesCmd.ExecuteNonQuery();
+            }
+
+            // --- Add LongDescription column if missing ---
+            if (!hasLongDescription)
+            {
+                using var alterLongCmd = connection.CreateCommand();
+                alterLongCmd.CommandText = "ALTER TABLE Events ADD COLUMN LongDescription TEXT;";
+                alterLongCmd.ExecuteNonQuery();
             }
 
             // --- Ensure CNDOS FormUrl is set ---
@@ -153,6 +179,15 @@ using (var scope = app.Services.CreateScope())
             Console.WriteLine($"[Database Migration Notice] {ex.Message}");
         }
     }
+}
+
+// Approved event texts + the newer events, written in one transaction (see EventContentSync).
+// A fresh scope/context is used so it never shares the connection of the raw SQLite steps above.
+using (var syncScope = app.Services.CreateScope())
+{
+    var syncDb = syncScope.ServiceProvider.GetRequiredService<AppDbContext>();
+    EventContentSync.Apply(syncDb);
+    PartnerSync.Apply(syncDb);
 }
 
 // Configure the HTTP request pipeline.
