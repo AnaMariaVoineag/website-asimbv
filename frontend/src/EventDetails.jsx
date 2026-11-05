@@ -210,7 +210,7 @@ const EventDetails = () => {
 
           <div className="event-description-box">
             <h3 className="section-label">Despre acest eveniment</h3>
-            <p className="event-description-text">{event.description}</p>
+            <p className="event-description-text">{event.longDescription || event.description}</p>
           </div>
 
           <div className="event-details-actions">
