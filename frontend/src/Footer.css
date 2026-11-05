@@ -67,6 +67,38 @@
   border-radius: 2px;
 }
 
+/* Partners Band */
+.footer-partners {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-partners-title {
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+}
+
+.footer-partners-title:hover {
+  text-decoration: underline;
+}
+
+.footer-partners .partner-tiles-row {
+  width: 100%;
+}
+
+.footer-partners .partner-tile {
+  height: 68px;
+  padding: 0.6rem 0.9rem;
+  border-color: transparent;
+}
+
 /* Links */
 .footer-links {
   list-style: none;

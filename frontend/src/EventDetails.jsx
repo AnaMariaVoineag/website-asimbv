@@ -1,7 +1,8 @@
 // src/EventDetails.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
+import PartnerTile from './PartnerTile';
 import './palette.css';
 import './EventDetails.css';
 
@@ -15,12 +16,37 @@ const parseImages = (imagesJson) => {
   }
 };
 
+// Keeps the API order: roles appear in the order of their first partner.
+const groupByRole = (partners) => {
+  const groups = new Map();
+  partners.forEach((partner) => {
+    if (!groups.has(partner.role)) groups.set(partner.role, []);
+    groups.get(partner.role).push(partner);
+  });
+  return [...groups.entries()];
+};
+
 const EventDetails = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [partnerData, setPartnerData] = useState({ eventId: null, partners: [] });
+  // Partners loaded for a previous event are ignored until this event's have arrived.
+  const partners = partnerData.eventId === id ? partnerData.partners : [];
+
+  // Separate from the event request: if this fails the page still works, just without the strip.
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/events/${id}/partners`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : []))
+      .then((data) => setPartnerData({ eventId: id, partners: Array.isArray(data) ? data : [] }))
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error('[EventDetails] partners fetch error:', err);
+      });
+    return () => controller.abort();
+  }, [id]);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -236,6 +262,21 @@ const EventDetails = () => {
           </div>
         </div>
       </article>
+
+      {partners.length > 0 && (
+        <section className="event-partners-card">
+          {groupByRole(partners).map(([role, members]) => (
+            <div key={role}>
+              <h2 className="section-label event-partners-label">{role}</h2>
+              <div className="partner-tiles-row">
+                {members.map((partner) => (
+                  <PartnerTile key={partner.name} partner={partner} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
     </div>
   );
 };

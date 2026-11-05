@@ -123,9 +123,9 @@ public static class EventContentSync
             Date: "31 octombrie 2026",
             Category: "Workshop",
             Images: """["/poze_evenimente/GitHub_DevDays/img1.jpg","/poze_evenimente/GitHub_DevDays/img2.jpg"]""",
-            Description: "Workshop dedicat GitHub Copilot, susținut de un student la master de la facultatea noastră, în care participanții au învățat prin exerciții practice cum pot dezvolta software mai eficient cu ajutorul inteligenței artificiale.",
+            Description: "Workshop dedicat GitHub Copilot, susținut de un reprezentant Microsoft, în care participanții au învățat prin exerciții practice cum pot dezvolta software mai eficient cu ajutorul inteligenței artificiale.",
             LongDescription: """
-            GitHub DevDays Brașov a fost un workshop dedicat GitHub Copilot, organizat de ASIMBv pe 31 octombrie și susținut de Alexandru-Răzvan Olariu, student la master de la facultatea noastră. Împreună am descoperit cum poate fi făcut procesul de dezvoltare software mai eficient cu ajutorul inteligenței artificiale, inclusiv prin lucrul cu Copilot din linia de comandă.
+            GitHub DevDays Brașov a fost un workshop dedicat GitHub Copilot, organizat de ASIMBv pe 31 octombrie și susținut de Alexandru-Răzvan Olariu, reprezentant Microsoft. Împreună am descoperit cum poate fi făcut procesul de dezvoltare software mai eficient cu ajutorul inteligenței artificiale, inclusiv prin lucrul cu Copilot din linia de comandă.
 
             Cei peste 20 de participanți au explorat atât conceptele teoretice de bază, cât și aplicarea lor în practică, prin exerciții interactive structurate pe diferite niveluri de dificultate. Între module, quiz-uri interactive i-au ajutat să își verifice, pas cu pas, cât de multe au învățat.
 

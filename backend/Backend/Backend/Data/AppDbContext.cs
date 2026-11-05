@@ -12,11 +12,22 @@ public class AppDbContext : DbContext
     public DbSet<EventItem> Events => Set<EventItem>();
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+    public DbSet<Partner> Partners => Set<Partner>();
+    public DbSet<EventPartner> EventPartners => Set<EventPartner>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Partner>().HasIndex(s => s.Name).IsUnique();
+
+        modelBuilder.Entity<EventPartner>(link =>
+        {
+            link.HasKey(l => new { l.EventId, l.PartnerId });
+            link.HasOne<EventItem>().WithMany().HasForeignKey(l => l.EventId).OnDelete(DeleteBehavior.Cascade);
+            link.HasOne(l => l.Partner).WithMany().HasForeignKey(l => l.PartnerId).OnDelete(DeleteBehavior.Cascade);
+        });
 
         modelBuilder.Entity<EventItem>().HasData(
             new EventItem

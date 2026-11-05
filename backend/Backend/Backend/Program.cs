@@ -185,7 +185,9 @@ using (var scope = app.Services.CreateScope())
 // A fresh scope/context is used so it never shares the connection of the raw SQLite steps above.
 using (var syncScope = app.Services.CreateScope())
 {
-    EventContentSync.Apply(syncScope.ServiceProvider.GetRequiredService<AppDbContext>());
+    var syncDb = syncScope.ServiceProvider.GetRequiredService<AppDbContext>();
+    EventContentSync.Apply(syncDb);
+    PartnerSync.Apply(syncDb);
 }
 
 // Configure the HTTP request pipeline.
