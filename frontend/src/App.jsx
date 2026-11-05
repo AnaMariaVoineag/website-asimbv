@@ -6,10 +6,12 @@ import EventsPage from './EventsPage';
 import ContactPage from './ContactPage';
 import TaxFormPage from './TaxFormPage';
 import EventDetails from './EventDetails';
+import ScrollToTop from './ScrollToTop';
 
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<MainPage />} />
