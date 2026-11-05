@@ -1,6 +1,7 @@
 // src/EventDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { assetUrl } from './assetUrl';
 import './palette.css';
 import './EventDetails.css';
 
@@ -8,7 +9,7 @@ const parseImages = (imagesJson) => {
   if (!imagesJson) return [];
   try {
     const parsed = JSON.parse(imagesJson);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(assetUrl) : [];
   } catch {
     return [];
   }
@@ -124,7 +125,7 @@ const EventDetails = () => {
                 className="event-main-image"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = '/logo_asimbv_circle.png';
+                  e.target.src = assetUrl('/logo_asimbv_circle.png');
                 }}
               />
 
@@ -153,7 +154,7 @@ const EventDetails = () => {
           ) : (
             <div className="event-no-image-placeholder">
               <img
-                src="/logo_asimbv_circle.png"
+                src={assetUrl('/logo_asimbv_circle.png')}
                 alt="ASIMBv Emblem"
                 className="event-placeholder-logo"
               />
@@ -178,7 +179,7 @@ const EventDetails = () => {
                     className="event-thumbnail-img"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = '/logo_asimbv_circle.png';
+                      e.target.src = assetUrl('/logo_asimbv_circle.png');
                     }}
                   />
                 </button>

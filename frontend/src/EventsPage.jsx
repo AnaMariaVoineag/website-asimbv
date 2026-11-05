@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import EventCard from './EventCard';
+import { assetUrl } from './assetUrl';
 import './palette.css';
 import './EventsPage.css';
 
@@ -11,7 +12,7 @@ const parseImages = (imagesJson) => {
   if (!imagesJson) return [];
   try {
     const parsed = JSON.parse(imagesJson);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(assetUrl) : [];
   } catch {
     return [];
   }
