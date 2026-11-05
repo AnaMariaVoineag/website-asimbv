@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import Navbar from './Navbar';
+import Footer from './Footer';
 import EventsPage from './EventsPage';
 import ContactPage from './ContactPage';
 import TaxFormPage from './TaxFormPage';
@@ -23,6 +24,7 @@ function App() {
         <Route path="/event-details/:id" element={<EventDetails />} />
         <Route path="/parteneri" element={<PartnersPage />} />
       </Routes>
+      <Footer />
     </>
   );
 }

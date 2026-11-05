@@ -31,21 +31,22 @@ public static class PartnerSync
         new("ASSM", "/parteneri/assm.png", "https://assmbv.org", PartnerTypes.Association, IsFeatured: true, DisplayOrder: 4),
 
         new("Arvato Systems", "/parteneri/arvato-systems.svg", "https://www.arvato-systems.com"),
+        new("BearingPoint", "/parteneri/bearingpoint.png", "https://www.bearingpoint.com"),
         new("CANAM", "/parteneri/canam.png", "https://www.canam.com"),
-        new("Enovation", "/parteneri/enovation.png", null),
+        new("Enovation", "/parteneri/enovation.png", "https://www.e-novation.software/"),
         new("Eviden", "/parteneri/eviden.png", "https://eviden.com"),
         new("principal33", "/parteneri/principal33.png", "https://www.principal33.com"),
         new("Rebel Dot", "/parteneri/rebel-dot.svg", "https://www.rebeldot.com"),
         new("Siemens", "/parteneri/siemens.svg", "https://www.siemens.com"),
         new("Trimble", "/parteneri/trimble.svg", "https://www.trimble.com"),
         new("VASS", "/parteneri/vass.png", "https://vasscompany.com"),
-        new("Waters", "/parteneri/waters.svg", "https://www.waters.com"),
+        new("Waters", "/parteneri/waters.svg", "https://www.waters.com/nextgen/us/en.html"),
     ];
 
     // Display order on an event page follows this list.
     private static readonly (int EventId, string Role, string[] Names)[] Links =
     [
-        (6, "Companii participante", ["Arvato Systems", "CANAM", "Rebel Dot", "Siemens", "VASS", "Trimble", "Enovation", "Waters"]),
+        (6, "Companii participante", ["Arvato Systems", "BearingPoint", "CANAM", "Rebel Dot", "Siemens", "VASS", "Trimble", "Enovation", "Waters"]),
         (7, "Organizat împreună cu", [Faculty]),
         (7, "Partenerii hackathonului", ["Siemens", "Eviden", "Rebel Dot", "principal33", "VASS"]),
         (8, "Organizat împreună cu", ["BEST Brașov"]),
