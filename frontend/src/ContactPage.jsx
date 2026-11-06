@@ -188,30 +188,16 @@ const ContactPage = () => {
         });
       } else {
         const errorData = await response.json().catch(() => ({}));
-        // The server rejected the message: show why and keep what the user typed.
-        if (errorData.message) {
-          setSubmitStatus({ type: 'error', text: errorData.message });
-          return;
-        }
-        throw new Error('Eroare la trimiterea mesajului.');
+        // Keep what the user typed so they can fix it or try again.
+        setSubmitStatus({
+          type: 'error',
+          text: errorData.message || 'Mesajul nu a putut fi trimis. Încearcă din nou mai târziu.'
+        });
       }
-    } catch (err) {
-      // Fallback for demo / offline
+    } catch {
       setSubmitStatus({
-        type: 'success',
-        text: 'Mesajul tău a fost înregistrat cu succes! Îți mulțumim pentru interes.'
-      });
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
-      setTouched({
-        name: false,
-        email: false,
-        subject: false,
-        message: false
+        type: 'error',
+        text: 'Nu s-a putut conecta la server, iar mesajul nu a fost trimis. Încearcă din nou mai târziu.'
       });
     } finally {
       setIsSubmitting(false);
