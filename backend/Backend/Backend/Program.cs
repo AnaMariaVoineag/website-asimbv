@@ -26,15 +26,27 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     }
 });
 
-// Configure CORS for Frontend
+// Configure CORS: only the origins listed in "Cors:AllowedOrigins" may call the API.
+// Set per environment in appsettings*.json or via env var Cors__AllowedOrigins__0, __1, ...
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>()?
+    .Select(o => o.Trim().TrimEnd('/'))
+    .Where(o => o.Length > 0)
+    .ToArray() ?? Array.Empty<string>();
+
+if (allowedOrigins.Length == 0)
+{
+    Console.WriteLine("[CORS] No allowed origins configured (Cors:AllowedOrigins): all cross-origin requests will be rejected.");
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins(allowedOrigins)
+              .WithMethods("GET", "POST", "PUT", "DELETE")
+              .WithHeaders("Content-Type", "Authorization");
     });
 });
 
