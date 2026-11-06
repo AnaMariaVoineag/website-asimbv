@@ -45,6 +45,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
       - ASPNETCORE_URLS=http://+:5197
+      - Admin__ApiKey=${ADMIN_API_KEY:-}
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB:-asimbv_db};Username=${POSTGRES_USER:-asimbv_user};Password=${POSTGRES_PASSWORD:-asimbv_secret_password_2026}
     depends_on:
       postgres:

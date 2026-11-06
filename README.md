@@ -18,6 +18,13 @@ cp .env.example .env
 ```
 *(Optionally adjust ports or passwords in `.env` if needed).*
 
+To read contact messages and newsletter subscribers through the API, set `ADMIN_API_KEY` in `.env` and send it as a header. Without a key, these endpoints reject every request:
+
+```bash
+curl -H "X-Admin-Key: <your key>" http://localhost:5197/api/contact
+curl -H "X-Admin-Key: <your key>" http://localhost:5197/api/newsletter/subscribers
+```
+
 ---
 
 ### Step 2: Start Containers with Docker Compose

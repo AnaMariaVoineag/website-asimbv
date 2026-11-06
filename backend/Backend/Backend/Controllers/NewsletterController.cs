@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Models;
+using Backend.Security;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -148,7 +149,8 @@ public class NewsletterController : ControllerBase
     }
 
     // ── GET api/newsletter/subscribers ───────────────────────────────────────
-    // Returns all active subscribers. In production, guard with [Authorize(Roles="Moderator")].
+    // Returns all active subscribers (admin only: requires the X-Admin-Key header).
+    [RequireAdminKey]
     [HttpGet("subscribers")]
     public async Task<ActionResult<IEnumerable<object>>> GetSubscribers()
     {

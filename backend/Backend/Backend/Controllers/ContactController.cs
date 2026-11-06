@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Models;
+using Backend.Security;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -75,7 +76,8 @@ public class ContactController : ControllerBase
         });
     }
 
-    // GET: api/contact (For viewing submitted messages — protect with [Authorize] in production)
+    // GET: api/contact (admin only: requires the X-Admin-Key header)
+    [RequireAdminKey]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ContactMessage>>> GetMessages()
     {
