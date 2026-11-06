@@ -154,6 +154,7 @@ const Footer = () => {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  maxLength="100"
                   placeholder="Numele tău (opțional)"
                   className="newsletter-input newsletter-name-input"
                   disabled={isLoading}
@@ -163,6 +164,7 @@ const Footer = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    maxLength="254"
                     placeholder="Adresa ta de email"
                     required
                     className="newsletter-input"

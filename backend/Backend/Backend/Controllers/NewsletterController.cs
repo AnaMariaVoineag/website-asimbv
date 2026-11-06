@@ -23,10 +23,17 @@ public class NewsletterController : ControllerBase
     // ── POST api/newsletter/subscribe ────────────────────────────────────────
     // Body: { "email": "...", "name": "..." }
     [HttpPost("subscribe")]
+    [RequestSizeLimit(64 * 1024)]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email))
             return BadRequest(new { message = "Adresa de email este obligatorie." });
+
+        if (request.Email.Trim().Length > NewsletterSubscriber.EmailMaxLength)
+            return BadRequest(new { message = $"Adresa de email poate avea cel mult {NewsletterSubscriber.EmailMaxLength} de caractere." });
+
+        if (request.Name?.Trim().Length > NewsletterSubscriber.NameMaxLength)
+            return BadRequest(new { message = $"Numele poate avea cel mult {NewsletterSubscriber.NameMaxLength} de caractere." });
 
         var emailRegex = new System.Text.RegularExpressions.Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);

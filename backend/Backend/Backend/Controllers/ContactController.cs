@@ -22,6 +22,7 @@ public class ContactController : ControllerBase
 
     // POST: api/contact
     [HttpPost]
+    [RequestSizeLimit(64 * 1024)]
     public async Task<IActionResult> SubmitMessage([FromBody] ContactMessage message)
     {
         if (string.IsNullOrWhiteSpace(message.Name)    ||
@@ -31,6 +32,18 @@ public class ContactController : ControllerBase
         {
             return BadRequest(new { message = "Toate câmpurile sunt obligatorii." });
         }
+
+        if (message.Name.Length > ContactMessage.NameMaxLength)
+            return BadRequest(new { message = $"Numele poate avea cel mult {ContactMessage.NameMaxLength} de caractere." });
+
+        if (message.Email.Length > ContactMessage.EmailMaxLength)
+            return BadRequest(new { message = $"Adresa de email poate avea cel mult {ContactMessage.EmailMaxLength} de caractere." });
+
+        if (message.Subject.Length > ContactMessage.SubjectMaxLength)
+            return BadRequest(new { message = $"Subiectul poate avea cel mult {ContactMessage.SubjectMaxLength} de caractere." });
+
+        if (message.Message.Length > ContactMessage.MessageMaxLength)
+            return BadRequest(new { message = $"Mesajul poate avea cel mult {ContactMessage.MessageMaxLength} de caractere." });
 
         message.CreatedAt = DateTime.UtcNow;
         _context.ContactMessages.Add(message);

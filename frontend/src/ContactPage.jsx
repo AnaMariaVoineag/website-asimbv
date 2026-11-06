@@ -188,7 +188,12 @@ const ContactPage = () => {
         });
       } else {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Eroare la trimiterea mesajului.');
+        // The server rejected the message: show why and keep what the user typed.
+        if (errorData.message) {
+          setSubmitStatus({ type: 'error', text: errorData.message });
+          return;
+        }
+        throw new Error('Eroare la trimiterea mesajului.');
       }
     } catch (err) {
       // Fallback for demo / offline
@@ -264,6 +269,7 @@ const ContactPage = () => {
                   id="name"
                   name="name"
                   className="form-input"
+                  maxLength="100"
                   placeholder="ex: Andrei Popescu"
                   value={formData.name}
                   onChange={handleChange}
@@ -287,6 +293,7 @@ const ContactPage = () => {
                   id="email"
                   name="email"
                   className="form-input"
+                  maxLength="254"
                   placeholder="ex: student@unitbv.ro"
                   value={formData.email}
                   onChange={handleChange}
