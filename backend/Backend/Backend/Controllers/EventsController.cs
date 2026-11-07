@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Models;
+using Backend.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,7 +71,8 @@ public class EventsController : ControllerBase
         return Ok(partners);
     }
 
-    // POST: api/events
+    // POST: api/events (admin only: requires the X-Admin-Key header)
+    [RequireAdminKey]
     [HttpPost]
     public async Task<ActionResult<EventItem>> PostEvent(EventItem eventItem)
     {
@@ -80,7 +82,8 @@ public class EventsController : ControllerBase
         return CreatedAtAction(nameof(GetEvent), new { id = eventItem.Id }, eventItem);
     }
 
-    // PUT: api/events/5
+    // PUT: api/events/5 (admin only: requires the X-Admin-Key header)
+    [RequireAdminKey]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutEvent(int id, EventItem eventItem)
     {
@@ -107,7 +110,8 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
-    // DELETE: api/events/5
+    // DELETE: api/events/5 (admin only: requires the X-Admin-Key header)
+    [RequireAdminKey]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEvent(int id)
     {
