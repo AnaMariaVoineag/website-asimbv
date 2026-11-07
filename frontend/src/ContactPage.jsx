@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './palette.css';
 import './ContactPage.css';
 
@@ -75,6 +75,7 @@ const ContactPage = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitInFlight = useRef(false); // Updates instantly, unlike the disabled button, so a repeat submit can't slip through
   const [submitStatus, setSubmitStatus] = useState(null); // { type: 'success' | 'error', text: '' }
   const [selectedSocial, setSelectedSocial] = useState(SOCIAL_LINKS[0]);
 
@@ -157,6 +158,9 @@ const ContactPage = () => {
       return;
     }
 
+    if (submitInFlight.current) return;
+    submitInFlight.current = true;
+
     setIsSubmitting(true);
     setSubmitStatus(null);
 
@@ -201,6 +205,7 @@ const ContactPage = () => {
         text: 'Nu s-a putut conecta la server, iar mesajul nu a fost trimis. Încearcă din nou mai târziu.'
       });
     } finally {
+      submitInFlight.current = false;
       setIsSubmitting(false);
     }
   };

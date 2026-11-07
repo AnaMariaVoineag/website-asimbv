@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logoText from './assets/logo_asimbv.png';
 import PartnerTile from './PartnerTile';
@@ -8,6 +8,7 @@ const Footer = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const submitInFlight = useRef(false); // Updates instantly, unlike the disabled button, so a repeat submit can't slip through
   const [status, setStatus] = useState(null); // { type: 'success'|'error'|'duplicate', text: '' }
   const [partners, setPartners] = useState([]);
 
@@ -23,7 +24,8 @@ const Footer = () => {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || submitInFlight.current) return;
+    submitInFlight.current = true;
 
     setIsLoading(true);
     setStatus(null);
@@ -49,6 +51,7 @@ const Footer = () => {
     } catch {
       setStatus({ type: 'error', text: 'Nu s-a putut conecta la server. Încearcă mai târziu.' });
     } finally {
+      submitInFlight.current = false;
       setIsLoading(false);
       if (status?.type === 'success') {
         setTimeout(() => setStatus(null), 6000);

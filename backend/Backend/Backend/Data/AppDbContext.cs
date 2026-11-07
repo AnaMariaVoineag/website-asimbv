@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Partner>().HasIndex(s => s.Name).IsUnique();
+        modelBuilder.Entity<NewsletterSubscriber>().HasIndex(s => s.Email).IsUnique();
 
         modelBuilder.Entity<EventPartner>(link =>
         {

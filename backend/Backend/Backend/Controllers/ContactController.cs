@@ -14,12 +14,20 @@ public class ContactController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IEmailService _email;
+    private readonly RecentSubmissions _recentSubmissions;
 
-    public ContactController(AppDbContext context, IEmailService email)
+    public ContactController(AppDbContext context, IEmailService email, RecentSubmissions recentSubmissions)
     {
         _context = context;
         _email   = email;
+        _recentSubmissions = recentSubmissions;
     }
+
+    private OkObjectResult MessageReceived() => Ok(new
+    {
+        success = true,
+        message = "Mesajul tău a fost transmis cu succes! Te vom contacta în cel mai scurt timp."
+    });
 
     // POST: api/contact
     [HttpPost]
@@ -51,9 +59,22 @@ public class ContactController : ControllerBase
         if (message.Message.Length > ContactMessage.MessageMaxLength)
             return BadRequest(new { message = $"Mesajul poate avea cel mult {ContactMessage.MessageMaxLength} de caractere." });
 
+        // An identical repeat is answered like the original, without storing or emailing it again.
+        var submissionKey = RecentSubmissions.KeyFor(message.Email.ToLowerInvariant(), message.Subject, message.Message);
+        if (!_recentSubmissions.TryRegister(submissionKey))
+            return MessageReceived();
+
         message.CreatedAt = DateTime.UtcNow;
         _context.ContactMessages.Add(message);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch
+        {
+            _recentSubmissions.Forget(submissionKey);
+            throw;
+        }
 
         // ── Internal notification email ──────────────────────────────────────
         var notifHtml = $"""
@@ -88,11 +109,7 @@ public class ContactController : ControllerBase
             subject:  $"[Contact ASIMBV] {message.Subject} — de la {message.Name}",
             htmlBody: notifHtml);
 
-        return Ok(new
-        {
-            success = true,
-            message = "Mesajul tău a fost transmis cu succes! Te vom contacta în cel mai scurt timp."
-        });
+        return MessageReceived();
     }
 
     // GET: api/contact (admin only: requires the X-Admin-Key header)

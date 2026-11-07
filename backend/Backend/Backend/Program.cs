@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddSingleton<RecentSubmissions>();
 
 
 // Configure Database (Dual-Provider: PostgreSQL when configured, SQLite fallback)
@@ -200,6 +201,19 @@ using (var syncScope = app.Services.CreateScope())
     var syncDb = syncScope.ServiceProvider.GetRequiredService<AppDbContext>();
     EventContentSync.Apply(syncDb);
     PartnerSync.Apply(syncDb);
+
+    // EnsureCreated() never alters an existing table, so add the unique email index to databases
+    // created before it existed. This fails if duplicate emails are already stored: the site keeps
+    // working without the index until those rows are cleaned up and the backend is restarted.
+    try
+    {
+        syncDb.Database.ExecuteSqlRaw(
+            "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_NewsletterSubscribers_Email\" ON \"NewsletterSubscribers\" (\"Email\");");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Database Migration Notice] Could not add the unique newsletter email index, duplicate emails may exist: {ex.Message}");
+    }
 }
 
 // Configure the HTTP request pipeline.

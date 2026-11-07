@@ -40,6 +40,7 @@ public class NewsletterController : ControllerBase
             return BadRequest(new { message = "Adresa de email nu este validă." });
 
         var normalized = request.Email.Trim().ToLowerInvariant();
+        var alreadySubscribed = Conflict(new { message = "Această adresă de email este deja abonată." });
 
         // Check if already subscribed (active)
         var existing = await _context.NewsletterSubscribers
@@ -48,7 +49,7 @@ public class NewsletterController : ControllerBase
         if (existing is not null)
         {
             if (existing.IsActive)
-                return Conflict(new { message = "Această adresă de email este deja abonată." });
+                return alreadySubscribed;
 
             // Re-subscribe
             existing.IsActive = true;
@@ -76,7 +77,17 @@ public class NewsletterController : ControllerBase
         };
 
         _context.NewsletterSubscribers.Add(subscriber);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            // A simultaneous request for this email won the race and the unique index rejected this one.
+            if (await _context.NewsletterSubscribers.AnyAsync(s => s.Email == normalized))
+                return alreadySubscribed;
+            throw;
+        }
 
         // ── Welcome confirmation email ────────────────────────────────────────
         var welcomeHtml = $"""
