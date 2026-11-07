@@ -1,3 +1,4 @@
+using System.Net;
 using Backend.Data;
 using Backend.Models;
 using Backend.Security;
@@ -77,6 +78,13 @@ public class ContactController : ControllerBase
         }
 
         // ── Internal notification email ──────────────────────────────────────
+        // User input is encoded so it can only ever appear as plain text in the email.
+        var safeName    = WebUtility.HtmlEncode(message.Name);
+        var safeEmail   = WebUtility.HtmlEncode(message.Email);
+        var safeSubject = WebUtility.HtmlEncode(message.Subject);
+        var safeMessage = WebUtility.HtmlEncode(message.Message);
+        var mailtoAddress = Uri.EscapeDataString(message.Email).Replace("%40", "@");
+
         var notifHtml = $"""
             <div style="font-family:'Segoe UI',Roboto,sans-serif;max-width:600px;margin:auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden">
               <div style="background:linear-gradient(135deg,#003977,#0064d2);padding:24px 32px">
@@ -85,15 +93,15 @@ public class ContactController : ControllerBase
               </div>
               <div style="padding:28px 32px;background:#fff">
                 <table style="width:100%;border-collapse:collapse;font-size:14px">
-                  <tr><td style="padding:8px 0;color:#64748b;width:120px">Nume</td><td style="padding:8px 0;font-weight:600;color:#1e293b">{message.Name}</td></tr>
-                  <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:{message.Email}" style="color:#003977">{message.Email}</a></td></tr>
-                  <tr><td style="padding:8px 0;color:#64748b">Subiect</td><td style="padding:8px 0;font-weight:600;color:#1e293b">{message.Subject}</td></tr>
+                  <tr><td style="padding:8px 0;color:#64748b;width:120px">Nume</td><td style="padding:8px 0;font-weight:600;color:#1e293b">{safeName}</td></tr>
+                  <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:{mailtoAddress}" style="color:#003977">{safeEmail}</a></td></tr>
+                  <tr><td style="padding:8px 0;color:#64748b">Subiect</td><td style="padding:8px 0;font-weight:600;color:#1e293b">{safeSubject}</td></tr>
                 </table>
                 <div style="margin-top:16px;padding:16px;background:#f8fafc;border-left:4px solid #003977;border-radius:4px">
-                  <p style="margin:0;font-size:14px;color:#334155;line-height:1.6;white-space:pre-wrap">{message.Message}</p>
+                  <p style="margin:0;font-size:14px;color:#334155;line-height:1.6;white-space:pre-wrap">{safeMessage}</p>
                 </div>
                 <div style="margin-top:20px">
-                  <a href="mailto:{message.Email}?subject=Re: {Uri.EscapeDataString(message.Subject)}" 
+                  <a href="mailto:{mailtoAddress}?subject=Re: {Uri.EscapeDataString(message.Subject)}" 
                      style="display:inline-block;background:#003977;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600">
                     Răspunde direct
                   </a>

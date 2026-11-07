@@ -1,3 +1,4 @@
+using System.Net;
 using Backend.Data;
 using Backend.Models;
 using Backend.Security;
@@ -97,7 +98,7 @@ public class NewsletterController : ControllerBase
                 <p style="color:rgba(255,255,255,0.8);margin:10px 0 0;font-size:14px">Ai fost abonat cu succes la newsletter-ul nostru.</p>
               </div>
               <div style="padding:32px;background:#fff">
-                <p style="color:#334155;font-size:15px;line-height:1.7">Salut{(string.IsNullOrEmpty(subscriber.Name) ? "" : $" {subscriber.Name}")},</p>
+                <p style="color:#334155;font-size:15px;line-height:1.7">Salut{(string.IsNullOrEmpty(subscriber.Name) ? "" : $" {WebUtility.HtmlEncode(subscriber.Name)}")},</p>
                 <p style="color:#334155;font-size:14px;line-height:1.7">
                   Ești acum la curent cu tot ce se întâmplă la Facultatea de Matematică și Informatică Brașov —
                   hackathoane, workshop-uri, voluntariat și oportunități de carieră.
