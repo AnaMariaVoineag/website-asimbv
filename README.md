@@ -2,7 +2,7 @@
 
 Full-stack application for the Association of Students in Computer Science and Mathematics Brasov (ASIMBv), composed of:
 - **`react-frontend`**: React 19 + Vite frontend (with Hot Module Replacement / live-reload support).
-- **`aspnet-backend`**: ASP.NET Core Web API (.NET 8).
+- **`aspnet-backend`**: ASP.NET Core Web API (.NET 10).
 - **`postgres`**: PostgreSQL 16 relational database.
 - **`adminer`**: Lightweight web-based database management tool.
 

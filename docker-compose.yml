@@ -33,7 +33,7 @@ services:
       postgres:
         condition: service_healthy
 
-  # --- Backend: ASP.NET Core (.NET 8) Web API ---
+  # --- Backend: ASP.NET Core (.NET 10) Web API ---
   aspnet-backend:
     build:
       context: .
