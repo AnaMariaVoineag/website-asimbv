@@ -2,6 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import './palette.css';
 import './TaxFormPage.css';
 
+// Spreadsheets run cells starting with = + - @ as formulas, so those get a leading apostrophe.
+// Quotes are doubled so a value can never break out of its cell. Same rules as CsvCell in TaxController.
+const csvCell = (value) => {
+  let text = String(value ?? '');
+  if (/^\s*[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+};
+
 const OCR_STEPS = [
   { id: 1, label: 'Încărcare fișier securizat', duration: 600 },
   { id: 2, label: 'Scanare și aliniere document ANAF', duration: 800 },
@@ -220,7 +228,7 @@ const TaxFormPage = () => {
       ['Acuratete OCR', `${extractedData.ocrConfidence}%`]
     ];
 
-    const csvContent = '\uFEFF' + csvRows.map((r) => r.map((cell) => `"${cell}"`).join(',')).join('\n');
+    const csvContent = '\uFEFF' + csvRows.map((r) => r.map(csvCell).join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');

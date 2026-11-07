@@ -81,6 +81,16 @@ public class TaxController : ControllerBase
         return Ok(sampleData);
     }
 
+    // Spreadsheets run cells starting with = + - @ as formulas, so those get a leading apostrophe.
+    // Quotes are doubled so a value can never break out of its cell.
+    private static string CsvCell(string? value)
+    {
+        var text = value ?? string.Empty;
+        if (text.TrimStart() is ['=' or '+' or '-' or '@', ..])
+            text = "'" + text;
+        return "\"" + text.Replace("\"", "\"\"") + "\"";
+    }
+
     // POST: api/tax/export-csv
     [HttpPost("export-csv")]
     public IActionResult ExportCsv([FromBody] ExtractedFormData data)
@@ -88,19 +98,19 @@ public class TaxController : ControllerBase
         var csvBuilder = new StringBuilder();
         // UTF-8 BOM for Excel compatibility
         csvBuilder.AppendLine("Camp,Valoare Extrasa");
-        csvBuilder.AppendLine($"Nume si Prenume,\"{data.FullName}\"");
-        csvBuilder.AppendLine($"Initiala Tata,\"{data.Initial}\"");
-        csvBuilder.AppendLine($"CNP,\"{data.Cnp}\"");
-        csvBuilder.AppendLine($"Adresa,\"{data.Address}\"");
-        csvBuilder.AppendLine($"Localitate,\"{data.City}\"");
-        csvBuilder.AppendLine($"Judet,\"{data.County}\"");
-        csvBuilder.AppendLine($"Telefon,\"{data.Phone}\"");
-        csvBuilder.AppendLine($"Email,\"{data.Email}\"");
-        csvBuilder.AppendLine($"Procent Redirectionat,\"{data.Percentage}\"");
-        csvBuilder.AppendLine($"Perioada Distribuire,\"{data.Period}\"");
-        csvBuilder.AppendLine($"Entitate Beneficiara,\"{data.BeneficiaryName}\"");
-        csvBuilder.AppendLine($"Cod Fiscal CIF,\"{data.BeneficiaryCif}\"");
-        csvBuilder.AppendLine($"Cont IBAN,\"{data.BeneficiaryIban}\"");
+        csvBuilder.AppendLine($"Nume si Prenume,{CsvCell(data.FullName)}");
+        csvBuilder.AppendLine($"Initiala Tata,{CsvCell(data.Initial)}");
+        csvBuilder.AppendLine($"CNP,{CsvCell(data.Cnp)}");
+        csvBuilder.AppendLine($"Adresa,{CsvCell(data.Address)}");
+        csvBuilder.AppendLine($"Localitate,{CsvCell(data.City)}");
+        csvBuilder.AppendLine($"Judet,{CsvCell(data.County)}");
+        csvBuilder.AppendLine($"Telefon,{CsvCell(data.Phone)}");
+        csvBuilder.AppendLine($"Email,{CsvCell(data.Email)}");
+        csvBuilder.AppendLine($"Procent Redirectionat,{CsvCell(data.Percentage)}");
+        csvBuilder.AppendLine($"Perioada Distribuire,{CsvCell(data.Period)}");
+        csvBuilder.AppendLine($"Entitate Beneficiara,{CsvCell(data.BeneficiaryName)}");
+        csvBuilder.AppendLine($"Cod Fiscal CIF,{CsvCell(data.BeneficiaryCif)}");
+        csvBuilder.AppendLine($"Cont IBAN,{CsvCell(data.BeneficiaryIban)}");
         csvBuilder.AppendLine($"Semnatura Detectata,\"{ (data.SignatureDetected ? "DA" : "NU") }\"");
         csvBuilder.AppendLine($"Acuratete OCR,\"{data.OcrConfidence}%\"");
 
