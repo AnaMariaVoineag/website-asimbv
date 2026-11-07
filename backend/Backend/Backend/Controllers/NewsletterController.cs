@@ -2,6 +2,7 @@ using Backend.Data;
 using Backend.Models;
 using Backend.Security;
 using Backend.Services;
+using Backend.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,10 +36,7 @@ public class NewsletterController : ControllerBase
         if (request.Name?.Trim().Length > NewsletterSubscriber.NameMaxLength)
             return BadRequest(new { message = $"Numele poate avea cel mult {NewsletterSubscriber.NameMaxLength} de caractere." });
 
-        var emailRegex = new System.Text.RegularExpressions.Regex(
-            @"^[^@\s]+@[^@\s]+\.[^@\s]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-        if (!emailRegex.IsMatch(request.Email.Trim()))
+        if (!EmailFormat.IsValid(request.Email.Trim()))
             return BadRequest(new { message = "Adresa de email nu este validă." });
 
         var normalized = request.Email.Trim().ToLowerInvariant();

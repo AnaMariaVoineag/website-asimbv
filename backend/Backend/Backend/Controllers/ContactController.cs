@@ -2,6 +2,7 @@ using Backend.Data;
 using Backend.Models;
 using Backend.Security;
 using Backend.Services;
+using Backend.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,11 +37,16 @@ public class ContactController : ControllerBase
         if (message.Name.Length > ContactMessage.NameMaxLength)
             return BadRequest(new { message = $"Numele poate avea cel mult {ContactMessage.NameMaxLength} de caractere." });
 
+        message.Email = message.Email.Trim();
+
         if (message.Email.Length > ContactMessage.EmailMaxLength)
             return BadRequest(new { message = $"Adresa de email poate avea cel mult {ContactMessage.EmailMaxLength} de caractere." });
 
-        if (message.Subject.Length > ContactMessage.SubjectMaxLength)
-            return BadRequest(new { message = $"Subiectul poate avea cel mult {ContactMessage.SubjectMaxLength} de caractere." });
+        if (!EmailFormat.IsValid(message.Email))
+            return BadRequest(new { message = "Adresa de email nu este validă." });
+
+        if (!ContactMessage.AllowedSubjects.Contains(message.Subject))
+            return BadRequest(new { message = "Subiectul selectat nu este valid." });
 
         if (message.Message.Length > ContactMessage.MessageMaxLength)
             return BadRequest(new { message = $"Mesajul poate avea cel mult {ContactMessage.MessageMaxLength} de caractere." });

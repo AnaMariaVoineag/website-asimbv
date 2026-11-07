@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './palette.css';
 import './ContactPage.css';
 
+// Keep in sync with ContactMessage.AllowedSubjects in the backend.
 const SUBJECT_OPTIONS = [
   'Întrebare generală',
   'Înscriere & Voluntariat',
