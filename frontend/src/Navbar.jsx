@@ -67,19 +67,12 @@ const Navbar = () => {
           >
             Susține
           </NavLink>
-          <NavLink 
-            to="/contact" 
-            className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
-            onClick={closeMenu}
-          >
-            Contact
-          </NavLink>
-          <NavLink 
-            to="/contact" 
+          <NavLink
+            to="/contact"
             className="nav-link nav-cta"
             onClick={closeMenu}
           >
-            Înscrie-te
+            Contactează-ne
           </NavLink>
         </div>
 
