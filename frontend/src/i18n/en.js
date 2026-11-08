@@ -226,10 +226,6 @@ const en = {
       browse: 'browse from your computer',
       max: 'Max 15MB',
     },
-    demo: 'Upload Demo Document',
-    errorDemo: 'Test Error State',
-    errorDemoHint: 'Test the behaviour when the file is unreadable',
-    prefilled: 'Download ASIMBV Pre-filled Form',
     processing: {
       title: 'Processing and OCR recognition in progress...',
       document: 'Document: ',

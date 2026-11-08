@@ -172,20 +172,6 @@ const TaxFormPage = () => {
     }
   };
 
-  const handleDemoUpload = () => {
-    const demoFile = new File(['%PDF-1.4 demo content'], 'Formular230_Popescu_Andrei.pdf', {
-      type: 'application/pdf'
-    });
-    processSelectedFile(demoFile);
-  };
-
-  const handleCorruptDemoUpload = () => {
-    const corruptFile = new File(['corrupt data'], 'document_corrupt_eroare.pdf', {
-      type: 'application/pdf'
-    });
-    processSelectedFile(corruptFile);
-  };
-
   const handleFieldChange = (field, value) => {
     setExtractedData((prev) => ({
       ...prev,
@@ -472,42 +458,6 @@ const TaxFormPage = () => {
                 <span className="file-pill">JPG</span>
                 <span className="file-pill">{t('tax.dropzone.max')}</span>
               </div>
-            </div>
-
-            {/* Template Download & Test Helpers */}
-            <div className="upload-actions-bar">
-              <button
-                type="button"
-                className="action-btn secondary-btn"
-                onClick={handleDemoUpload}
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                <span>{t('tax.demo')}</span>
-              </button>
-
-              <button
-                type="button"
-                className="action-btn error-demo-btn"
-                onClick={handleCorruptDemoUpload}
-                title={t('tax.errorDemoHint')}
-              >
-                <span>{t('tax.errorDemo')}</span>
-              </button>
-
-              <a
-                href="/logo_asimbv_circle.png"
-                download="Formular_230_Precompletat_ASIMBV.pdf"
-                className="action-btn outline-btn"
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span>{t('tax.prefilled')}</span>
-              </a>
             </div>
           </div>
         )}

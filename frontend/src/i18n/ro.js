@@ -226,10 +226,6 @@ const ro = {
       browse: 'răsfoiește din calculator',
       max: 'Max 15MB',
     },
-    demo: 'Încarcă Document Demo',
-    errorDemo: 'Testează Stare Eroare',
-    errorDemoHint: 'Testează comportamentul când fișierul este ilizibil',
-    prefilled: 'Descarcă Formular Precompletat ASIMBV',
     processing: {
       title: 'Procesare și Recunoaștere OCR în curs...',
       document: 'Document: ',
