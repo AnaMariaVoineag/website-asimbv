@@ -5,6 +5,17 @@ html.events-scroll-snap-enabled {
   scroll-padding-top: 95px;
 }
 
+/* Extra snap points below the last card so mandatory snapping doesn't pull
+   the user back up: the pagination and the very bottom of the page (footer). */
+html.events-scroll-snap-enabled .pagination-container {
+  scroll-snap-align: end;
+  scroll-margin-bottom: 2rem;
+}
+
+html.events-scroll-snap-enabled .site-footer {
+  scroll-snap-align: end;
+}
+
 .events-page-container {
   font-family: 'Poppins', sans-serif;
   padding: 6.5rem 8% 4rem;
