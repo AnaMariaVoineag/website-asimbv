@@ -29,7 +29,7 @@ const cardsData = [
     title: 'Voluntariat',
     description: 'Fii parte din echipa ASIMBV! Dezvoltă-ți abilitățile de comunicare, organizare și leagă prietenii pe viață.',
     buttonText: 'Înscrie-te',
-    link: '/volunteering',
+    link: '/contact',
     icon: (
       <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -41,7 +41,7 @@ const cardsData = [
     title: 'Sponsorizări & Parteneriate',
     description: 'Suntem mereu deschiși la colaborări noi! Contactează-ne pentru a discuta despre oportunități de parteneriat, sponsorizări sau proiecte comune care să aducă valoare comunității IT din Brașov.',
     buttonText: 'Devino Partener',
-    link: '/get-involved',
+    link: '/parteneri',
     icon: (
       <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
