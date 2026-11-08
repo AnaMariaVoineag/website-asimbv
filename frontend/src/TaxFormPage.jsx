@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useI18n } from './i18n/I18nProvider';
 import './palette.css';
 import './TaxFormPage.css';
 
@@ -11,10 +12,10 @@ const csvCell = (value) => {
 };
 
 const OCR_STEPS = [
-  { id: 1, label: 'Încărcare fișier securizat', duration: 600 },
-  { id: 2, label: 'Scanare și aliniere document ANAF', duration: 800 },
-  { id: 3, label: 'Recunoaștere optică a caracterelor (OCR)', duration: 900 },
-  { id: 4, label: 'Validare câmpuri, CNP și semnătură', duration: 700 }
+  { id: 1, duration: 600 },
+  { id: 2, duration: 800 },
+  { id: 3, duration: 900 },
+  { id: 4, duration: 700 }
 ];
 
 const INITIAL_EXTRACTED_DATA = {
@@ -38,6 +39,14 @@ const INITIAL_EXTRACTED_DATA = {
 };
 
 const TaxFormPage = () => {
+  const { t, lang, locale, rich, list } = useI18n();
+  const ocrStepLabels = list('tax.processing.steps');
+  const benefits = list('tax.benefits');
+  const onlineSteps = list('tax.online.steps');
+  const errorHints = list('tax.error.hints');
+  // The period comes back from the server as text like "2 ani"; show it in the current language.
+  const periodText = (period) =>
+    lang === 'en' ? String(period).replace(/\bani\b/gi, 'years').replace(/\ban\b/gi, 'year') : period;
   const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [processState, setProcessState] = useState('idle'); // 'idle' | 'processing' | 'success' | 'error'
@@ -96,7 +105,7 @@ const TaxFormPage = () => {
     
     if (!validTypes.includes(selectedFile.type) && !['pdf', 'png', 'jpg', 'jpeg'].includes(extension)) {
       setFile(selectedFile);
-      setErrorMessage('Formatul fișierului nu este acceptat. Vă rugăm încărcați un fișier PDF sau imagine (.pdf, .png, .jpg).');
+      setErrorMessage(t('tax.error.invalidFormat'));
       setProcessState('error');
       return;
     }
@@ -134,7 +143,7 @@ const TaxFormPage = () => {
       } else {
         const errorData = await response.json().catch(() => ({}));
         if (response.status === 422 || errorData.message) {
-          throw new Error(errorData.message || 'Nu s-a putut procesa fișierul încărcat.');
+          throw new Error((lang === 'ro' && errorData.message) || t('tax.error.cannotProcess'));
         } else {
           // Fallback simulation for offline demo
           setExtractedData({
@@ -148,7 +157,7 @@ const TaxFormPage = () => {
       }
     } catch (err) {
       if (selectedFile.name.toLowerCase().includes('error') || selectedFile.name.toLowerCase().includes('corrupt')) {
-        setErrorMessage(err.message || 'Fișierul este ilizibil sau corupt. Asigură-te că documentul este un Formular 230 clar.');
+        setErrorMessage(err.message || t('tax.error.unreadable'));
         setProcessState('error');
       } else {
         // Successful fallback
@@ -210,22 +219,22 @@ const TaxFormPage = () => {
 
     // Client-side CSV generation fallback
     const csvRows = [
-      ['Camp', 'Valoare Extrasa'],
-      ['Nume si Prenume', extractedData.fullName],
-      ['Initiala Tata', extractedData.initial],
-      ['CNP', extractedData.cnp],
-      ['Adresa', extractedData.address],
-      ['Localitate', extractedData.city],
-      ['Judet', extractedData.county],
-      ['Telefon', extractedData.phone],
-      ['Email', extractedData.email],
-      ['Procent Redirectionat', extractedData.percentage],
-      ['Perioada', extractedData.period],
-      ['Entitate Beneficiara', extractedData.beneficiaryName],
-      ['Cod Fiscal CIF', extractedData.beneficiaryCif],
-      ['Cont IBAN', extractedData.beneficiaryIban],
-      ['Semnatura Detectata', extractedData.signatureDetected ? 'DA' : 'NU'],
-      ['Acuratete OCR', `${extractedData.ocrConfidence}%`]
+      [t('tax.csv.field'), t('tax.csv.value')],
+      [t('tax.csv.fullName'), extractedData.fullName],
+      [t('tax.csv.initial'), extractedData.initial],
+      [t('tax.csv.cnp'), extractedData.cnp],
+      [t('tax.csv.address'), extractedData.address],
+      [t('tax.csv.city'), extractedData.city],
+      [t('tax.csv.county'), extractedData.county],
+      [t('tax.csv.phone'), extractedData.phone],
+      [t('tax.csv.email'), extractedData.email],
+      [t('tax.csv.percentage'), extractedData.percentage],
+      [t('tax.csv.period'), extractedData.period],
+      [t('tax.csv.entity'), extractedData.beneficiaryName],
+      [t('tax.csv.cif'), extractedData.beneficiaryCif],
+      [t('tax.csv.iban'), extractedData.beneficiaryIban],
+      [t('tax.csv.signature'), extractedData.signatureDetected ? t('tax.csv.yes') : t('tax.csv.no')],
+      [t('tax.csv.confidence'), `${extractedData.ocrConfidence}%`]
     ];
 
     const csvContent = '\uFEFF' + csvRows.map((r) => r.map(csvCell).join(',')).join('\n');
@@ -244,9 +253,9 @@ const TaxFormPage = () => {
     if (printWindow) {
       printWindow.document.write(`
         <!DOCTYPE html>
-        <html>
+        <html lang="${lang}">
           <head>
-            <title>Formular 230 - ${extractedData.fullName}</title>
+            <title>${t('tax.printable.pageTitle', { name: extractedData.fullName })}</title>
             <style>
               body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #1e293b; }
               .header { text-align: center; border-bottom: 2px solid #003977; padding-bottom: 15px; margin-bottom: 25px; }
@@ -263,36 +272,36 @@ const TaxFormPage = () => {
           </head>
           <body>
             <div class="header">
-              <h1 class="title">CERERE PRIVIND DESTINAȚIA SUMEI REPREZENTÂND PÂNĂ LA 3,5% DIN IMPOZIT</h1>
-              <div class="subtitle">Formularul 230 ANAF — Procesat și Validat Digital via ASIMBV</div>
+              <h1 class="title">${t('tax.printable.heading')}</h1>
+              <div class="subtitle">${t('tax.printable.subheading')}</div>
             </div>
             
             <div class="grid">
               <div class="card">
-                <div class="card-title">I. Date de Identificare ale Contribuabilului</div>
-                <div class="row"><span class="label">Nume și prenume:</span> ${extractedData.fullName}</div>
-                <div class="row"><span class="label">Inițiala tatălui:</span> ${extractedData.initial}</div>
-                <div class="row"><span class="label">Cod Numeric Personal (CNP):</span> ${extractedData.cnp}</div>
-                <div class="row"><span class="label">Adresă domiciliu:</span> ${extractedData.address}</div>
-                <div class="row"><span class="label">Localitate:</span> ${extractedData.city}, Jud. ${extractedData.county}</div>
-                <div class="row"><span class="label">Telefon:</span> ${extractedData.phone}</div>
-                <div class="row"><span class="label">Email:</span> ${extractedData.email}</div>
+                <div class="card-title">${t('tax.printable.sectionOne')}</div>
+                <div class="row"><span class="label">${t('tax.printable.fullName')}</span> ${extractedData.fullName}</div>
+                <div class="row"><span class="label">${t('tax.printable.initial')}</span> ${extractedData.initial}</div>
+                <div class="row"><span class="label">${t('tax.printable.cnp')}</span> ${extractedData.cnp}</div>
+                <div class="row"><span class="label">${t('tax.printable.address')}</span> ${extractedData.address}</div>
+                <div class="row"><span class="label">${t('tax.printable.city')}</span> ${extractedData.city}, ${t('tax.printable.countyAbbr')} ${extractedData.county}</div>
+                <div class="row"><span class="label">${t('tax.printable.phone')}</span> ${extractedData.phone}</div>
+                <div class="row"><span class="label">${t('tax.printable.email')}</span> ${extractedData.email}</div>
               </div>
 
               <div class="card">
-                <div class="card-title">II. Destinația sumei (3,5% din impozit)</div>
-                <div class="row"><span class="label">Denumire entitate:</span> ${extractedData.beneficiaryName}</div>
-                <div class="row"><span class="label">Cod de identificare fiscală (CIF):</span> ${extractedData.beneficiaryCif}</div>
-                <div class="row"><span class="label">Cont bancar (IBAN):</span> ${extractedData.beneficiaryIban}</div>
-                <div class="row"><span class="label">Procent redirecționat:</span> <span class="badge">${extractedData.percentage}</span></div>
-                <div class="row"><span class="label">Perioadă opțiune:</span> ${extractedData.period}</div>
-                <div class="row"><span class="label">Statut semnătură:</span> ${extractedData.signatureDetected ? 'Semnătură olografă detectată ✓' : 'Nesemnat'}</div>
-                <div class="row"><span class="label">Scor încredere OCR:</span> ${extractedData.ocrConfidence}%</div>
+                <div class="card-title">${t('tax.printable.sectionTwo')}</div>
+                <div class="row"><span class="label">${t('tax.printable.entity')}</span> ${extractedData.beneficiaryName}</div>
+                <div class="row"><span class="label">${t('tax.printable.cif')}</span> ${extractedData.beneficiaryCif}</div>
+                <div class="row"><span class="label">${t('tax.printable.iban')}</span> ${extractedData.beneficiaryIban}</div>
+                <div class="row"><span class="label">${t('tax.printable.percentage')}</span> <span class="badge">${extractedData.percentage}</span></div>
+                <div class="row"><span class="label">${t('tax.printable.period')}</span> ${periodText(extractedData.period)}</div>
+                <div class="row"><span class="label">${t('tax.printable.signatureStatus')}</span> ${extractedData.signatureDetected ? t('tax.printable.signed') : t('tax.printable.unsigned')}</div>
+                <div class="row"><span class="label">${t('tax.printable.confidence')}</span> ${extractedData.ocrConfidence}%</div>
               </div>
             </div>
 
             <div class="footer">
-              Document generat automat pentru transmitere către Administrația Financiară (ANAF). ASIM Brașov © ${new Date().getFullYear()}
+              ${t('tax.printable.footer', { year: new Date().getFullYear() })}
             </div>
             <script>window.print();</script>
           </body>
@@ -318,11 +327,10 @@ const TaxFormPage = () => {
     <div className="tax-page-container">
       {/* Top Banner & Info */}
       <header className="tax-header">
-        <span className="tax-badge">Susține Educația & Tehnologia</span>
-        <h1 className="tax-title">Redirecționează 3.5% din Impozit</h1>
+        <span className="tax-badge">{t('tax.badge')}</span>
+        <h1 className="tax-title">{t('tax.title')}</h1>
         <p className="tax-subtitle">
-          Transformă impozitul tău pe venit în oportunități pentru studenții Facultății de Matematică și Informatică Brașov. 
-          Încarcă Formularul 230 pentru procesare și validare automată OCR.
+          {t('tax.subtitle')}
         </p>
       </header>
 
@@ -335,8 +343,8 @@ const TaxFormPage = () => {
             </svg>
           </div>
           <div>
-            <strong>100% Gratuit</strong>
-            <p>Suma este deja reținută de stat din salariu.</p>
+            <strong>{benefits[0]?.title}</strong>
+            <p>{benefits[0]?.text}</p>
           </div>
         </div>
 
@@ -347,8 +355,8 @@ const TaxFormPage = () => {
             </svg>
           </div>
           <div>
-            <strong>Procesare Rapidă OCR</strong>
-            <p>Extragere instantanee și sigură a datelor.</p>
+            <strong>{benefits[1]?.title}</strong>
+            <p>{benefits[1]?.text}</p>
           </div>
         </div>
 
@@ -360,8 +368,8 @@ const TaxFormPage = () => {
             </svg>
           </div>
           <div>
-            <strong>Impact Direct</strong>
-            <p>Finanțează hackathoane, workshop-uri și burse.</p>
+            <strong>{benefits[2]?.title}</strong>
+            <p>{benefits[2]?.text}</p>
           </div>
         </div>
       </div>
@@ -376,11 +384,10 @@ const TaxFormPage = () => {
             {/* ── OPTION A: Complete Online via formular230.ro API ── */}
             <div className="f230-online-section">
               <div className="f230-online-header">
-                <div className="f230-online-badge">✦ Recomandat</div>
-                <h2 className="f230-online-title">Completează Formularul Online</h2>
+                <div className="f230-online-badge">{t('tax.online.recommended')}</div>
+                <h2 className="f230-online-title">{t('tax.online.title')}</h2>
                 <p className="f230-online-desc">
-                  Nu ai formularul tipărit? Completează-l direct aici în câteva minute.
-                  Datele ASIMBV sunt precompletate automat — tu doar semnezi digital.
+                  {t('tax.online.description')}
                 </p>
               </div>
 
@@ -396,7 +403,7 @@ const TaxFormPage = () => {
                     <line x1="16" y1="13" x2="8" y2="13"></line>
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                   </svg>
-                  <span>Completează Formularul 230 Online</span>
+                  <span>{t('tax.online.button')}</span>
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cta-arrow">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -409,17 +416,17 @@ const TaxFormPage = () => {
               <div className="f230-steps-inline">
                 <div className="f230-step-inline">
                   <span className="f230-step-num">1</span>
-                  <span>Apasă butonul de mai sus</span>
+                  <span>{onlineSteps[0]}</span>
                 </div>
                 <div className="f230-step-sep">→</div>
                 <div className="f230-step-inline">
                   <span className="f230-step-num">2</span>
-                  <span>Completează datele personale</span>
+                  <span>{onlineSteps[1]}</span>
                 </div>
                 <div className="f230-step-sep">→</div>
                 <div className="f230-step-inline">
                   <span className="f230-step-num">3</span>
-                  <span>Trimite direct la ANAF</span>
+                  <span>{onlineSteps[2]}</span>
                 </div>
               </div>
             </div>
@@ -427,7 +434,7 @@ const TaxFormPage = () => {
             {/* ── Divider ── */}
             <div className="upload-divider">
               <div className="divider-line"></div>
-              <span className="divider-label">SAU încarcă formularul deja completat</span>
+              <span className="divider-label">{t('tax.or')}</span>
               <div className="divider-line"></div>
             </div>
 
@@ -455,15 +462,15 @@ const TaxFormPage = () => {
                 </svg>
               </div>
 
-              <h2 className="dropzone-title">Încarcă Formularul 230 (PDF sau Imagine)</h2>
+              <h2 className="dropzone-title">{t('tax.dropzone.title')}</h2>
               <p className="dropzone-subtitle">
-                Trage fișierul aici sau <span className="browse-link">răsfoiește din calculator</span>
+                {t('tax.dropzone.drag')}<span className="browse-link">{t('tax.dropzone.browse')}</span>
               </p>
               <div className="dropzone-meta-tags">
                 <span className="file-pill">PDF</span>
                 <span className="file-pill">PNG</span>
                 <span className="file-pill">JPG</span>
-                <span className="file-pill">Max 15MB</span>
+                <span className="file-pill">{t('tax.dropzone.max')}</span>
               </div>
             </div>
 
@@ -477,16 +484,16 @@ const TaxFormPage = () => {
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
-                <span>Încarcă Document Demo</span>
+                <span>{t('tax.demo')}</span>
               </button>
 
               <button
                 type="button"
                 className="action-btn error-demo-btn"
                 onClick={handleCorruptDemoUpload}
-                title="Testează comportamentul când fișierul este ilizibil"
+                title={t('tax.errorDemoHint')}
               >
-                <span>Testează Stare Eroare</span>
+                <span>{t('tax.errorDemo')}</span>
               </button>
 
               <a
@@ -499,7 +506,7 @@ const TaxFormPage = () => {
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span>Descarcă Formular Precompletat ASIMBV</span>
+                <span>{t('tax.prefilled')}</span>
               </a>
             </div>
           </div>
@@ -521,9 +528,9 @@ const TaxFormPage = () => {
               </div>
             </div>
 
-            <h2 className="processing-title">Procesare și Recunoaștere OCR în curs...</h2>
+            <h2 className="processing-title">{t('tax.processing.title')}</h2>
             <p className="processing-filename">
-              Document: <strong>{file?.name || 'Formular_230.pdf'}</strong>
+              {t('tax.processing.document')}<strong>{file?.name || 'Formular_230.pdf'}</strong>
             </p>
 
             {/* Percentage Progress Bar */}
@@ -533,7 +540,7 @@ const TaxFormPage = () => {
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
-            <div className="progress-percentage-label">{progressPercent}% finalizat</div>
+            <div className="progress-percentage-label">{t('tax.processing.done', { percent: progressPercent })}</div>
 
             {/* Step List */}
             <div className="ocr-steps-list">
@@ -556,7 +563,7 @@ const TaxFormPage = () => {
                         <span>{idx + 1}</span>
                       )}
                     </div>
-                    <span className="step-label">{step.label}</span>
+                    <span className="step-label">{ocrStepLabels[idx]}</span>
                   </div>
                 );
               })}
@@ -577,16 +584,15 @@ const TaxFormPage = () => {
               </svg>
             </div>
 
-            <h2 className="error-title">Eroare la procesarea documentului</h2>
+            <h2 className="error-title">{t('tax.error.title')}</h2>
             <p className="error-desc">{errorMessage}</p>
 
             <div className="error-hints-card">
-              <h4>Recomandări pentru rezolvare:</h4>
+              <h4>{t('tax.error.hintsTitle')}</h4>
               <ul>
-                <li>Asigură-te că fișierul este un <strong>Formular 230 ANAF</strong> valid.</li>
-                <li>Verifică dacă textul și cifrele din document sunt clare și lizibile.</li>
-                <li>Încarcă un fișier în format <strong>PDF</strong> sau imagine de înaltă rezoluție (PNG / JPG).</li>
-                <li>Documentul nu trebuie să fie parțial decupat sau protejat prin parolă.</li>
+                {errorHints.map((hint, index) => (
+                  <li key={index}>{rich(`tax.error.hints.${index}`)}</li>
+                ))}
               </ul>
             </div>
 
@@ -600,7 +606,7 @@ const TaxFormPage = () => {
                   <polyline points="1 4 1 10 7 10"></polyline>
                   <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
                 </svg>
-                <span>Încearcă din nou</span>
+                <span>{t('tax.error.retry')}</span>
               </button>
             </div>
           </div>
@@ -616,9 +622,9 @@ const TaxFormPage = () => {
               <div className="success-title-group">
                 <div className="success-check-badge">✓</div>
                 <div>
-                  <h2 className="success-heading">Date Extrase cu Succes</h2>
+                  <h2 className="success-heading">{t('tax.success.title')}</h2>
                   <p className="success-subheading">
-                    Document: <strong>{extractedData.fileName}</strong> • Acuratețe OCR:{' '}
+                    {t('tax.success.document')}<strong>{extractedData.fileName}</strong>{t('tax.success.confidence')}
                     <strong className="confidence-tag">{extractedData.ocrConfidence}%</strong>
                   </p>
                 </div>
@@ -630,14 +636,14 @@ const TaxFormPage = () => {
                   className={`switch-tab ${activeTab === 'data' ? 'active' : ''}`}
                   onClick={() => setActiveTab('data')}
                 >
-                  Date Structurate
+                  {t('tax.success.tabData')}
                 </button>
                 <button
                   type="button"
                   className={`switch-tab ${activeTab === 'preview' ? 'active' : ''}`}
                   onClick={() => setActiveTab('preview')}
                 >
-                  Previzualizare Document
+                  {t('tax.success.tabPreview')}
                 </button>
               </div>
             </div>
@@ -648,19 +654,19 @@ const TaxFormPage = () => {
                 {/* Section I: Contributor Info */}
                 <div className="data-panel">
                   <div className="panel-header">
-                    <h3 className="panel-title">I. Date Identificare Contribuabil</h3>
+                    <h3 className="panel-title">{t('tax.success.sectionOne')}</h3>
                     <button
                       type="button"
                       className="edit-toggle-btn"
                       onClick={() => setIsEditing(!isEditing)}
                     >
-                      {isEditing ? 'Salvează Câmpurile' : 'Editează Câmpuri'}
+                      {isEditing ? t('tax.success.save') : t('tax.success.edit')}
                     </button>
                   </div>
 
                   <div className="fields-grid">
                     <div className="field-block">
-                      <label className="field-label">Nume și Prenume</label>
+                      <label className="field-label">{t('tax.success.fullName')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -674,7 +680,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Inițiala Tatălui</label>
+                      <label className="field-label">{t('tax.success.initial')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -688,7 +694,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Cod Numeric Personal (CNP)</label>
+                      <label className="field-label">{t('tax.success.cnp')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -702,7 +708,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Telefon</label>
+                      <label className="field-label">{t('tax.success.phone')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -716,7 +722,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block full-width">
-                      <label className="field-label">Adresă Domiciliu</label>
+                      <label className="field-label">{t('tax.success.address')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -730,7 +736,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Localitate</label>
+                      <label className="field-label">{t('tax.success.city')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -744,7 +750,7 @@ const TaxFormPage = () => {
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Județ</label>
+                      <label className="field-label">{t('tax.success.county')}</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -762,44 +768,44 @@ const TaxFormPage = () => {
                 {/* Section II: Beneficiary & Tax Allocation */}
                 <div className="data-panel">
                   <div className="panel-header">
-                    <h3 className="panel-title">II. Entitate Beneficiară & Opțiune</h3>
+                    <h3 className="panel-title">{t('tax.success.sectionTwo')}</h3>
                     <span className="signature-pill">
                       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                      Semnătură Detectată
+                      {t('tax.success.signature')}
                     </span>
                   </div>
 
                   <div className="fields-grid">
                     <div className="field-block full-width">
-                      <label className="field-label">Denumire Asociație</label>
+                      <label className="field-label">{t('tax.success.association')}</label>
                       <div className="field-value highlight">{extractedData.beneficiaryName}</div>
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Cod Identificare Fiscală (CIF)</label>
+                      <label className="field-label">{t('tax.success.cif')}</label>
                       <div className="field-value code-font">{extractedData.beneficiaryCif}</div>
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Procent Redirecționat</label>
+                      <label className="field-label">{t('tax.success.percentage')}</label>
                       <div className="field-value percent-badge">{extractedData.percentage}</div>
                     </div>
 
                     <div className="field-block full-width">
-                      <label className="field-label">Cont Bancar (IBAN)</label>
+                      <label className="field-label">{t('tax.success.iban')}</label>
                       <div className="field-value code-font iban-value">{extractedData.beneficiaryIban}</div>
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Perioadă Distribuire</label>
-                      <div className="field-value">{extractedData.period}</div>
+                      <label className="field-label">{t('tax.success.period')}</label>
+                      <div className="field-value">{periodText(extractedData.period)}</div>
                     </div>
 
                     <div className="field-block">
-                      <label className="field-label">Format Validare</label>
-                      <div className="field-value">Conform Ordin ANAF</div>
+                      <label className="field-label">{t('tax.success.format')}</label>
+                      <div className="field-value">{t('tax.success.formatValue')}</div>
                     </div>
                   </div>
                 </div>
@@ -813,55 +819,55 @@ const TaxFormPage = () => {
                   <div className="mock-sheet-header">
                     <div className="mock-anaf-logo">ANAF</div>
                     <div className="mock-title-center">
-                      <h4>MINISTERUL FINANȚELOR • AGENȚIA NAȚIONALĂ DE ADMINISTRARE FISCALĂ</h4>
-                      <h3>FORMULARUL 230</h3>
-                      <p>Cerere privind destinația sumei reprezentând până la 3,5% din impozitul anual datorat</p>
+                      <h4>{t('tax.preview.ministry')}</h4>
+                      <h3>{t('tax.preview.form')}</h3>
+                      <p>{t('tax.preview.request')}</p>
                     </div>
                     <div className="mock-year">2026</div>
                   </div>
 
                   <div className="mock-section-box">
-                    <div className="mock-section-title">I. DATE DE IDENTIFICARE ALE CONTRIBUABILULUI</div>
+                    <div className="mock-section-title">{t('tax.preview.sectionOne')}</div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">Nume și prenume:</span>
+                      <span className="mock-lbl">{t('tax.preview.fullName')}</span>
                       <span className="mock-val highlighted">{extractedData.fullName}</span>
                     </div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">CNP:</span>
+                      <span className="mock-lbl">{t('tax.preview.cnp')}</span>
                       <span className="mock-val highlighted">{extractedData.cnp}</span>
                     </div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">Adresă:</span>
-                      <span className="mock-val highlighted">{extractedData.address}, {extractedData.city}, Jud. {extractedData.county}</span>
+                      <span className="mock-lbl">{t('tax.preview.address')}</span>
+                      <span className="mock-val highlighted">{extractedData.address}, {extractedData.city}, {t('tax.preview.countyAbbr')} {extractedData.county}</span>
                     </div>
                   </div>
 
                   <div className="mock-section-box">
-                    <div className="mock-section-title">II. DESTINAȚIA SUMEI PENTRU SUSȚINEREA UNEI ENTITĂȚI NON-PROFIT</div>
+                    <div className="mock-section-title">{t('tax.preview.sectionTwo')}</div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">Denumire entitate:</span>
+                      <span className="mock-lbl">{t('tax.preview.entity')}</span>
                       <span className="mock-val highlighted">{extractedData.beneficiaryName}</span>
                     </div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">CIF:</span>
+                      <span className="mock-lbl">{t('tax.preview.cif')}</span>
                       <span className="mock-val highlighted">{extractedData.beneficiaryCif}</span>
-                      <span className="mock-lbl" style={{ marginLeft: '20px' }}>Cota (%):</span>
+                      <span className="mock-lbl" style={{ marginLeft: '20px' }}>{t('tax.preview.share')}</span>
                       <span className="mock-val highlighted">{extractedData.percentage}</span>
                     </div>
                     <div className="mock-field-row">
-                      <span className="mock-lbl">Cont IBAN:</span>
+                      <span className="mock-lbl">{t('tax.preview.iban')}</span>
                       <span className="mock-val highlighted">{extractedData.beneficiaryIban}</span>
                     </div>
                   </div>
 
                   <div className="mock-footer-row">
                     <div className="mock-sig-box">
-                      <span>Semnătură contribuabil:</span>
+                      <span>{t('tax.preview.signature')}</span>
                       <div className="sig-scribble">Popescu Andrei</div>
                     </div>
                     <div className="mock-date-box">
-                      <span>Data procesării:</span>
-                      <strong>{new Date().toLocaleDateString('ro-RO')}</strong>
+                      <span>{t('tax.preview.processedOn')}</span>
+                      <strong>{new Date().toLocaleDateString(locale)}</strong>
                     </div>
                   </div>
                 </div>
@@ -880,7 +886,7 @@ const TaxFormPage = () => {
                     <polyline points="1 4 1 10 7 10"></polyline>
                     <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
                   </svg>
-                  <span>Încarcă alt fișier</span>
+                  <span>{t('tax.success.uploadAnother')}</span>
                 </button>
               </div>
 
@@ -897,7 +903,7 @@ const TaxFormPage = () => {
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                     <polyline points="10 9 9 9 8 9"></polyline>
                   </svg>
-                  <span>Descarcă Raport CSV</span>
+                  <span>{t('tax.success.csv')}</span>
                 </button>
 
                 <button
@@ -910,7 +916,7 @@ const TaxFormPage = () => {
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
-                  <span>Descarcă PDF Generat</span>
+                  <span>{t('tax.success.pdf')}</span>
                 </button>
               </div>
             </div>

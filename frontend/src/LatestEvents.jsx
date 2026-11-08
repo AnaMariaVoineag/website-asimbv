@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
 import { useLatestEvents, firstEventImage } from './useLatestEvents';
+import { useI18n } from './i18n/I18nProvider';
+import { localizeEvent } from './i18n/eventTranslations';
 import './LatestEvents.css';
 
 const FALLBACK_IMAGE = '/logo_asimbv_circle.png';
@@ -22,6 +24,7 @@ const ArrowIcon = ({ className }) => (
 );
 
 const LatestEventCard = ({ event }) => {
+  const { t } = useI18n();
   const image = firstEventImage(event.images);
 
   return (
@@ -49,7 +52,7 @@ const LatestEventCard = ({ event }) => {
         <h3 className="latest-event-title">{event.title}</h3>
         <p className="latest-event-description">{event.description}</p>
         <span className="latest-event-more">
-          Vezi detalii
+          {t('latest.details')}
           <ArrowIcon className="latest-event-arrow" />
         </span>
       </div>
@@ -65,22 +68,27 @@ const LatestEventCard = ({ event }) => {
  */
 const LatestEvents = ({
   count = 3,
-  badge = 'Evenimente recente',
-  title = 'Ce s-a mai întâmplat la ASIMBv',
-  subtitle = 'Cele mai noi activități ale comunității noastre: workshopuri, întâlniri și momente pe care le-am trăit împreună.',
+  badge,
+  title,
+  subtitle,
   showAllLink = true,
   id = 'evenimente-recente',
 }) => {
+  const { t, lang } = useI18n();
   const { events, status } = useLatestEvents(count);
+  // Texts default to the current language; pass a string (or '' to hide one) to override.
+  const badgeText = badge ?? t('latest.badge');
+  const titleText = title ?? t('latest.title');
+  const subtitleText = subtitle ?? t('latest.subtitle');
 
   return (
     <section className="past-events-section" id={id}>
       <div className="past-events-container">
-        {(badge || title || subtitle) && (
+        {(badgeText || titleText || subtitleText) && (
           <div className="past-events-header">
-            {badge && <span className="past-events-badge">{badge}</span>}
-            {title && <h2 className="past-events-title">{title}</h2>}
-            {subtitle && <p className="past-events-subtitle">{subtitle}</p>}
+            {badgeText && <span className="past-events-badge">{badgeText}</span>}
+            {titleText && <h2 className="past-events-title">{titleText}</h2>}
+            {subtitleText && <p className="past-events-subtitle">{subtitleText}</p>}
           </div>
         )}
 
@@ -101,14 +109,14 @@ const LatestEvents = ({
 
         {status === 'error' && (
           <p className="latest-events-error">
-            Nu am putut încărca evenimentele recente. Le poți vedea pe pagina de evenimente.
+            {t('latest.error')}
           </p>
         )}
 
         {status === 'ready' && events.length > 0 && (
           <div className="latest-events-grid">
             {events.map((event) => (
-              <LatestEventCard key={event.id} event={event} />
+              <LatestEventCard key={event.id} event={localizeEvent(event, lang)} />
             ))}
           </div>
         )}
@@ -116,7 +124,7 @@ const LatestEvents = ({
         {showAllLink && (
           <div className="past-events-cta-container">
             <Link to="/events" className="past-events-btn">
-              <span>Vezi toate evenimentele</span>
+              <span>{t('latest.all')}</span>
               <ArrowIcon className="btn-cta-arrow" />
             </Link>
           </div>

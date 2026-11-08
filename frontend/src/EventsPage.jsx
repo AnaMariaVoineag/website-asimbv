@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import EventCard from './EventCard';
 import { assetUrl } from './assetUrl';
+import { useI18n } from './i18n/I18nProvider';
+import { localizeEvent } from './i18n/eventTranslations';
 import './palette.css';
 import './EventsPage.css';
 
@@ -19,6 +21,7 @@ const parseImages = (imagesJson) => {
 };
 
 const EventsPage = () => {
+  const { t, lang } = useI18n();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,7 +54,7 @@ const EventsPage = () => {
         }));
         setEvents(normalized);
       } catch (err) {
-        setError('Nu s-au putut încărca evenimentele. Verifică conexiunea sau reîncarcă pagina.');
+        setError(true);
         console.error('[EventsPage] fetch error:', err);
       } finally {
         setLoading(false);
@@ -60,8 +63,13 @@ const EventsPage = () => {
     fetchEvents();
   }, []);
 
+  const localizedEvents = useMemo(
+    () => events.map((event) => localizeEvent(event, lang)),
+    [events, lang]
+  );
+
   const filteredEvents = useMemo(() => {
-    return events.filter((event) => {
+    return localizedEvents.filter((event) => {
       const matchesCategory =
         selectedCategory === 'Toate' ||
         (event.category && event.category.toLowerCase() === selectedCategory.toLowerCase());
@@ -74,7 +82,7 @@ const EventsPage = () => {
 
       return matchesCategory && matchesSearch;
     });
-  }, [events, selectedCategory, searchTerm]);
+  }, [localizedEvents, selectedCategory, searchTerm]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -100,9 +108,9 @@ const EventsPage = () => {
   return (
     <div className="events-page-container">
       <header className="events-header">
-        <h1 className="events-page-title">Evenimentele Noastre</h1>
+        <h1 className="events-page-title">{t('events.title')}</h1>
         <p className="events-page-subtitle">
-          Explorează toate activitățile, workshop-urile, proiectele sociale și competițiile comunității ASIMBV.
+          {t('events.subtitle')}
         </p>
       </header>
 
@@ -115,7 +123,7 @@ const EventsPage = () => {
           <input
             type="text"
             className="events-search-input"
-            placeholder="Caută după nume sau cuvânt cheie..."
+            placeholder={t('events.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -123,7 +131,7 @@ const EventsPage = () => {
             <button 
               className="search-clear-btn" 
               onClick={() => setSearchTerm('')}
-              aria-label="Șterge căutarea"
+              aria-label={t('events.clearSearch')}
             >
               ×
             </button>
@@ -137,16 +145,16 @@ const EventsPage = () => {
               className={`category-pill ${selectedCategory === category ? 'active' : ''} pill-${category.toLowerCase()}`}
               onClick={() => handleCategoryClick(category)}
             >
-              {category === 'Toate' ? 'Toate Categoriile' : category}
+              {category === 'Toate' ? t('events.allCategories') : category}
             </button>
           ))}
         </div>
 
         {!loading && (
           <div className="results-counter">
-            {filteredEvents.length === 1 
-              ? '1 eveniment găsit' 
-              : `${filteredEvents.length} evenimente găsite`}
+            {filteredEvents.length === 1
+              ? t('events.resultOne')
+              : t('events.resultMany', { count: filteredEvents.length })}
           </div>
         )}
       </div>
@@ -154,18 +162,18 @@ const EventsPage = () => {
       {loading && (
         <div className="events-status-message">
           <div className="spinner"></div>
-          <p>Se încarcă evenimentele din baza de date...</p>
+          <p>{t('events.loading')}</p>
         </div>
       )}
 
       {error && !loading && (
         <div className="events-status-message error-message">
-          <p>⚠️ {error}</p>
+          <p>⚠️ {t('events.loadError')}</p>
           <button 
             className="retry-btn"
             onClick={() => window.location.reload()}
           >
-            Reîncearcă
+            {t('events.retry')}
           </button>
         </div>
       )}
@@ -173,8 +181,8 @@ const EventsPage = () => {
       {!loading && !error && filteredEvents.length === 0 && (
         <div className="events-empty-state">
           <div className="empty-icon">🔍</div>
-          <h3>Nu a fost găsit niciun eveniment</h3>
-          <p>Încearcă să ajustezi filtrele sau termenul de căutare.</p>
+          <h3>{t('events.emptyTitle')}</h3>
+          <p>{t('events.emptyText')}</p>
           <button 
             className="reset-filters-btn"
             onClick={() => {
@@ -182,7 +190,7 @@ const EventsPage = () => {
               setSearchTerm('');
             }}
           >
-            Resetează filtrele
+            {t('events.resetFilters')}
           </button>
         </div>
       )}
@@ -205,13 +213,13 @@ const EventsPage = () => {
           </div>
 
           {totalPages > 1 && (
-            <nav className="pagination-container" aria-label="Navigare pagini">
+            <nav className="pagination-container" aria-label={t('events.pagination')}>
               <button
                 className="pagination-btn pagination-nav-btn"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                ‹ Înapoi
+                {t('events.prev')}
               </button>
 
               <div className="pagination-numbers">
@@ -231,7 +239,7 @@ const EventsPage = () => {
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                Înainte ›
+                {t('events.next')}
               </button>
             </nav>
           )}

@@ -5,8 +5,11 @@ import LatestEvents from './LatestEvents';
 import FeatureCards from './FeatureCards';
 import logoCircle from './assets/logo_asimbv_circle.png';
 import bgImage from './assets/Corp_P.jpg';
+import { useI18n } from './i18n/I18nProvider';
 
 const MainPage = () => {
+  const { t } = useI18n();
+
   useEffect(() => {
     document.title = "ASIMBV | Main Page";
   }, []);
@@ -20,9 +23,9 @@ const MainPage = () => {
         <div className="hero-overlay"></div>
         
         <div className="hero-content">
-          <img src={logoCircle} alt="Sigla ASIMBV" className="center-seal" />
-          <h1 id="text" className="main-title">ASIM BRAȘOV</h1>
-          <h2 className="sub-title">ASOCIAȚIA STUDENȚILOR LA INFORMATICĂ ȘI MATEMATICĂ BRAȘOV</h2>
+          <img src={logoCircle} alt={t('common.logoAlt')} className="center-seal" />
+          <h1 id="text" className="main-title">{t('hero.title')}</h1>
+          <h2 className="sub-title">{t('hero.subtitle')}</h2>
         </div>
       </main>
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
+import { useI18n } from './i18n/I18nProvider';
 import './EventsPage.css'; 
 
 const EventCard = ({ event }) => {
+  const { t } = useI18n();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const hasImages = event.images && event.images.length > 0;
@@ -53,7 +55,7 @@ const EventCard = ({ event }) => {
                   key={idx}
                   className={`dot ${idx === currentIndex ? 'active' : ''}`}
                   onClick={() => setCurrentIndex(idx)}
-                  aria-label={`Go to image ${idx + 1}`}
+                  aria-label={t('events.goToImage', { number: idx + 1 })}
                 />
               ))}
             </div>
@@ -80,12 +82,12 @@ const EventCard = ({ event }) => {
         <div className="event-action-wrapper">
           {event.formUrl && (
             <a href={event.formUrl} target="_blank" rel="noopener noreferrer" className="event-form-link-btn">
-              <span>Înscrie-te / Formular Înscriere</span>
+              <span>{t('events.signUp')}</span>
             </a>
           )}
 
           <Link to={`/event-details/${event.id}`} className="event-details-link-btn">
-            <span>Vezi detalii eveniment</span>
+            <span>{t('events.seeDetails')}</span>
           </Link>
         </div>
       </div>

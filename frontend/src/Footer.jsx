@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logoText from './assets/logo_asimbv.png';
 import PartnerTile from './PartnerTile';
+import { useI18n } from './i18n/I18nProvider';
 import './Footer.css';
 
 const Footer = () => {
+  const { t, lang } = useI18n();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -40,16 +42,16 @@ const Footer = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setStatus({ type: 'success', text: data.message });
+        setStatus({ type: 'success', text: lang === 'ro' ? data.message : t('footer.subscribed') });
         setEmail('');
         setName('');
       } else if (res.status === 409) {
-        setStatus({ type: 'duplicate', text: data.message });
+        setStatus({ type: 'duplicate', text: lang === 'ro' ? data.message : t('footer.duplicate') });
       } else {
-        setStatus({ type: 'error', text: data.message || 'Eroare la abonare. Încearcă din nou.' });
+        setStatus({ type: 'error', text: (lang === 'ro' && data.message) || t('footer.subscribeError') });
       }
     } catch {
-      setStatus({ type: 'error', text: 'Nu s-a putut conecta la server. Încearcă mai târziu.' });
+      setStatus({ type: 'error', text: t('footer.networkError') });
     } finally {
       submitInFlight.current = false;
       setIsLoading(false);
@@ -67,29 +69,29 @@ const Footer = () => {
           {/* Column 1: Logo + Short Description */}
           <div className="footer-col footer-col-brand">
             <Link to="/" className="footer-logo-link">
-              <img src={logoText} alt="ASIMBV Logo" className="footer-logo" />
+              <img src={logoText} alt={t('footer.logoAlt')} className="footer-logo" />
             </Link>
             <p className="footer-description">
-              Asociația Studenților la Informatică și Matematică Brașov — susținem dezvoltarea personală, profesională și academică a studenților prin proiecte inovatoare și evenimente memorabile.
+              {t('footer.description')}
             </p>
           </div>
 
           {/* Column 2: Quick Links */}
           <div className="footer-col">
-            <h4 className="footer-col-title">Quick Links</h4>
+            <h4 className="footer-col-title">{t('footer.quickLinks')}</h4>
             <ul className="footer-links">
-              <li><Link to="/">Acasă</Link></li>
-              <li><Link to="/events">Evenimente</Link></li>
-              <li><Link to="/formular-230">Redirecționează 3.5%</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/parteneri">Parteneri</Link></li>
+              <li><Link to="/">{t('footer.home')}</Link></li>
+              <li><Link to="/events">{t('footer.events')}</Link></li>
+              <li><Link to="/formular-230">{t('footer.redirect')}</Link></li>
+              <li><Link to="/contact">{t('footer.contact')}</Link></li>
+              <li><Link to="/parteneri">{t('footer.partners')}</Link></li>
             </ul>
           </div>
 
           {/* Column 3: Social Media (White Outline Logos) */}
           <div className="footer-col">
-            <h4 className="footer-col-title">Follow Us</h4>
-            <p className="footer-social-desc">Fii la curent cu ultimele noutăți pe rețelele noastre sociale:</p>
+            <h4 className="footer-col-title">{t('footer.followUs')}</h4>
+            <p className="footer-social-desc">{t('footer.socialText')}</p>
             <div className="footer-social-icons">
               {/* Instagram */}
               <a 
@@ -138,9 +140,9 @@ const Footer = () => {
 
           {/* Column 4: Newsletter Subscription */}
           <div className="footer-col">
-            <h4 className="footer-col-title">Newsletter</h4>
+            <h4 className="footer-col-title">{t('footer.newsletter')}</h4>
             <p className="footer-newsletter-text">
-              Abonează-te pentru a primi vești despre workshop-uri, oportunități de voluntariat și evenimente viitoare.
+              {t('footer.newsletterText')}
             </p>
 
             {status?.type === 'success' ? (
@@ -158,7 +160,7 @@ const Footer = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   maxLength="100"
-                  placeholder="Numele tău (opțional)"
+                  placeholder={t('footer.namePlaceholder')}
                   className="newsletter-input newsletter-name-input"
                   disabled={isLoading}
                 />
@@ -168,12 +170,12 @@ const Footer = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     maxLength="254"
-                    placeholder="Adresa ta de email"
+                    placeholder={t('footer.emailPlaceholder')}
                     required
                     className="newsletter-input"
                     disabled={isLoading}
                   />
-                  <button type="submit" className="newsletter-submit-btn" aria-label="Subscribe" disabled={isLoading}>
+                  <button type="submit" className="newsletter-submit-btn" aria-label={t('footer.subscribe')} disabled={isLoading}>
                     {isLoading ? (
                       <span className="newsletter-spinner"></span>
                     ) : (
@@ -199,7 +201,7 @@ const Footer = () => {
         {/* Partners Band */}
         {partners.length > 0 && (
           <div className="footer-partners">
-            <Link to="/parteneri" className="footer-partners-title">Partenerii noștri</Link>
+            <Link to="/parteneri" className="footer-partners-title">{t('footer.ourPartners')}</Link>
             <div className="partner-tiles-row">
               {partners.map((partner) => (
                 <PartnerTile key={partner.name} partner={partner} />
@@ -211,11 +213,11 @@ const Footer = () => {
         {/* Bottom Bar: Copyright & Privacy Policy */}
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © {new Date().getFullYear()} ASIM Brașov. Toate drepturile rezervate.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div className="footer-legal">
             <Link to="/privacy-policy" className="footer-legal-link">
-              Privacy Policy
+              {t('footer.privacy')}
             </Link>
           </div>
         </div>

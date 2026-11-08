@@ -1,0 +1,36 @@
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-btn:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.lang-btn.active {
+  background-color: #ffffff;
+  color: #003977;
+}
+
+.lang-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}

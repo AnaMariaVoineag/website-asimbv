@@ -1,13 +1,10 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { useI18n } from './i18n/I18nProvider';
 import './FeatureCards.css';
 
 const cardsData = [
   {
     id: 'events',
-    title: 'Evenimente & Workshop-uri',
-    description: 'Participă la conferințe IT, hackathoane, workshop-uri interactive și activități studențești memorabile.',
-    buttonText: 'Vezi evenimentele',
     link: '/events',
     icon: (
       <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -26,9 +23,6 @@ const cardsData = [
   },
   {
     id: 'volunteering',
-    title: 'Voluntariat',
-    description: 'Fii parte din echipa ASIMBV! Dezvoltă-ți abilitățile de comunicare, organizare și leagă prietenii pe viață.',
-    buttonText: 'Înscrie-te',
     link: '/contact',
     icon: (
       <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -37,10 +31,7 @@ const cardsData = [
     )
   },
   {
-    id: 'get-involved',
-    title: 'Sponsorizări & Parteneriate',
-    description: 'Suntem mereu deschiși la colaborări noi! Contactează-ne pentru a discuta despre oportunități de parteneriat, sponsorizări sau proiecte comune care să aducă valoare comunității IT din Brașov.',
-    buttonText: 'Devino Partener',
+    id: 'partners',
     link: '/parteneri',
     icon: (
       <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -54,14 +45,16 @@ const cardsData = [
 ];
 
 const FeatureCards = () => {
+  const { t } = useI18n();
+
   return (
     <section className="features-section">
       <div className="features-container">
         <div className="features-header">
-          <span className="features-badge">Oportunități & Activități</span>
-          <h2 className="features-title">Descoperă Comunitatea ASIMBV</h2>
+          <span className="features-badge">{t('features.badge')}</span>
+          <h2 className="features-title">{t('features.title')}</h2>
           <p className="features-subtitle">
-            Alătură-te unei comunități pasionate de tehnologie, matematică și proiecte studențești de impact.
+            {t('features.subtitle')}
           </p>
         </div>
 
@@ -71,10 +64,10 @@ const FeatureCards = () => {
               <div className="feature-icon-wrapper">
                 {card.icon}
               </div>
-              <h3 className="feature-card-title">{card.title}</h3>
-              <p className="feature-card-description">{card.description}</p>
+              <h3 className="feature-card-title">{t(`features.cards.${card.id}.title`)}</h3>
+              <p className="feature-card-description">{t(`features.cards.${card.id}.description`)}</p>
               <Link to={card.link} className="feature-card-btn">
-                <span>{card.buttonText}</span>
+                <span>{t(`features.cards.${card.id}.button`)}</span>
                 <svg className="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useI18n } from './i18n/I18nProvider';
 import './palette.css';
 import './ContactPage.css';
 
@@ -59,6 +60,7 @@ const SOCIAL_LINKS = [
 ];
 
 const ContactPage = () => {
+  const { t, lang } = useI18n();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -73,7 +75,6 @@ const ContactPage = () => {
     message: false
   });
 
-  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submitInFlight = useRef(false); // Updates instantly, unlike the disabled button, so a repeat submit can't slip through
   const [submitStatus, setSubmitStatus] = useState(null); // { type: 'success' | 'error', text: '' }
@@ -85,43 +86,41 @@ const ContactPage = () => {
 
     // Name validation
     if (!values.name.trim()) {
-      errs.name = 'Numele este obligatoriu.';
+      errs.name = t('contact.errors.nameRequired');
     } else if (values.name.trim().length < 3) {
-      errs.name = 'Numele trebuie să aibă cel puțin 3 caractere.';
+      errs.name = t('contact.errors.nameShort');
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!values.email.trim()) {
-      errs.email = 'Adresa de email este obligatorie.';
+      errs.email = t('contact.errors.emailRequired');
     } else if (!emailRegex.test(values.email.trim())) {
-      errs.email = 'Introduceți o adresă de email validă (ex: student@unitbv.ro).';
+      errs.email = t('contact.errors.emailInvalid');
     }
 
     // Subject validation
     if (!values.subject.trim()) {
-      errs.subject = 'Vă rugăm să selectați un subiect.';
+      errs.subject = t('contact.errors.subjectRequired');
     }
 
     // Message validation
     if (!values.message.trim()) {
-      errs.message = 'Mesajul este obligatoriu.';
+      errs.message = t('contact.errors.messageRequired');
     } else if (values.message.trim().length < 15) {
-      errs.message = `Mesajul este prea scurt (minim 15 caractere, curent: ${values.message.trim().length}).`;
+      errs.message = t('contact.errors.messageShort', { count: values.message.trim().length });
     }
 
     return errs;
   };
 
   useEffect(() => {
-    document.title = 'ASIMBV | Contact';
-  }, []);
+    document.title = t('contact.pageTitle');
+  }, [t]);
 
-  // Update errors on change
-  useEffect(() => {
-    const validationErrors = validate(formData);
-    setErrors(validationErrors);
-  }, [formData]);
+  // Derived from the form data and the language, so messages re-translate when the language changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const errors = useMemo(() => validate(formData), [formData, lang]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -153,7 +152,7 @@ const ContactPage = () => {
     if (Object.keys(currentErrors).length > 0) {
       setSubmitStatus({
         type: 'error',
-        text: 'Vă rugăm să corectați erorile din formular înainte de a trimite.'
+        text: t('contact.fixErrors')
       });
       return;
     }
@@ -176,7 +175,7 @@ const ContactPage = () => {
       if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          text: 'Mesajul tău a fost trimis cu succes! Echipa ASIMBV îți va răspunde în cel mai scurt timp.'
+          text: t('contact.success')
         });
         // Reset form
         setFormData({
@@ -196,13 +195,13 @@ const ContactPage = () => {
         // Keep what the user typed so they can fix it or try again.
         setSubmitStatus({
           type: 'error',
-          text: errorData.message || 'Mesajul nu a putut fi trimis. Încearcă din nou mai târziu.'
+          text: (lang === 'ro' && errorData.message) || t('contact.sendFailed')
         });
       }
     } catch {
       setSubmitStatus({
         type: 'error',
-        text: 'Nu s-a putut conecta la server, iar mesajul nu a fost trimis. Încearcă din nou mai târziu.'
+        text: t('contact.networkError')
       });
     } finally {
       submitInFlight.current = false;
@@ -214,11 +213,10 @@ const ContactPage = () => {
     <div className="contact-page-container">
       {/* Header */}
       <header className="contact-header">
-        <span className="contact-badge">Suntem aici pentru tine</span>
-        <h1 className="contact-title">Hai să luăm legătura!</h1>
+        <span className="contact-badge">{t('contact.badge')}</span>
+        <h1 className="contact-title">{t('contact.title')}</h1>
         <p className="contact-subtitle">
-          Ai o întrebare, o propunere de proiect sau vrei să te alături comunității ASIMBV? 
-          Trimite-ne un mesaj sau scanează codurile QR pentru a ne găsi pe rețelele sociale.
+          {t('contact.subtitle')}
         </p>
       </header>
 
@@ -226,8 +224,8 @@ const ContactPage = () => {
         {/* Left: Contact Form */}
         <section className="contact-form-card">
           <div className="card-header-block">
-            <h2 className="form-heading">Trimite-ne un mesaj</h2>
-            <p className="form-subheading">Completează câmpurile de mai jos și îți vom răspunde prompt.</p>
+            <h2 className="form-heading">{t('contact.formHeading')}</h2>
+            <p className="form-subheading">{t('contact.formSubheading')}</p>
           </div>
 
           {submitStatus && (
@@ -253,7 +251,7 @@ const ContactPage = () => {
             {/* Field: Name */}
             <div className={`form-group ${touched.name && errors.name ? 'has-error' : ''} ${touched.name && !errors.name ? 'is-valid' : ''}`}>
               <label htmlFor="name" className="form-label">
-                Nume și Prenume <span className="req">*</span>
+                {t('contact.nameLabel')} <span className="req">*</span>
               </label>
               <div className="input-wrapper">
                 <input
@@ -262,7 +260,7 @@ const ContactPage = () => {
                   name="name"
                   className="form-input"
                   maxLength="100"
-                  placeholder="ex: Andrei Popescu"
+                  placeholder={t('contact.namePlaceholder')}
                   value={formData.name}
                   onChange={handleChange}
                   onBlur={() => handleBlur('name')}
@@ -277,7 +275,7 @@ const ContactPage = () => {
             {/* Field: Email */}
             <div className={`form-group ${touched.email && errors.email ? 'has-error' : ''} ${touched.email && !errors.email ? 'is-valid' : ''}`}>
               <label htmlFor="email" className="form-label">
-                Adresă de Email <span className="req">*</span>
+                {t('contact.emailLabel')} <span className="req">*</span>
               </label>
               <div className="input-wrapper">
                 <input
@@ -286,7 +284,7 @@ const ContactPage = () => {
                   name="email"
                   className="form-input"
                   maxLength="254"
-                  placeholder="ex: student@unitbv.ro"
+                  placeholder={t('contact.emailPlaceholder')}
                   value={formData.email}
                   onChange={handleChange}
                   onBlur={() => handleBlur('email')}
@@ -301,7 +299,7 @@ const ContactPage = () => {
             {/* Field: Subject */}
             <div className={`form-group ${touched.subject && errors.subject ? 'has-error' : ''} ${touched.subject && !errors.subject ? 'is-valid' : ''}`}>
               <label htmlFor="subject" className="form-label">
-                Subiect <span className="req">*</span>
+                {t('contact.subjectLabel')} <span className="req">*</span>
               </label>
               <div className="input-wrapper">
                 <select
@@ -312,10 +310,10 @@ const ContactPage = () => {
                   onChange={handleChange}
                   onBlur={() => handleBlur('subject')}
                 >
-                  <option value="">-- Selectează un subiect --</option>
+                  <option value="">{t('contact.subjectPlaceholder')}</option>
                   {SUBJECT_OPTIONS.map((sub) => (
                     <option key={sub} value={sub}>
-                      {sub}
+                      {t(`contact.subjects.${sub}`)}
                     </option>
                   ))}
                 </select>
@@ -330,7 +328,7 @@ const ContactPage = () => {
             <div className={`form-group ${touched.message && errors.message ? 'has-error' : ''} ${touched.message && !errors.message ? 'is-valid' : ''}`}>
               <div className="label-with-counter">
                 <label htmlFor="message" className="form-label">
-                  Mesajul tău <span className="req">*</span>
+                  {t('contact.messageLabel')} <span className="req">*</span>
                 </label>
                 <span className="char-counter">
                   {formData.message.length} / 1000
@@ -343,7 +341,7 @@ const ContactPage = () => {
                   rows="5"
                   maxLength="1000"
                   className="form-textarea"
-                  placeholder="Scrie-ne detaliile întrebării sau propunerii tale..."
+                  placeholder={t('contact.messagePlaceholder')}
                   value={formData.message}
                   onChange={handleChange}
                   onBlur={() => handleBlur('message')}
@@ -363,11 +361,11 @@ const ContactPage = () => {
               {isSubmitting ? (
                 <>
                   <span className="btn-spinner"></span>
-                  <span>Se trimite mesajul...</span>
+                  <span>{t('contact.sending')}</span>
                 </>
               ) : (
                 <>
-                  <span>Trimite Mesajul</span>
+                  <span>{t('contact.send')}</span>
                   <svg className="btn-send-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -396,8 +394,8 @@ const ContactPage = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="qr-title">Acces Rapid Social Media</h3>
-                <p className="qr-subtitle">Scanează cu camera telefonului pentru a ne urmări instant!</p>
+                <h3 className="qr-title">{t('contact.qrTitle')}</h3>
+                <p className="qr-subtitle">{t('contact.qrSubtitle')}</p>
               </div>
             </div>
 
@@ -422,7 +420,7 @@ const ContactPage = () => {
               <div className="qr-image-wrapper">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(selectedSocial.qrValue)}&margin=10&color=003977`}
-                  alt={`Cod QR ${selectedSocial.name}`}
+                  alt={t('contact.qrAlt', { name: selectedSocial.name })}
                   className="qr-code-img"
                   loading="lazy"
                 />
@@ -438,7 +436,7 @@ const ContactPage = () => {
                   rel="noopener noreferrer"
                   className="qr-direct-link"
                 >
-                  <span>Deschide pagina oficială</span>
+                  <span>{t('contact.openPage')}</span>
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -451,7 +449,7 @@ const ContactPage = () => {
 
           {/* Quick Info Card */}
           <div className="quick-info-card">
-            <h3 className="info-card-title">Informații de Contact</h3>
+            <h3 className="info-card-title">{t('contact.infoTitle')}</h3>
 
             <div className="info-item">
               <div className="info-icon-box">
@@ -461,7 +459,7 @@ const ContactPage = () => {
                 </svg>
               </div>
               <div className="info-content">
-                <span className="info-label">Email Oficial</span>
+                <span className="info-label">{t('contact.officialEmail')}</span>
                 <a href="mailto:asociatiainfomatebv@gmail.com" className="info-value link">asociatiainfomatebv@gmail.com</a>
               </div>
             </div>
@@ -474,8 +472,8 @@ const ContactPage = () => {
                 </svg>
               </div>
               <div className="info-content">
-                <span className="info-label">Sediu & Facultate</span>
-                <span className="info-value">Strada Iuliu Maniu 50, Brașov<br />Corp P — Fac. de Matematică și Informatică</span>
+                <span className="info-label">{t('contact.addressLabel')}</span>
+                <span className="info-value">{t('contact.address')}<br />{t('contact.addressFaculty')}</span>
               </div>
             </div>
 
@@ -487,8 +485,8 @@ const ContactPage = () => {
                 </svg>
               </div>
               <div className="info-content">
-                <span className="info-label">Program Activități</span>
-                <span className="info-value">Luni – Vineri: 10:00 – 18:00</span>
+                <span className="info-label">{t('contact.scheduleLabel')}</span>
+                <span className="info-value">{t('contact.schedule')}</span>
               </div>
             </div>
           </div>

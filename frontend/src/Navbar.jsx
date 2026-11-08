@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import logoText from './assets/logo_asimbv.png';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useI18n } from './i18n/I18nProvider';
 import './Navbar.css';
 
 const Navbar = () => {
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,54 +36,55 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Left: Brand Logo */}
         <Link to="/" className="navbar-logo-link" onClick={closeMenu}>
-          <img src={logoText} alt="ASIMBV Logo" className="navbar-logo-img" />
+          <img src={logoText} alt={t('nav.logoAlt')} className="navbar-logo-img" />
         </Link>
 
         {/* Navigation Links */}
         <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>
-          <NavLink 
-            to="/" 
+          <NavLink
+            to="/"
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
           >
-            Acasă
+            {t('nav.home')}
           </NavLink>
-          <NavLink 
-            to="/events" 
+          <NavLink
+            to="/events"
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
           >
-            Evenimente
+            {t('nav.events')}
           </NavLink>
           <NavLink
             to="/parteneri"
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
           >
-            Parteneri
+            {t('nav.partners')}
           </NavLink>
 
-          <NavLink 
-            to="/formular-230" 
+          <NavLink
+            to="/formular-230"
             className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}
             onClick={closeMenu}
           >
-            Susține
+            {t('nav.support')}
           </NavLink>
+          <LanguageSwitcher />
           <NavLink
             to="/contact"
             className="nav-link nav-cta"
             onClick={closeMenu}
           >
-            Contactează-ne
+            {t('nav.contact')}
           </NavLink>
         </div>
 
         {/* Mobile Hamburger Toggle */}
-        <button 
-          className={`hamburger ${menuOpen ? 'is-active' : ''}`} 
+        <button
+          className={`hamburger ${menuOpen ? 'is-active' : ''}`}
           onClick={toggleMenu}
-          aria-label="Toggle navigation menu"
+          aria-label={t('nav.toggleMenu')}
           aria-expanded={menuOpen}
         >
           <span className="bar"></span>

@@ -1,8 +1,10 @@
 // src/EventDetails.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
 import PartnerTile from './PartnerTile';
+import { useI18n } from './i18n/I18nProvider';
+import { localizeEvent, translateRole } from './i18n/eventTranslations';
 import './palette.css';
 import './EventDetails.css';
 
@@ -28,7 +30,9 @@ const groupByRole = (partners) => {
 
 const EventDetails = () => {
   const { id } = useParams();
-  const [event, setEvent] = useState(null);
+  const { t, lang } = useI18n();
+  const [rawEvent, setEvent] = useState(null);
+  const event = useMemo(() => localizeEvent(rawEvent, lang), [rawEvent, lang]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -79,7 +83,7 @@ const EventDetails = () => {
       <div className="event-details-page">
         <div className="event-details-loading">
           <div className="loading-spinner"></div>
-          <p>Se încarcă detaliile evenimentului...</p>
+          <p>{t('eventDetails.loading')}</p>
         </div>
       </div>
     );
@@ -89,10 +93,10 @@ const EventDetails = () => {
     return (
       <div className="event-details-page">
         <div className="event-details-card event-message-card">
-          <h2>Evenimentul nu a fost găsit</h2>
-          <p>Evenimentul pe care îl cauți nu există sau a fost eliminat.</p>
+          <h2>{t('eventDetails.notFoundTitle')}</h2>
+          <p>{t('eventDetails.notFoundText')}</p>
           <Link to="/events" className="event-back-btn">
-            ← Înapoi la toate evenimentele
+            {t('eventDetails.backToAll')}
           </Link>
         </div>
       </div>
@@ -103,10 +107,10 @@ const EventDetails = () => {
     return (
       <div className="event-details-page">
         <div className="event-details-card event-message-card">
-          <h2>A apărut o eroare</h2>
-          <p>Nu s-au putut prelua datele despre eveniment. Verifică conexiunea sau reîncearcă.</p>
+          <h2>{t('eventDetails.errorTitle')}</h2>
+          <p>{t('eventDetails.errorText')}</p>
           <Link to="/events" className="event-back-btn">
-            ← Înapoi la toate evenimentele
+            {t('eventDetails.backToAll')}
           </Link>
         </div>
       </div>
@@ -136,7 +140,7 @@ const EventDetails = () => {
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          <span>Înapoi la toate evenimentele</span>
+          <span>{t('eventDetails.backLink')}</span>
         </Link>
       </div>
 
@@ -147,7 +151,7 @@ const EventDetails = () => {
             <div className="event-main-image-wrapper">
               <img
                 src={currentImage}
-                alt={`${event.title} - imagine ${activeImageIndex + 1}`}
+                alt={t('eventDetails.imageAlt', { title: event.title, number: activeImageIndex + 1 })}
                 className="event-main-image"
                 onError={(e) => {
                   e.target.onerror = null;
@@ -160,14 +164,14 @@ const EventDetails = () => {
                   <button
                     className="gallery-nav-btn prev"
                     onClick={handlePrevImage}
-                    aria-label="Imagine anterioară"
+                    aria-label={t('eventDetails.prevImage')}
                   >
                     ‹
                   </button>
                   <button
                     className="gallery-nav-btn next"
                     onClick={handleNextImage}
-                    aria-label="Imagine următoare"
+                    aria-label={t('eventDetails.nextImage')}
                   >
                     ›
                   </button>
@@ -181,10 +185,10 @@ const EventDetails = () => {
             <div className="event-no-image-placeholder">
               <img
                 src={assetUrl('/logo_asimbv_circle.png')}
-                alt="ASIMBv Emblem"
+                alt={t('eventDetails.placeholderAlt')}
                 className="event-placeholder-logo"
               />
-              <span className="event-placeholder-label">Eveniment Oficial ASIMBv</span>
+              <span className="event-placeholder-label">{t('eventDetails.placeholderLabel')}</span>
             </div>
           )}
 
@@ -197,11 +201,11 @@ const EventDetails = () => {
                   type="button"
                   className={`event-thumbnail-btn ${index === activeImageIndex ? 'active' : ''}`}
                   onClick={() => setActiveImageIndex(index)}
-                  aria-label={`Selectează imaginea ${index + 1}`}
+                  aria-label={t('eventDetails.selectImage', { number: index + 1 })}
                 >
                   <img
                     src={imgUrl}
-                    alt={`Miniatură ${index + 1}`}
+                    alt={t('eventDetails.thumbnailAlt', { number: index + 1 })}
                     className="event-thumbnail-img"
                     onError={(e) => {
                       e.target.onerror = null;
@@ -235,7 +239,7 @@ const EventDetails = () => {
           <h1 className="event-details-title">{event.title}</h1>
 
           <div className="event-description-box">
-            <h3 className="section-label">Despre acest eveniment</h3>
+            <h3 className="section-label">{t('eventDetails.about')}</h3>
             <p className="event-description-text">{event.longDescription || event.description}</p>
           </div>
 
@@ -247,7 +251,7 @@ const EventDetails = () => {
                 rel="noopener noreferrer"
                 className="event-cta-form-btn"
               >
-                <span>Înscrie-te / Formular Înscriere</span>
+                <span>{t('events.signUp')}</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                   <polyline points="15 3 21 3 21 9"></polyline>
@@ -257,7 +261,7 @@ const EventDetails = () => {
             )}
 
             <Link to="/events" className="event-secondary-back-btn">
-              ← Toate evenimentele
+              {t('eventDetails.allEvents')}
             </Link>
           </div>
         </div>
@@ -267,7 +271,7 @@ const EventDetails = () => {
         <section className="event-partners-card">
           {groupByRole(partners).map(([role, members]) => (
             <div key={role}>
-              <h2 className="section-label event-partners-label">{role}</h2>
+              <h2 className="section-label event-partners-label">{translateRole(role, lang)}</h2>
               <div className="partner-tiles-row">
                 {members.map((partner) => (
                   <PartnerTile key={partner.name} partner={partner} />

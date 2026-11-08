@@ -1,12 +1,10 @@
-import React from 'react';
 import logoCircle from './assets/logo_asimbv_circle.png';
+import { useI18n } from './i18n/I18nProvider';
 import './AboutSection.css';
 
 const highlights = [
   {
     id: 1,
-    title: 'Comunitate UniTBv',
-    description: 'Reprezentăm și susținem studenții Facultății de Matematică și Informatică din Brașov.',
     icon: (
       <svg className="about-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
@@ -16,8 +14,6 @@ const highlights = [
   },
   {
     id: 2,
-    title: 'Hackathoane & Workshop-uri',
-    description: 'Organizăm evenimente tehnice de impact, inclusiv hackathonul Transilvania CodeStorm@MI.',
     icon: (
       <svg className="about-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="16 18 22 12 16 6"></polyline>
@@ -27,8 +23,6 @@ const highlights = [
   },
   {
     id: 3,
-    title: 'Conexiune cu Industria IT',
-    description: 'Facilităm puntea dintre studenți și companiile tech prin parteneriate și oportunități de carieră.',
     icon: (
       <svg className="about-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
@@ -38,8 +32,6 @@ const highlights = [
   },
   {
     id: 4,
-    title: 'Dezvoltare & Voluntariat',
-    description: 'Dezvoltăm abilități practice de leadership, organizare de proiecte și lucru în echipă.',
     icon: (
       <svg className="about-highlight-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -52,19 +44,22 @@ const highlights = [
 ];
 
 const AboutSection = () => {
+  const { t, rich, list } = useI18n();
+  const texts = list('about.highlights');
+
   return (
     <section className="about-section" id="despre-noi">
       <div className="about-container">
         <div className="about-grid">
           {/* Left Column: Text & Highlights */}
           <div className="about-content">
-            <span className="about-badge">Despre Noi</span>
-            <h2 className="about-title">Comunitatea studenților pasionați de Informatică și Matematică</h2>
+            <span className="about-badge">{t('about.badge')}</span>
+            <h2 className="about-title">{t('about.title')}</h2>
             <p className="about-paragraph">
-              <strong>Asociația Studenților la Informatică și Matematică din Brașov (ASIMBV)</strong> s-a născut din dorința de a crea o comunitate unită și dinamică în cadrul <strong>Facultății de Matematică și Informatică</strong> a <strong>Universității Transilvania din Brașov</strong>.
+              {rich('about.p1')}
             </p>
             <p className="about-paragraph">
-              Misiunea noastră este de a transforma anii de facultate într-o experiență completă: conectăm studenții cu lideri din industria tehnologică, dezvoltăm proiecte inovatoare, sprijinim inițiativele academice și organizăm activități care fac diferența.
+              {t('about.p2')}
             </p>
 
             <div className="about-highlights-grid">
@@ -74,8 +69,8 @@ const AboutSection = () => {
                     {item.icon}
                   </div>
                   <div>
-                    <h4 className="about-highlight-title">{item.title}</h4>
-                    <p className="about-highlight-desc">{item.description}</p>
+                    <h4 className="about-highlight-title">{texts[item.id - 1]?.title}</h4>
+                    <p className="about-highlight-desc">{texts[item.id - 1]?.description}</p>
                   </div>
                 </div>
               ))}
@@ -86,11 +81,11 @@ const AboutSection = () => {
           <div className="about-visual">
             <div className="about-visual-card">
               <div className="about-visual-glow"></div>
-              <img src={logoCircle} alt="Sigla ASIMBV" className="about-visual-seal" />
+              <img src={logoCircle} alt={t('common.logoAlt')} className="about-visual-seal" />
               <div className="about-visual-badge">
-                <span className="about-visual-tag">FMI • UniTBv</span>
-                <h3 className="about-visual-name">ASIM Brașov</h3>
-                <p className="about-visual-quote">„Creat de studenți, pentru studenți.”</p>
+                <span className="about-visual-tag">{t('about.tag')}</span>
+                <h3 className="about-visual-name">{t('about.name')}</h3>
+                <p className="about-visual-quote">{t('about.quote')}</p>
               </div>
             </div>
           </div>
