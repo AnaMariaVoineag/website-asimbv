@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './MainPage.css';
 import AboutSection from './AboutSection';
-import PastEventsSection from './PastEventsSection';
+import LatestEvents from './LatestEvents';
 import FeatureCards from './FeatureCards';
 import logoCircle from './assets/logo_asimbv_circle.png';
 import bgImage from './assets/Corp_P.jpg';
@@ -27,7 +27,7 @@ const MainPage = () => {
       </main>
 
       <AboutSection />
-      <PastEventsSection />
+      <LatestEvents />
       <FeatureCards />
     </div>
   );

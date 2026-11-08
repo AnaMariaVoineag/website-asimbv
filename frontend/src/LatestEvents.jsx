@@ -1,0 +1,129 @@
+import { Link } from 'react-router-dom';
+import { assetUrl } from './assetUrl';
+import { useLatestEvents, firstEventImage } from './useLatestEvents';
+import './LatestEvents.css';
+
+const FALLBACK_IMAGE = '/logo_asimbv_circle.png';
+
+const CalendarIcon = () => (
+  <svg className="date-mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="16" y1="2" x2="16" y2="6"></line>
+    <line x1="8" y1="2" x2="8" y2="6"></line>
+    <line x1="3" y1="10" x2="21" y2="10"></line>
+  </svg>
+);
+
+const ArrowIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </svg>
+);
+
+const LatestEventCard = ({ event }) => {
+  const image = firstEventImage(event.images);
+
+  return (
+    <Link to={`/event-details/${event.id}`} className="latest-event-card">
+      <div className="latest-event-image-wrapper">
+        <img
+          src={image || assetUrl(FALLBACK_IMAGE)}
+          alt={event.title}
+          className={`latest-event-image ${image ? '' : 'is-placeholder'}`}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = assetUrl(FALLBACK_IMAGE);
+            e.currentTarget.classList.add('is-placeholder');
+          }}
+        />
+        <span className="latest-event-category">{event.category || 'Social'}</span>
+      </div>
+
+      <div className="latest-event-body">
+        <span className="milestone-date">
+          <CalendarIcon />
+          {event.date}
+        </span>
+        <h3 className="latest-event-title">{event.title}</h3>
+        <p className="latest-event-description">{event.description}</p>
+        <span className="latest-event-more">
+          Vezi detalii
+          <ArrowIcon className="latest-event-arrow" />
+        </span>
+      </div>
+    </Link>
+  );
+};
+
+/**
+ * Section showing the most recent events from the database, newest first, each with its front image.
+ * It stays in sync with the database on its own (see useLatestEvents), so new events appear automatically.
+ *
+ * Every prop is optional, so <LatestEvents /> works as-is on any page.
+ */
+const LatestEvents = ({
+  count = 3,
+  badge = 'Evenimente recente',
+  title = 'Ce s-a mai întâmplat la ASIMBv',
+  subtitle = 'Cele mai noi activități ale comunității noastre: workshopuri, întâlniri și momente pe care le-am trăit împreună.',
+  showAllLink = true,
+  id = 'evenimente-recente',
+}) => {
+  const { events, status } = useLatestEvents(count);
+
+  return (
+    <section className="past-events-section" id={id}>
+      <div className="past-events-container">
+        {(badge || title || subtitle) && (
+          <div className="past-events-header">
+            {badge && <span className="past-events-badge">{badge}</span>}
+            {title && <h2 className="past-events-title">{title}</h2>}
+            {subtitle && <p className="past-events-subtitle">{subtitle}</p>}
+          </div>
+        )}
+
+        {status === 'loading' && (
+          <div className="latest-events-grid" aria-busy="true">
+            {Array.from({ length: count }, (_, i) => (
+              <div key={i} className="latest-event-card latest-event-skeleton">
+                <div className="latest-event-image-wrapper" />
+                <div className="latest-event-body">
+                  <div className="skeleton-line skeleton-short" />
+                  <div className="skeleton-line" />
+                  <div className="skeleton-line" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {status === 'error' && (
+          <p className="latest-events-error">
+            Nu am putut încărca evenimentele recente. Le poți vedea pe pagina de evenimente.
+          </p>
+        )}
+
+        {status === 'ready' && events.length > 0 && (
+          <div className="latest-events-grid">
+            {events.map((event) => (
+              <LatestEventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+
+        {showAllLink && (
+          <div className="past-events-cta-container">
+            <Link to="/events" className="past-events-btn">
+              <span>Vezi toate evenimentele</span>
+              <ArrowIcon className="btn-cta-arrow" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default LatestEvents;

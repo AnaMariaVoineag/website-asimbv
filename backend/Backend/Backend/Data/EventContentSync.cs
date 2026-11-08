@@ -136,7 +136,7 @@ public static class EventContentSync
             Title: "Aniversarea a 2 ani de ASIMBv",
             Date: "6 octombrie 2026",
             Category: "Social",
-            Images: """["/poze_evenimente/Aniversare_2_ani_ASIMBV/img1.jpeg","/poze_evenimente/Aniversare_2_ani_ASIMBV/img2.jpg"]""",
+            Images: """["/poze_evenimente/Aniversare_2_ani_ASIMBV/img2.jpg","/poze_evenimente/Aniversare_2_ani_ASIMBV/img1.jpeg"]""",
             Description: "ASIMBv a sărbătorit doi ani de activitate, printr-o seară de game night și karaoke alături de comunitatea ei.",
             LongDescription: """
             Pe 6 octombrie 2026, ASIMBv a împlinit doi ani de la înființare. Doi ani în care asociația a devenit o prezență constantă în spațiul universitar brașovean, apropiind comunitatea studenților din Facultatea de Matematică și Informatică de cea din oraș.
