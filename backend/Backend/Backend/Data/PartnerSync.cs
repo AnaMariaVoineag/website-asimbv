@@ -30,6 +30,8 @@ public static class PartnerSync
         new("BEST Brașov", "/parteneri/best-brasov.png", "https://bestbrasov.ro", PartnerTypes.Association, IsFeatured: true, DisplayOrder: 3),
         new("ASSM", "/parteneri/assm.png", "https://assmbv.org", PartnerTypes.Association, IsFeatured: true, DisplayOrder: 4),
 
+        new("UniPerks", "/parteneri/uniperks.png", "https://uniperks.ro", PartnerTypes.Company, DisplayOrder: 5),
+
         new("Arvato Systems", "/parteneri/arvato-systems.svg", "https://www.arvato-systems.com"),
         new("BearingPoint", "/parteneri/bearingpoint.png", "https://www.bearingpoint.com"),
         new("CANAM", "/parteneri/canam.png", "https://www.canam.com"),
