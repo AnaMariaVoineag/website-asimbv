@@ -152,6 +152,19 @@ const ro = {
     privacy: 'Privacy Policy',
   },
 
+  unsubscribe: {
+    pageTitle: 'ASIMBV | Dezabonare',
+    title: 'Dezabonare de la newsletter',
+    confirmText: 'Apasă butonul de mai jos ca să nu mai primești newsletter-ul ASIMBV pe email.',
+    button: 'Dezabonează-mă',
+    loading: 'Se procesează...',
+    doneTitle: 'Te-ai dezabonat',
+    doneText: 'Nu vei mai primi newsletter-ul ASIMBV. Te poți abona din nou oricând din subsolul site-ului.',
+    invalidText: 'Link-ul de dezabonare nu este valid sau ești deja dezabonat.',
+    errorText: 'Nu s-a putut conecta la server. Încearcă din nou.',
+    backHome: 'Înapoi la pagina principală',
+  },
+
   contact: {
     pageTitle: 'ASIMBV | Contact',
     subjects: {

@@ -15,11 +15,22 @@ public class NewsletterController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IEmailService _email;
+    private readonly IConfiguration _config;
 
-    public NewsletterController(AppDbContext context, IEmailService email)
+    public NewsletterController(AppDbContext context, IEmailService email, IConfiguration config)
     {
         _context = context;
         _email   = email;
+        _config  = config;
+    }
+
+    // The email link opens a page on the website where the reader confirms, and that page sends the
+    // DELETE. Linking straight to the API would not work (a link is always a GET), and a GET that
+    // unsubscribes would be triggered by the link scanners of mail providers that open every link.
+    private string UnsubscribePageUrl(string token)
+    {
+        var site = (_config["App:PublicSiteUrl"] ?? "https://asimbv.ro").TrimEnd('/');
+        return $"{site}/dezabonare?token={Uri.EscapeDataString(token)}";
     }
 
     // ── POST api/newsletter/subscribe ────────────────────────────────────────
@@ -109,7 +120,7 @@ public class NewsletterController : ControllerBase
                 </div>
                 <p style="color:#64748b;font-size:12px;margin-top:24px">
                   Dacă nu ai solicitat această abonare, poți
-                  <a href="https://asimbv.ro/api/newsletter/unsubscribe?token={subscriber.UnsubscribeToken}" style="color:#003977">dezabona-te instant</a>.
+                  <a href="{WebUtility.HtmlEncode(UnsubscribePageUrl(subscriber.UnsubscribeToken))}" style="color:#003977">dezabona-te instant</a>.
                 </p>
               </div>
               <div style="padding:14px 32px;background:#f8fafc;font-size:11px;color:#94a3b8;text-align:center">

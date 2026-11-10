@@ -151,6 +151,19 @@ const en = {
     privacy: 'Privacy Policy',
   },
 
+  unsubscribe: {
+    pageTitle: 'ASIMBV | Unsubscribe',
+    title: 'Unsubscribe from the newsletter',
+    confirmText: 'Press the button below to stop receiving the ASIMBV newsletter by email.',
+    button: 'Unsubscribe me',
+    loading: 'Processing...',
+    doneTitle: 'You have unsubscribed',
+    doneText: 'You will no longer receive the ASIMBV newsletter. You can subscribe again at any time from the site footer.',
+    invalidText: 'This unsubscribe link is not valid, or you are already unsubscribed.',
+    errorText: 'Could not connect to the server. Please try again.',
+    backHome: 'Back to the main page',
+  },
+
   contact: {
     pageTitle: 'ASIMBV | Contact',
     // Keys are the Romanian values the backend accepts; only the label shown changes.
