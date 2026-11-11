@@ -76,6 +76,9 @@ const ro = {
     searchPlaceholder: 'Caută după nume sau cuvânt cheie...',
     clearSearch: 'Șterge căutarea',
     allCategories: 'Toate Categoriile',
+    categoryWorkshop: 'Atelier',
+    categorySocial: 'Social',
+    categoryCompetition: 'Competiție',
     resultOne: '1 eveniment găsit',
     resultMany: '{count} evenimente găsite',
     loading: 'Se încarcă evenimentele din baza de date...',
@@ -212,8 +215,6 @@ const ro = {
     addressLabel: 'Sediu & Facultate',
     address: 'Strada Iuliu Maniu 50, Brașov',
     addressFaculty: 'Corp P — Fac. de Matematică și Informatică',
-    scheduleLabel: 'Program Activități',
-    schedule: 'Luni – Vineri: 10:00 – 18:00',
   },
 
   tax: {

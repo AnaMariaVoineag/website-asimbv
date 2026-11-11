@@ -145,7 +145,7 @@ const EventsPage = () => {
               className={`category-pill ${selectedCategory === category ? 'active' : ''} pill-${category.toLowerCase()}`}
               onClick={() => handleCategoryClick(category)}
             >
-              {category === 'Toate' ? t('events.allCategories') : category}
+              {category === 'Toate' ? t('events.allCategories') : t(`events.category${category}`)}
             </button>
           ))}
         </div>

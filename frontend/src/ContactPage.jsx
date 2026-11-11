@@ -476,19 +476,6 @@ const ContactPage = () => {
                 <span className="info-value">{t('contact.address')}<br />{t('contact.addressFaculty')}</span>
               </div>
             </div>
-
-            <div className="info-item">
-              <div className="info-icon-box">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div className="info-content">
-                <span className="info-label">{t('contact.scheduleLabel')}</span>
-                <span className="info-value">{t('contact.schedule')}</span>
-              </div>
-            </div>
           </div>
         </aside>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
 import { useI18n } from './i18n/I18nProvider';
+import { categoryLabel } from './i18n/eventTranslations';
 import './EventsPage.css'; 
 
 const EventCard = ({ event }) => {
@@ -44,7 +45,7 @@ const EventCard = ({ event }) => {
           
           <div className="event-badge-overlay">
             <span className={`event-category-badge ${categoryClass}`}>
-              {category}
+              {categoryLabel(t, category)}
             </span>
           </div>
 

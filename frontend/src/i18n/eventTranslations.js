@@ -141,3 +141,11 @@ export const localizeEvent = (event, lang) => {
     date: translateDate(event.date, lang),
   };
 };
+
+const KNOWN_CATEGORIES = ['Workshop', 'Social', 'Competition'];
+
+export const categoryLabel = (t, category) => {
+  const normalized = (category || 'Social').trim().toLowerCase();
+  const match = KNOWN_CATEGORIES.find((c) => c.toLowerCase() === normalized);
+  return match ? t(`events.category${match}`) : category;
+};

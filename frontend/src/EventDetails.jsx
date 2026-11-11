@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
 import PartnerTile from './PartnerTile';
 import { useI18n } from './i18n/I18nProvider';
-import { localizeEvent, translateRole } from './i18n/eventTranslations';
+import { localizeEvent, translateRole, categoryLabel } from './i18n/eventTranslations';
 import './palette.css';
 import './EventDetails.css';
 
@@ -222,7 +222,7 @@ const EventDetails = () => {
         <div className="event-info-section">
           <div className="event-badges-row">
             <span className={`event-category-badge ${categoryClass}`}>
-              {category}
+              {categoryLabel(t, category)}
             </span>
 
             <div className="event-date-chip">

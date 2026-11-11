@@ -75,6 +75,9 @@ const en = {
     searchPlaceholder: 'Search by name or keyword...',
     clearSearch: 'Clear search',
     allCategories: 'All Categories',
+    categoryWorkshop: 'Workshop',
+    categorySocial: 'Social',
+    categoryCompetition: 'Competition',
     resultOne: '1 event found',
     resultMany: '{count} events found',
     loading: 'Loading events from the database...',
@@ -212,8 +215,6 @@ const en = {
     addressLabel: 'Office & Faculty',
     address: '50 Iuliu Maniu Street, Brașov',
     addressFaculty: 'Building P — Faculty of Mathematics and Computer Science',
-    scheduleLabel: 'Opening Hours',
-    schedule: 'Monday – Friday: 10:00 – 18:00',
   },
 
   tax: {

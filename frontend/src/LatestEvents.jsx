@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { assetUrl } from './assetUrl';
 import { useLatestEvents, firstEventImage } from './useLatestEvents';
 import { useI18n } from './i18n/I18nProvider';
-import { localizeEvent } from './i18n/eventTranslations';
+import { localizeEvent, categoryLabel } from './i18n/eventTranslations';
 import './LatestEvents.css';
 
 const FALLBACK_IMAGE = '/logo_asimbv_circle.png';
@@ -41,7 +41,7 @@ const LatestEventCard = ({ event }) => {
             e.currentTarget.classList.add('is-placeholder');
           }}
         />
-        <span className="latest-event-category">{event.category || 'Social'}</span>
+        <span className="latest-event-category">{categoryLabel(t, event.category)}</span>
       </div>
 
       <div className="latest-event-body">
