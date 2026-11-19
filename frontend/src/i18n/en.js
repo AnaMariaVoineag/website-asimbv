@@ -16,6 +16,13 @@ const en = {
     language: 'Language',
   },
 
+  announcement: {
+    label: 'Announcement',
+    badge: 'Announcement',
+    text: 'The teaching evaluation period has started! Share your feedback on your teachers: sign in to the UniTBv intranet with your student account.',
+    button: 'Rate your teachers',
+  },
+
   hero: {
     title: 'ASIM BRAȘOV',
     subtitle: 'STUDENTS’ ASSOCIATION FOR COMPUTER SCIENCE AND MATHEMATICS BRAȘOV',
@@ -165,6 +172,13 @@ const en = {
     invalidText: 'This unsubscribe link is not valid, or you are already unsubscribed.',
     errorText: 'Could not connect to the server. Please try again.',
     backHome: 'Back to the main page',
+  },
+
+  feedback: {
+    pageTitle: 'ASIMBV | Teacher evaluation',
+    title: 'Teaching activity evaluation',
+    text: 'Redirecting you to the teacher evaluation page on the UniTBv intranet. Sign in with your student account.',
+    button: 'Go to the evaluation',
   },
 
   contact: {

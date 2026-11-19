@@ -10,6 +10,7 @@ import EventDetails from './EventDetails';
 import PartnersPage from './PartnersPage';
 import UnsubscribePage from './UnsubscribePage';
 import ScrollToTop from './ScrollToTop';
+import FeedbackRedirectPage from './FeedbackRedirectPage';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
         <Route path="/parteneri" element={<PartnersPage />} />
         {/* Linked from the newsletter emails; the backend builds the link (App:PublicSiteUrl). */}
         <Route path="/dezabonare" element={<UnsubscribePage />} />
+        {/* Short link to the university's teacher evaluation page (intranet.unitbv.ro). */}
+        <Route path="/feedback" element={<FeedbackRedirectPage />} />
       </Routes>
       <Footer />
     </>
