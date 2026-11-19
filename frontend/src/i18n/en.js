@@ -131,7 +131,7 @@ const en = {
 
   footer: {
     logoAlt: 'ASIMBV Logo',
-    description: 'Students’ Association for Computer Science and Mathematics Brașov — we support the personal, professional and academic development of students through innovative projects and memorable events.',
+    description: 'Students’ Association for Computer Science and Mathematics Brașov — We code the future, we calculate the success!',
     quickLinks: 'Quick Links',
     home: 'Home',
     events: 'Events',

@@ -132,7 +132,7 @@ const ro = {
 
   footer: {
     logoAlt: 'ASIMBV Logo',
-    description: 'Asociația Studenților la Informatică și Matematică Brașov — susținem dezvoltarea personală, profesională și academică a studenților prin proiecte inovatoare și evenimente memorabile.',
+    description: 'Asociația Studenților la Informatică și Matematică Brașov — Codăm viitorul, calculăm succesul!',
     quickLinks: 'Quick Links',
     home: 'Acasă',
     events: 'Evenimente',
