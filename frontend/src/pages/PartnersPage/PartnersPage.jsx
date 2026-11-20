@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import PartnerTile from '../../components/PartnerTile/PartnerTile';
+import PartnersSkeleton from '../../components/partners/PartnersSkeleton';
+import Reveal from '../../components/Reveal/Reveal';
 import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
 import { useAsyncData } from '../../hooks/useAsyncData';
@@ -23,7 +25,7 @@ const PartnersPage = () => {
         <p className="partners-subtitle">{t('partners.subtitle')}</p>
       </header>
 
-      {status === 'loading' && <p className="partners-message">{t('partners.loading')}</p>}
+      {status === 'loading' && <PartnersSkeleton />}
       {status === 'error' && <p className="partners-message">{t('partners.error')}</p>}
 
       {SECTIONS.map((type) => {
@@ -41,11 +43,14 @@ const PartnersPage = () => {
         );
       })}
 
-      <section className="partners-cta">
-        <h2 className="partners-cta-title">{t('partners.ctaTitle')}</h2>
-        <p className="partners-cta-text">{t('partners.ctaText')}</p>
-        <Link to={ROUTES.contact} className="partners-cta-btn">{t('partners.ctaButton')}</Link>
-      </section>
+      {/* Held back while loading: it would otherwise sit under the empty page and be pushed down by the partners. */}
+      {status !== 'loading' && (
+        <Reveal as="section" once className="partners-cta">
+          <h2 className="partners-cta-title">{t('partners.ctaTitle')}</h2>
+          <p className="partners-cta-text">{t('partners.ctaText')}</p>
+          <Link to={ROUTES.contact} className="partners-cta-btn">{t('partners.ctaButton')}</Link>
+        </Reveal>
+      )}
     </div>
   );
 };

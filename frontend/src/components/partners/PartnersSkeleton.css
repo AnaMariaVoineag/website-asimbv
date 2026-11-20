@@ -1,0 +1,33 @@
+.partners-skeleton {
+  pointer-events: none;
+}
+
+.partners-skeleton-title,
+.partner-tile-skeleton {
+  background: linear-gradient(90deg, var(--slate-200) 25%, var(--slate-100) 50%, var(--slate-200) 75%);
+  background-size: 200% 100%;
+  animation: partners-shimmer 1.4s ease-in-out infinite;
+}
+
+.partners-skeleton-title {
+  width: 160px;
+  height: 14px;
+  border-radius: 6px;
+  margin: 0 auto 1.25rem;
+}
+
+.partner-tile-skeleton {
+  border-color: transparent;
+}
+
+@keyframes partners-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partners-skeleton-title,
+  .partner-tile-skeleton {
+    animation: none;
+  }
+}
