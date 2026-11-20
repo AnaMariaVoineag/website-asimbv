@@ -14,15 +14,16 @@ const EventsPage = () => {
   const { t } = useI18n();
   const { events, status } = useEvents();
   const filters = useEventFilters(events, ITEMS_PER_PAGE);
-  // Scroll snapping is only wanted while this page is open.
-  useHtmlClass('events-scroll-snap-enabled');
+  const isReady = status === 'ready';
+  const hasCards = isReady && filters.filtered.length > 0;
+  // Scroll snapping needs cards to snap to: without them the footer is the only snap point
+  // and mandatory snapping would throw the page straight down to it.
+  useHtmlClass('events-scroll-snap-enabled', hasCards);
 
   const handlePageChange = (page) => {
     filters.goToPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const isReady = status === 'ready';
 
   return (
     <div className="events-page-container">
@@ -41,9 +42,9 @@ const EventsPage = () => {
 
       {status === 'loading' && <EventsLoading />}
       {status === 'error' && <EventsError />}
-      {isReady && filters.filtered.length === 0 && <EventsEmpty onReset={filters.reset} />}
+      {isReady && !hasCards && <EventsEmpty onReset={filters.reset} />}
 
-      {isReady && filters.filtered.length > 0 && (
+      {hasCards && (
         <>
           <EventsList events={filters.pageItems} />
           <Pagination
