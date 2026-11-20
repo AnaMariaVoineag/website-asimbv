@@ -1,9 +1,11 @@
 // Opened from the link in the newsletter emails: /dezabonare?token=...
 // Nothing happens until the reader presses the button, because mail providers open every link in an
 // email to scan it, and an automatic unsubscribe would remove people who never asked for it.
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { unsubscribe } from '../../services/newsletterService';
 import './UnsubscribePage.css';
 
@@ -13,10 +15,7 @@ const UnsubscribePage = () => {
   const token = searchParams.get('token')?.trim() ?? '';
   // idle | loading | done | invalid | error
   const [status, setStatus] = useState(token ? 'idle' : 'invalid');
-
-  useEffect(() => {
-    document.title = t('unsubscribe.pageTitle');
-  }, [t]);
+  useDocumentTitle(t('unsubscribe.pageTitle'));
 
   const handleUnsubscribe = async () => {
     setStatus('loading');
@@ -57,7 +56,7 @@ const UnsubscribePage = () => {
             {status === 'loading' ? t('unsubscribe.loading') : t('unsubscribe.button')}
           </button>
         ) : (
-          <Link to="/" className="unsubscribe-home-link">{t('unsubscribe.backHome')}</Link>
+          <Link to={ROUTES.home} className="unsubscribe-home-link">{t('unsubscribe.backHome')}</Link>
         )}
       </section>
     </div>

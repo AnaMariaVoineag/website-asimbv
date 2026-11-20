@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getPartners } from '../../services/partnersService';
 import PartnerTile from '../../components/PartnerTile/PartnerTile';
+import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
+import { useAsyncData } from '../../hooks/useAsyncData';
+import { getPartners } from '../../services/partnersService';
 import './PartnersPage.css';
 
 // Sections appear in this order, and only when they have at least one partner.
@@ -10,37 +11,18 @@ const SECTIONS = ['educational', 'affiliation', 'association', 'company'];
 
 const PartnersPage = () => {
   const { t } = useI18n();
-  const [partners, setPartners] = useState([]);
-  const [status, setStatus] = useState('loading');
-
-  useEffect(() => {
-    const controller = new AbortController();
-    getPartners({ signal: controller.signal })
-      .then((data) => {
-        setPartners(data);
-        setStatus('ready');
-      })
-      .catch((err) => {
-        if (err.name === 'AbortError') return;
-        console.error('[PartnersPage] fetch error:', err);
-        setStatus('error');
-      });
-    return () => controller.abort();
-  }, []);
+  const { data, status } = useAsyncData('partners', (signal) => getPartners({ signal }));
+  const partners = data ?? [];
 
   return (
     <div className="partners-page">
       <header className="partners-header">
         <h1 className="partners-title">{t('partners.title')}</h1>
-        <p className="partners-subtitle">
-          {t('partners.subtitle')}
-        </p>
+        <p className="partners-subtitle">{t('partners.subtitle')}</p>
       </header>
 
       {status === 'loading' && <p className="partners-message">{t('partners.loading')}</p>}
-      {status === 'error' && (
-        <p className="partners-message">{t('partners.error')}</p>
-      )}
+      {status === 'error' && <p className="partners-message">{t('partners.error')}</p>}
 
       {SECTIONS.map((type) => {
         const members = partners.filter((partner) => partner.type === type);
@@ -59,10 +41,8 @@ const PartnersPage = () => {
 
       <section className="partners-cta">
         <h2 className="partners-cta-title">{t('partners.ctaTitle')}</h2>
-        <p className="partners-cta-text">
-          {t('partners.ctaText')}
-        </p>
-        <Link to="/contact" className="partners-cta-btn">{t('partners.ctaButton')}</Link>
+        <p className="partners-cta-text">{t('partners.ctaText')}</p>
+        <Link to={ROUTES.contact} className="partners-cta-btn">{t('partners.ctaButton')}</Link>
       </section>
     </div>
   );

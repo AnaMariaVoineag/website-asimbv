@@ -1,62 +1,48 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { assetUrl } from '../../utils/assetUrl';
+import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
 import { categoryLabel } from '../../dictionaries/eventTranslations';
-import '../../pages/EventsPage/EventsPage.css'; 
+import { useImageCarousel } from '../../hooks/useImageCarousel';
+import { handleImageError } from '../../utils/image';
+import { CalendarIcon } from '../icons';
+import './EventCard.css';
+
+const MAX_IMAGES = 3;
 
 const EventCard = ({ event }) => {
   const { t } = useI18n();
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const hasImages = event.images && event.images.length > 0;
-  const validImages = hasImages ? event.images.slice(0, 3) : [];
-
-  useEffect(() => {
-    if (validImages.length <= 1) return;
-
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === validImages.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [validImages.length]);
+  const images = (event.images ?? []).slice(0, MAX_IMAGES);
+  const hasImages = images.length > 0;
+  const [currentIndex, setCurrentIndex] = useImageCarousel(images.length);
 
   const category = event.category || 'Social';
-  const categoryClass = `badge-${category.toLowerCase()}`;
 
   return (
-    <div className={`event-card ${!hasImages ? 'no-image-card' : ''}`}>
-      
+    <div className={`event-card ${hasImages ? '' : 'no-image-card'}`}>
       {hasImages && (
         <div className="event-image-section">
-          <img 
-            src={validImages[currentIndex]} 
-            alt={event.title} 
+          <img
+            src={images[currentIndex]}
+            alt={event.title}
             className="event-image"
             loading="lazy"
-            onError={(e) => {
-              e.target.onerror = null; 
-              e.target.src = assetUrl('/logo_asimbv_circle.png');
-            }}
+            onError={handleImageError}
           />
-          
+
           <div className="event-badge-overlay">
-            <span className={`event-category-badge ${categoryClass}`}>
+            <span className={`event-category-badge badge-${category.toLowerCase()}`}>
               {categoryLabel(t, category)}
             </span>
           </div>
 
-          {validImages.length > 1 && (
+          {images.length > 1 && (
             <div className="event-dots">
-              {validImages.map((_, idx) => (
+              {images.map((_, index) => (
                 <button
-                  key={idx}
-                  className={`dot ${idx === currentIndex ? 'active' : ''}`}
-                  onClick={() => setCurrentIndex(idx)}
-                  aria-label={t('events.goToImage', { number: idx + 1 })}
+                  key={index}
+                  className={`dot ${index === currentIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentIndex(index)}
+                  aria-label={t('events.goToImage', { number: index + 1 })}
                 />
               ))}
             </div>
@@ -67,12 +53,7 @@ const EventCard = ({ event }) => {
       <div className="event-text-section">
         <div className="event-meta-header">
           <div className="event-date">
-            <svg className="event-date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
+            <CalendarIcon className="event-date-icon" />
             <span>{event.date}</span>
           </div>
         </div>
@@ -87,7 +68,7 @@ const EventCard = ({ event }) => {
             </a>
           )}
 
-          <Link to={`/event-details/${event.id}`} className="event-details-link-btn">
+          <Link to={ROUTES.eventDetails(event.id)} className="event-details-link-btn">
             <span>{t('events.seeDetails')}</span>
           </Link>
         </div>

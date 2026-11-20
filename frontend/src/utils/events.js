@@ -28,7 +28,22 @@ export const parseImages = (imagesJson) => {
   }
 };
 
-export const firstEventImage = (imagesJson) => parseImages(imagesJson)[0] ?? null;
+// Backend shape -> what the UI expects: images as resolved URLs, formUrl never undefined.
+export const normalizeEvent = (event) => ({
+  ...event,
+  images: parseImages(event.images),
+  formUrl: event.formUrl ?? null,
+});
+
+// Keeps the API order: roles appear in the order of their first partner.
+export const groupByRole = (partners) => {
+  const groups = new Map();
+  partners.forEach((partner) => {
+    if (!groups.has(partner.role)) groups.set(partner.role, []);
+    groups.get(partner.role).push(partner);
+  });
+  return [...groups.entries()];
+};
 
 // Newest first by event date; events whose date can't be read fall back to id order (newest id first).
 export const sortNewestFirst = (events) =>
