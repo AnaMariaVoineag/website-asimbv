@@ -943,7 +943,13 @@
               "path": [
                 "api",
                 "newsletter",
-                "confirm?token=anything"
+                "confirm"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "anything"
+                }
               ]
             }
           },
@@ -972,7 +978,13 @@
               "path": [
                 "api",
                 "newsletter",
-                "unsubscribe?token=qa-invalid-token"
+                "unsubscribe"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "qa-invalid-token"
+                }
               ]
             }
           },
@@ -982,7 +994,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status is 404\", () => pm.response.to.have.status(404));"
+                  "pm.test(\"Status is 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"404 comes from the endpoint, not a missing route\", () => pm.expect(pm.response.json().message).to.be.a(\"string\").that.is.not.empty);"
                 ]
               }
             }
@@ -1001,7 +1014,13 @@
               "path": [
                 "api",
                 "newsletter",
-                "unsubscribe?token={{qaUnsubToken}}"
+                "unsubscribe"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{qaUnsubToken}}"
+                }
               ]
             }
           },
