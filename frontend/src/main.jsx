@@ -7,7 +7,7 @@ import { I18nProvider } from './i18n/I18nProvider.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter basename="/website-asimbv">
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <I18nProvider>
         <App />
       </I18nProvider>
