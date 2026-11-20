@@ -1,15 +1,14 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MainPage from './MainPage';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import EventsPage from './EventsPage';
-import ContactPage from './ContactPage';
-import TaxFormPage from './TaxFormPage';
-import EventDetails from './EventDetails';
-import PartnersPage from './PartnersPage';
-import UnsubscribePage from './UnsubscribePage';
-import ScrollToTop from './ScrollToTop';
+import MainPage from './pages/MainPage/MainPage';
+import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
+import EventsPage from './pages/EventsPage/EventsPage';
+import ContactPage from './pages/ContactPage/ContactPage';
+import TaxFormPage from './pages/TaxFormPage/TaxFormPage';
+import EventDetails from './pages/EventDetails/EventDetails';
+import PartnersPage from './pages/PartnersPage/PartnersPage';
+import UnsubscribePage from './pages/UnsubscribePage/UnsubscribePage';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 function App() {
   return (
