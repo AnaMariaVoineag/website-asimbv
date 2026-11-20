@@ -4,6 +4,16 @@
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html {
+  scroll-padding-top: 80px;
+}
+
 body, html, #root {
   width: 100%;
   min-height: 100vh;

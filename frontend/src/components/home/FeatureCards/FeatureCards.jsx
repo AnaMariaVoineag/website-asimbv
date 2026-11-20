@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 import { useI18n } from '../../../context/I18nContext';
+import AnimatedTitle from '../../AnimatedTitle/AnimatedTitle';
+import Reveal from '../../Reveal/Reveal';
+import Tilt from '../../Tilt/Tilt';
 import { ArrowRightIcon, CalendarDaysIcon, HeartIcon, RocketIcon } from '../../icons';
 import './FeatureCards.css';
 
@@ -16,15 +19,15 @@ const FeatureCards = () => {
   return (
     <section className="features-section">
       <div className="features-container">
-        <div className="features-header">
+        <Reveal className="features-header">
           <span className="features-badge">{t('features.badge')}</span>
-          <h2 className="features-title">{t('features.title')}</h2>
+          <AnimatedTitle className="features-title" text={t('features.title')} />
           <p className="features-subtitle">{t('features.subtitle')}</p>
-        </div>
+        </Reveal>
 
-        <div className="features-grid">
+        <Reveal stagger className="features-grid">
           {CARDS.map(({ id, link, Icon }) => (
-            <div key={id} className="feature-card">
+            <Tilt key={id} className="feature-card">
               <div className="feature-icon-wrapper">
                 <Icon className="feature-icon" />
               </div>
@@ -34,9 +37,9 @@ const FeatureCards = () => {
                 <span>{t(`features.cards.${id}.button`)}</span>
                 <ArrowRightIcon className="btn-arrow" />
               </Link>
-            </div>
+            </Tilt>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

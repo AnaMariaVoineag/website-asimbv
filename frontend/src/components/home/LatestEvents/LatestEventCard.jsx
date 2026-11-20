@@ -4,6 +4,7 @@ import { useI18n } from '../../../context/I18nContext';
 import { categoryLabel } from '../../../dictionaries/eventTranslations';
 import { assetUrl } from '../../../utils/assetUrl';
 import { FALLBACK_IMAGE } from '../../../utils/image';
+import Tilt from '../../Tilt/Tilt';
 import { ArrowRightIcon, CalendarIcon } from '../../icons';
 
 const LatestEventCard = ({ event }) => {
@@ -11,7 +12,7 @@ const LatestEventCard = ({ event }) => {
   const image = event.images[0] ?? null;
 
   return (
-    <Link to={ROUTES.eventDetails(event.id)} className="latest-event-card">
+    <Tilt as={Link} to={ROUTES.eventDetails(event.id)} className="latest-event-card">
       <div className="latest-event-image-wrapper">
         <img
           src={image || assetUrl(FALLBACK_IMAGE)}
@@ -39,7 +40,7 @@ const LatestEventCard = ({ event }) => {
           <ArrowRightIcon className="latest-event-arrow" />
         </span>
       </div>
-    </Link>
+    </Tilt>
   );
 };
 

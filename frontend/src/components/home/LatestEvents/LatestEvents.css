@@ -66,12 +66,12 @@
 
 .latest-event-card:hover,
 .latest-event-card:focus-visible {
-  transform: translateY(-8px);
   box-shadow: 0 20px 35px rgba(26, 86, 219, 0.14);
   border-color: rgba(26, 86, 219, 0.3);
 }
 
 .latest-event-card:focus-visible {
+  transform: translateY(-8px);
   outline: 3px solid var(--color-blue);
   outline-offset: 3px;
 }

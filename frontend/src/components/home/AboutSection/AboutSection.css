@@ -1,4 +1,6 @@
 .about-section {
+  /* Content that slides in from the sides must not widen the page while it is still off to the side. */
+  overflow-x: clip;
   padding: 85px 24px;
   background-color: var(--color-white);
   font-family: var(--font-base);

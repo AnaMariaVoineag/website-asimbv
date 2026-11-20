@@ -4,12 +4,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: 100vh;
     padding-top: 75px;
     box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Background image on its own layer so it can drift slower than the page (parallax). */
+.hero-bg {
+    position: absolute;
+    inset: -20% 0 -5% 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: translate3d(0, calc(var(--hero-progress, 0) * 18%), 0) scale(1.06);
+    will-change: transform;
+}
+
+/* Text block that lifts and fades out while the page scrolls past the hero. */
+.hero-parallax {
+    position: relative;
+    z-index: 2;
+    transform: translate3d(0, calc(var(--hero-progress, 0) * -70px), 0);
+    opacity: max(0, calc(1 - var(--hero-progress, 0) * 1.5));
+    will-change: transform, opacity;
 }
 
 .hero-overlay {
@@ -37,6 +55,13 @@
     width: 250px;
     margin-bottom: 20px;
     object-fit: contain;
+    filter: drop-shadow(0 14px 32px rgba(26, 86, 219, 0.55));
+    animation: seal-float 7s ease-in-out infinite;
+}
+
+@keyframes seal-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(1.5deg); }
 }
 
 .main-title {
@@ -105,7 +130,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0.8;
+    opacity: max(0, calc(0.8 - var(--hero-progress, 0) * 5));
 }
 
 .scroll-cue:hover {
@@ -129,7 +154,14 @@
 @media (prefers-reduced-motion: reduce) {
     .hero-content,
     #text,
+    .center-seal,
     .scroll-cue-arrow {
         animation: none;
+    }
+
+    .hero-bg,
+    .hero-parallax {
+        transform: none;
+        opacity: 1;
     }
 }

@@ -67,7 +67,6 @@
 
 /* Hover Effects: Scale + Shadow */
 .feature-card:hover {
-  transform: translateY(-8px) scale(1.02);
   box-shadow: 0 20px 40px rgba(26, 86, 219, 0.16);
   border-color: rgba(26, 86, 219, 0.3);
 }
