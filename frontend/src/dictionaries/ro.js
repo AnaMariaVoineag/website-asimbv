@@ -156,6 +156,14 @@ const ro = {
     privacy: 'Privacy Policy',
   },
 
+  notFound: {
+    pageTitle: 'ASIMBV | Pagina nu a fost găsită',
+    title: 'Pagina nu a fost găsită',
+    text: 'Pagina pe care o cauți nu există sau a fost mutată. Verifică adresa sau alege una dintre opțiunile de mai jos.',
+    home: 'Înapoi acasă',
+    events: 'Vezi evenimentele',
+  },
+
   unsubscribe: {
     pageTitle: 'ASIMBV | Dezabonare',
     title: 'Dezabonare de la newsletter',

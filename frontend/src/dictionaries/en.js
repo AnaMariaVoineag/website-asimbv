@@ -155,6 +155,14 @@ const en = {
     privacy: 'Privacy Policy',
   },
 
+  notFound: {
+    pageTitle: 'ASIMBV | Page not found',
+    title: 'Page not found',
+    text: 'The page you are looking for does not exist or has been moved. Check the address or pick one of the options below.',
+    home: 'Back home',
+    events: 'See events',
+  },
+
   unsubscribe: {
     pageTitle: 'ASIMBV | Unsubscribe',
     title: 'Unsubscribe from the newsletter',

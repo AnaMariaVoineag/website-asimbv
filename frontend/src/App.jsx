@@ -10,6 +10,7 @@ import ContactPage from './pages/ContactPage/ContactPage';
 import TaxFormPage from './pages/TaxFormPage/TaxFormPage';
 import PartnersPage from './pages/PartnersPage/PartnersPage';
 import UnsubscribePage from './pages/UnsubscribePage/UnsubscribePage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 const App = () => (
   <>
@@ -25,6 +26,7 @@ const App = () => (
       <Route path={ROUTES.partners} element={<PartnersPage />} />
       {/* Linked from the newsletter emails; the backend builds the link (App:PublicSiteUrl). */}
       <Route path={ROUTES.unsubscribe} element={<UnsubscribePage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
     <Footer />
   </>
