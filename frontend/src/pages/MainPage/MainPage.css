@@ -1,0 +1,8 @@
+.main-page {
+    font-family: var(--font-base);
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px);
+    margin: 0;
+    padding: 0;
+}

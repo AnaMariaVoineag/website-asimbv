@@ -1,0 +1,26 @@
+.animated-title-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Room for descenders, which overflow: hidden would otherwise clip. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.animated-title-inner {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 0.85s cubic-bezier(0.22, 0.8, 0.28, 1);
+  transition-delay: calc(var(--word-index, 0) * 70ms);
+}
+
+.animated-title.is-visible .animated-title-inner {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-title-inner {
+    transform: none;
+    transition: none;
+  }
+}

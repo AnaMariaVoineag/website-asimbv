@@ -1,0 +1,42 @@
+:root {
+  --font-base: 'Poppins', sans-serif;
+
+  --color-primary: #003977;
+  --color-blue: #1A56DB;
+  --color-blue-dark: #1546b3;
+  --color-sky: #0284c7;
+  --color-success: #16a34a;
+  --color-white: #ffffff;
+
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  --primary-a08: rgba(0, 57, 119, 0.08);
+  --primary-a10: rgba(0, 57, 119, 0.1);
+  --primary-a12: rgba(0, 57, 119, 0.12);
+  --primary-a25: rgba(0, 57, 119, 0.25);
+  --primary-a35: rgba(0, 57, 119, 0.35);
+
+  --bg-page: #E0E6E5;
+  --bg-card: var(--color-white);
+  --bg-image-fallback: #A7A19E;
+
+  --text-page-title: var(--color-primary);
+  --text-event-title: #543956;
+  --text-event-date: #5B6987;
+  --text-event-desc: #5D4A5E;
+
+  --accent-primary: #73A5AA;
+  --accent-secondary: #69879B;
+
+  --carousel-overlay: rgba(33, 42, 62, 0.9);
+  --timeline-dot-shadow: rgba(84, 57, 86, 0.25);
+}
