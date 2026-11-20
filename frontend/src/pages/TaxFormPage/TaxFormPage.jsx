@@ -18,24 +18,24 @@ const OCR_STEPS = [
   { id: 4, duration: 700 }
 ];
 
-const INITIAL_EXTRACTED_DATA = {
-  fullName: 'Popescu V. Andrei-Ioan',
-  initial: 'V.',
-  cnp: '1990415080012',
-  address: 'Str. Mihai Viteazul, Nr. 12, Bl. B2, Ap. 14',
-  city: 'Brașov',
-  county: 'Brașov',
-  phone: '0721 234 567',
-  email: 'andrei.popescu@student.unitbv.ro',
-  beneficiaryName: 'ASOCIAȚIA STUDENȚILOR LA INFORMATICĂ ȘI MATEMATICĂ BRAȘOV (ASIMBV)',
-  beneficiaryCif: '50849202',
-  beneficiaryIban: 'RO88BTRLRONCRT0012345601',
-  percentage: '3.5%',
-  period: '2 ani',
-  signatureDetected: true,
-  ocrConfidence: 99.1,
-  fileName: 'Formular_230_Completat.pdf',
-  fileSizeBytes: 245800
+const EMPTY_EXTRACTED_DATA = {
+  fullName: '',
+  initial: '',
+  cnp: '',
+  address: '',
+  city: '',
+  county: '',
+  phone: '',
+  email: '',
+  beneficiaryName: '',
+  beneficiaryCif: '',
+  beneficiaryIban: '',
+  percentage: '',
+  period: '',
+  signatureDetected: false,
+  ocrConfidence: 0,
+  fileName: '',
+  fileSizeBytes: 0
 };
 
 const TaxFormPage = () => {
@@ -53,7 +53,7 @@ const TaxFormPage = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [progressPercent, setProgressPercent] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
-  const [extractedData, setExtractedData] = useState(INITIAL_EXTRACTED_DATA);
+  const [extractedData, setExtractedData] = useState(EMPTY_EXTRACTED_DATA);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('data'); // 'data' | 'preview'
 
@@ -125,7 +125,6 @@ const TaxFormPage = () => {
       await new Promise((resolve) => setTimeout(resolve, OCR_STEPS[i].duration));
     }
 
-    // Call backend API with fallback
     try {
       const response = await uploadForm230(selectedFile);
 
@@ -136,33 +135,12 @@ const TaxFormPage = () => {
         setProcessState('success');
       } else {
         const errorData = await response.json().catch(() => ({}));
-        if (response.status === 422 || errorData.message) {
-          throw new Error((lang === 'ro' && errorData.message) || t('tax.error.cannotProcess'));
-        } else {
-          // Fallback simulation for offline demo
-          setExtractedData({
-            ...INITIAL_EXTRACTED_DATA,
-            fileName: selectedFile.name,
-            fileSizeBytes: selectedFile.size
-          });
-          setProgressPercent(100);
-          setProcessState('success');
-        }
-      }
-    } catch (err) {
-      if (selectedFile.name.toLowerCase().includes('error') || selectedFile.name.toLowerCase().includes('corrupt')) {
-        setErrorMessage(err.message || t('tax.error.unreadable'));
+        setErrorMessage((lang === 'ro' && errorData.message) || t('tax.error.cannotProcess'));
         setProcessState('error');
-      } else {
-        // Successful fallback
-        setExtractedData({
-          ...INITIAL_EXTRACTED_DATA,
-          fileName: selectedFile.name,
-          fileSizeBytes: selectedFile.size
-        });
-        setProgressPercent(100);
-        setProcessState('success');
       }
+    } catch {
+      setErrorMessage(t('tax.error.networkError'));
+      setProcessState('error');
     }
   };
 

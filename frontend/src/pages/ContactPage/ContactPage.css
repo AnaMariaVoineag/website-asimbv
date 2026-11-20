@@ -471,6 +471,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .info-value.link {
@@ -489,7 +490,7 @@
    ============================================ */
 @media (max-width: 960px) {
   .contact-layout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .contact-title {

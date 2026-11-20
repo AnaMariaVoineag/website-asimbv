@@ -255,6 +255,7 @@ const ro = {
     error: {
       title: 'Eroare la procesarea documentului',
       invalidFormat: 'Formatul fișierului nu este acceptat. Vă rugăm încărcați un fișier PDF sau imagine (.pdf, .png, .jpg).',
+      networkError: 'Nu s-a putut conecta la server. Încearcă din nou mai târziu.',
       cannotProcess: 'Nu s-a putut procesa fișierul încărcat.',
       unreadable: 'Fișierul este ilizibil sau corupt. Asigură-te că documentul este un Formular 230 clar.',
       hintsTitle: 'Recomandări pentru rezolvare:',

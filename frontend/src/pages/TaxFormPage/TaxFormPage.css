@@ -31,7 +31,8 @@
 
 .tax-title {
   color: var(--text-page-title);
-  font-size: 2.75rem;
+  font-size: clamp(1.6rem, 8vw, 2.75rem);
+  overflow-wrap: anywhere;
   font-weight: 800;
   margin: 0 0 0.75rem 0;
   letter-spacing: 1px;
@@ -260,7 +261,7 @@ button.f230ro-lansare.f230-primary-cta {
 }
 
 .divider-line {
-  flex: 1;
+  flex: 1 1 1rem;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--slate-300), transparent);
 }
@@ -269,7 +270,7 @@ button.f230ro-lansare.f230-primary-cta {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--slate-400);
-  white-space: nowrap;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }

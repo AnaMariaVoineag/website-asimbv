@@ -255,6 +255,7 @@ const en = {
     error: {
       title: 'Error processing the document',
       invalidFormat: 'The file format is not supported. Please upload a PDF or image file (.pdf, .png, .jpg).',
+      networkError: 'Could not connect to the server. Please try again later.',
       cannotProcess: 'The uploaded file could not be processed.',
       unreadable: 'The file is unreadable or corrupted. Make sure the document is a clear Form 230.',
       hintsTitle: 'Tips to fix this:',
