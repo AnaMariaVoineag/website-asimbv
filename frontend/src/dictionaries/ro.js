@@ -17,6 +17,10 @@ const ro = {
     language: 'Limba',
   },
 
+  home: {
+    pageTitle: 'ASIMBV | Pagina principală',
+  },
+
   hero: {
     scroll: 'Derulează în jos',
     title: 'ASIM BRAȘOV',
@@ -72,6 +76,7 @@ const ro = {
   },
 
   events: {
+    pageTitle: 'ASIMBV | Evenimente',
     title: 'Evenimentele Noastre',
     subtitle: 'Explorează toate activitățile, workshop-urile, proiectele sociale și competițiile comunității ASIMBV.',
     searchPlaceholder: 'Caută după nume sau cuvânt cheie...',
@@ -97,6 +102,7 @@ const ro = {
   },
 
   eventDetails: {
+    pageTitle: 'ASIMBV | Eveniment',
     loading: 'Se încarcă detaliile evenimentului...',
     notFoundTitle: 'Evenimentul nu a fost găsit',
     notFoundText: 'Evenimentul pe care îl cauți nu există sau a fost eliminat.',
@@ -116,6 +122,7 @@ const ro = {
   },
 
   partners: {
+    pageTitle: 'ASIMBV | Parteneri',
     title: 'Partenerii noștri',
     subtitle: 'Organizațiile alături de care construim o comunitate mai puternică pentru studenți.',
     loading: 'Se încarcă partenerii...',
@@ -178,7 +185,7 @@ const ro = {
   },
 
   contact: {
-    pageTitle: 'ASIMBV | Contact',
+    pageTitle: 'ASIMBV | Contactează-ne',
     subjects: {
       'Întrebare generală': 'Întrebare generală',
       'Înscriere & Voluntariat': 'Înscriere & Voluntariat',
@@ -227,6 +234,7 @@ const ro = {
   },
 
   tax: {
+    pageTitle: 'ASIMBV | Redirecționează 3.5%',
     badge: 'Susține Educația & Tehnologia',
     title: 'Redirecționează 3.5% din Impozit',
     subtitle: 'Transformă impozitul tău pe venit în oportunități pentru studenții Facultății de Matematică și Informatică Brașov. Încarcă Formularul 230 pentru procesare și validare automată OCR.',

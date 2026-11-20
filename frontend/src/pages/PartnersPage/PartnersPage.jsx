@@ -3,6 +3,7 @@ import PartnerTile from '../../components/PartnerTile/PartnerTile';
 import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
 import { useAsyncData } from '../../hooks/useAsyncData';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { getPartners } from '../../services/partnersService';
 import './PartnersPage.css';
 
@@ -11,6 +12,7 @@ const SECTIONS = ['educational', 'affiliation', 'association', 'company'];
 
 const PartnersPage = () => {
   const { t } = useI18n();
+  useDocumentTitle(t('partners.pageTitle'));
   const { data, status } = useAsyncData('partners', (signal) => getPartners({ signal }));
   const partners = data ?? [];
 

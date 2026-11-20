@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeftIcon } from '../../components/icons';
 import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useEvent, useEventPartners } from '../../hooks/useEvent';
 import EventGallery from '../../components/event-details/EventGallery';
 import EventInfo from '../../components/event-details/EventInfo';
@@ -14,6 +15,8 @@ const EventDetails = () => {
   const { t } = useI18n();
   const { event, status } = useEvent(id);
   const partners = useEventPartners(id);
+  // The event name once it has loaded, so tabs and history entries are easy to tell apart.
+  useDocumentTitle(event ? `ASIMBV | ${event.title}` : t('eventDetails.pageTitle'));
 
   if (status === 'loading') {
     return (

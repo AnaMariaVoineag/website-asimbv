@@ -16,6 +16,10 @@ const en = {
     language: 'Language',
   },
 
+  home: {
+    pageTitle: 'ASIMBV | Main Page',
+  },
+
   hero: {
     scroll: 'Scroll down',
     title: 'ASIM BRAȘOV',
@@ -71,6 +75,7 @@ const en = {
   },
 
   events: {
+    pageTitle: 'ASIMBV | Events',
     title: 'Our Events',
     subtitle: 'Explore all the activities, workshops, social projects and competitions of the ASIMBV community.',
     searchPlaceholder: 'Search by name or keyword...',
@@ -96,6 +101,7 @@ const en = {
   },
 
   eventDetails: {
+    pageTitle: 'ASIMBV | Event',
     loading: 'Loading event details...',
     notFoundTitle: 'Event not found',
     notFoundText: 'The event you are looking for does not exist or has been removed.',
@@ -115,6 +121,7 @@ const en = {
   },
 
   partners: {
+    pageTitle: 'ASIMBV | Partners',
     title: 'Our Partners',
     subtitle: 'The organisations alongside which we build a stronger community for students.',
     loading: 'Loading partners...',
@@ -177,7 +184,7 @@ const en = {
   },
 
   contact: {
-    pageTitle: 'ASIMBV | Contact',
+    pageTitle: 'ASIMBV | Contact us',
     // Keys are the Romanian values the backend accepts; only the label shown changes.
     subjects: {
       'Întrebare generală': 'General question',
@@ -227,6 +234,7 @@ const en = {
   },
 
   tax: {
+    pageTitle: 'ASIMBV | Redirect 3.5%',
     badge: 'Support Education & Technology',
     title: 'Redirect 3.5% of Your Income Tax',
     subtitle: 'Turn your income tax into opportunities for the students of the Faculty of Mathematics and Computer Science in Brașov. Upload Form 230 for automatic OCR processing and validation.',

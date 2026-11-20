@@ -1,3 +1,5 @@
+import { useI18n } from '../../context/I18nContext';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useFormular230Script } from '../../hooks/useFormular230Script';
 import { useTaxFormUpload } from '../../hooks/useTaxFormUpload';
 import BenefitsStrip from '../../components/tax/BenefitsStrip';
@@ -9,6 +11,8 @@ import UploadView from '../../components/tax/UploadView';
 import './TaxFormPage.css';
 
 const TaxFormPage = () => {
+  const { t } = useI18n();
+  useDocumentTitle(t('tax.pageTitle'));
   useFormular230Script();
   const upload = useTaxFormUpload();
 

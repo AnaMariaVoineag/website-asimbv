@@ -2,6 +2,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import { useI18n } from '../../context/I18nContext';
 import { useEventFilters } from '../../hooks/useEventFilters';
 import { useEvents } from '../../hooks/useEvents';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useHtmlClass } from '../../hooks/useHtmlClass';
 import EventsFilters from '../../components/events/EventsFilters';
 import EventsList from '../../components/events/EventsList';
@@ -12,6 +13,7 @@ const ITEMS_PER_PAGE = 5;
 
 const EventsPage = () => {
   const { t } = useI18n();
+  useDocumentTitle(t('events.pageTitle'));
   const { events, status } = useEvents();
   const filters = useEventFilters(events, ITEMS_PER_PAGE);
   const isReady = status === 'ready';
