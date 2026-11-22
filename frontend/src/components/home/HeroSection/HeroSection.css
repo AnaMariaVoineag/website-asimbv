@@ -55,13 +55,8 @@
     width: 250px;
     margin-bottom: 20px;
     object-fit: contain;
+    /* Transparent logo with only a soft blue glow. */
     filter: drop-shadow(0 14px 32px rgba(26, 86, 219, 0.55));
-    animation: seal-float 7s ease-in-out infinite;
-}
-
-@keyframes seal-float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-12px) rotate(1.5deg); }
 }
 
 .main-title {
@@ -154,7 +149,6 @@
 @media (prefers-reduced-motion: reduce) {
     .hero-content,
     #text,
-    .center-seal,
     .scroll-cue-arrow {
         animation: none;
     }
