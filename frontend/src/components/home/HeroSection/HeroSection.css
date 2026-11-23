@@ -2,7 +2,7 @@
     position: relative;
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
     padding-top: 75px;
@@ -25,6 +25,12 @@
 .hero-parallax {
     position: relative;
     z-index: 2;
+    /* Logo and titles stay centered in the first screen; the announcement sits below this block. */
+    width: 100%;
+    min-height: calc(100vh - 75px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transform: translate3d(0, calc(var(--hero-progress, 0) * -70px), 0);
     opacity: max(0, calc(1 - var(--hero-progress, 0) * 1.5));
     will-change: transform, opacity;
@@ -157,5 +163,78 @@
     .hero-parallax {
         transform: none;
         opacity: 1;
+    }
+}
+
+/* Teacher evaluation announcement inside the hero */
+.hero-announcement {
+    position: relative;
+    z-index: 2;
+    /* Tucks slightly into the first screen as a hint that there is more below. */
+    margin: -2.5rem 20px 5.5rem;
+    max-width: 560px;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+    padding: 1.25rem 1.5rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    animation: announcement-in 0.6s ease 1.8s both;
+}
+
+.hero-announcement-badge {
+    background: var(--accent-primary);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+}
+
+.hero-announcement-text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: #f1f5f9;
+}
+
+.hero-announcement-btn {
+    display: inline-block;
+    background: #ffffff;
+    color: #003977;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.65rem 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-announcement-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.hero-announcement-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+}
+
+@keyframes announcement-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-announcement {
+        animation: none;
     }
 }

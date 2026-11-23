@@ -10,6 +10,7 @@ import ContactPage from './pages/ContactPage/ContactPage';
 import TaxFormPage from './pages/TaxFormPage/TaxFormPage';
 import PartnersPage from './pages/PartnersPage/PartnersPage';
 import UnsubscribePage from './pages/UnsubscribePage/UnsubscribePage';
+import FeedbackRedirectPage from './pages/FeedbackRedirectPage/FeedbackRedirectPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 const App = () => (
@@ -26,6 +27,8 @@ const App = () => (
       <Route path={ROUTES.partners} element={<PartnersPage />} />
       {/* Linked from the newsletter emails; the backend builds the link (App:PublicSiteUrl). */}
       <Route path={ROUTES.unsubscribe} element={<UnsubscribePage />} />
+      {/* Short link to the university's teacher evaluation page (intranet.unitbv.ro). */}
+      <Route path={ROUTES.feedback} element={<FeedbackRedirectPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
     <Footer />

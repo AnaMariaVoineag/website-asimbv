@@ -20,6 +20,13 @@ const en = {
     pageTitle: 'ASIMBV | Main Page',
   },
 
+  announcement: {
+    label: 'Announcement',
+    badge: 'Announcement',
+    text: 'The teaching evaluation period has started! Share your feedback on your teachers: sign in to the UniTBv intranet with your student account.',
+    button: 'Rate your teachers',
+  },
+
   hero: {
     scroll: 'Scroll down',
     title: 'ASIM BRAȘOV',
@@ -168,6 +175,13 @@ const en = {
     text: 'The page you are looking for does not exist or has been moved. Check the address or pick one of the options below.',
     home: 'Back home',
     events: 'See events',
+  },
+
+  feedback: {
+    pageTitle: 'ASIMBV | Teacher evaluation',
+    title: 'Teaching activity evaluation',
+    text: 'Redirecting you to the teacher evaluation page on the UniTBv intranet. Sign in with your student account.',
+    button: 'Go to the evaluation',
   },
 
   unsubscribe: {

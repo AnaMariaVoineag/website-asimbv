@@ -21,6 +21,13 @@ const ro = {
     pageTitle: 'ASIMBV | Pagina principală',
   },
 
+  announcement: {
+    label: 'Anunț',
+    badge: 'Anunț',
+    text: 'A început perioada de evaluare a activității didactice! Spune-ți părerea despre profesorii tăi: autentifică-te pe intranetul UniTBv cu contul tău de student.',
+    button: 'Evaluează profesorii',
+  },
+
   hero: {
     scroll: 'Derulează în jos',
     title: 'ASIM BRAȘOV',
@@ -169,6 +176,13 @@ const ro = {
     text: 'Pagina pe care o cauți nu există sau a fost mutată. Verifică adresa sau alege una dintre opțiunile de mai jos.',
     home: 'Înapoi acasă',
     events: 'Vezi evenimentele',
+  },
+
+  feedback: {
+    pageTitle: 'ASIMBV | Evaluarea profesorilor',
+    title: 'Evaluarea activității didactice',
+    text: 'Te redirecționăm către pagina de evaluare a profesorilor de pe intranetul UniTBv. Autentifică-te cu contul tău de student.',
+    button: 'Mergi la evaluare',
   },
 
   unsubscribe: {
