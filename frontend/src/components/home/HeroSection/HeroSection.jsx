@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import logoCircle from '../../../assets/logo_asimbv_circle.png';
 import bgImage from '../../../assets/Corp_P.jpg';
+import { FEEDBACK_URL } from '../../../constants/external';
 import { useI18n } from '../../../context/I18nContext';
 import { useScrollEffect } from '../../../hooks/useScrollEffect';
 import './HeroSection.css';
@@ -29,6 +30,20 @@ const HeroSection = () => {
           <h2 className="sub-title">{t('hero.subtitle')}</h2>
         </div>
       </div>
+
+      {/* Teacher evaluation period announcement. Remove this block when the period ends. */}
+      <aside className="hero-announcement" aria-label={t('announcement.label')}>
+        <span className="hero-announcement-badge">{t('announcement.badge')}</span>
+        <p className="hero-announcement-text">{t('announcement.text')}</p>
+        <a
+          href={FEEDBACK_URL}
+          className="hero-announcement-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('announcement.button')}
+        </a>
+      </aside>
 
       <a href="#despre-noi" className="scroll-cue" aria-label={t('hero.scroll')}>
         <span className="scroll-cue-arrow" aria-hidden="true"></span>

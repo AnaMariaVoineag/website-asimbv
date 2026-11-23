@@ -7,6 +7,7 @@ export const ROUTES = {
   taxForm: '/formular-230',
   taxFormAlias: '/redirectioneaza-3.5',
   unsubscribe: '/dezabonare',
+  feedback: '/feedback',
   privacyPolicy: '/privacy-policy',
 };
 
