@@ -1,0 +1,75 @@
+.reveal,
+.reveal-stagger {
+  --reveal-ease: cubic-bezier(0.22, 0.8, 0.28, 1);
+}
+
+.reveal {
+  --reveal-x: 0px;
+  --reveal-y: 36px;
+  --reveal-scale: 1;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translate3d(var(--reveal-x), var(--reveal-y), 0) scale(var(--reveal-scale));
+  transition:
+    opacity 0.9s var(--reveal-ease),
+    transform 0.9s var(--reveal-ease),
+    filter 0.9s var(--reveal-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-from='left'] {
+  --reveal-x: -56px;
+  --reveal-y: 0px;
+}
+
+.reveal[data-from='right'] {
+  --reveal-x: 56px;
+  --reveal-y: 0px;
+}
+
+.reveal[data-from='zoom'] {
+  --reveal-y: 0px;
+  --reveal-scale: 0.9;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* Children wait invisible, then rise one after another. `backwards` keeps the animation from
+   overriding the children's own hover transforms once it has finished. */
+.reveal-stagger:not(.is-visible) > * {
+  opacity: 0;
+}
+
+.reveal-stagger.is-visible > * {
+  animation: reveal-rise 0.85s var(--reveal-ease) backwards;
+  animation-delay: calc(var(--reveal-delay, 0ms) + var(--stagger-index, 0) * 130ms);
+}
+
+.reveal-stagger > :nth-child(2) { --stagger-index: 1; }
+.reveal-stagger > :nth-child(3) { --stagger-index: 2; }
+.reveal-stagger > :nth-child(4) { --stagger-index: 3; }
+.reveal-stagger > :nth-child(5) { --stagger-index: 4; }
+.reveal-stagger > :nth-child(6) { --stagger-index: 5; }
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(48px) scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-stagger > * {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
