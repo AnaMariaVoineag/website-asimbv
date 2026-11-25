@@ -45,8 +45,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
       - ASPNETCORE_URLS=http://+:5197
-      - Admin__ApiKey=${ADMIN_API_KEY:-}
+      - Admin__Email=${ADMIN_EMAIL:-asociatiainfomatebv@gmail.com}
+      - Admin__Password=${ADMIN_PASSWORD:-}
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB:-asimbv_db};Username=${POSTGRES_USER:-asimbv_user};Password=${POSTGRES_PASSWORD:-asimbv_secret_password_2026}
+      - Uploads__Path=/app/uploads
+    volumes:
+      # Images uploaded from the admin dashboard (/admin); kept across rebuilds.
+      - uploads_data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -72,3 +77,5 @@ services:
 volumes:
   # Persistent volume for PostgreSQL database storage
   postgres_data:
+  # Persistent volume for images uploaded from the admin dashboard
+  uploads_data:

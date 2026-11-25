@@ -11,6 +11,10 @@ namespace Backend.Data;
 /// </summary>
 public static class PartnerSync
 {
+    // The tables are checked on every startup, but the partners and links are seeded once per database,
+    // so partners edited or deleted from the admin dashboard stay that way.
+    private const string Marker = "partner-seed-v1";
+
     private const string Faculty = "Facultatea de Matematică și Informatică, UNITBV";
 
     // Type, IsFeatured and DisplayOrder are for the partners page and footer.
@@ -99,6 +103,12 @@ public static class PartnerSync
         {
             db.Database.ExecuteSqlRaw((db.Database.IsNpgsql() ? PostgresSchema : SqliteSchema) + SharedSchema);
 
+            if (DataSyncMarkers.IsApplied(db, Marker))
+            {
+                transaction.Commit();
+                return;
+            }
+
             var partners = db.Partners.ToDictionary(p => p.Name);
             foreach (var seed in Partners)
             {
@@ -152,6 +162,7 @@ public static class PartnerSync
             }
 
             db.SaveChanges();
+            DataSyncMarkers.MarkApplied(db, Marker);
             transaction.Commit();
         }
         catch (Exception ex)

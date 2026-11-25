@@ -5,6 +5,7 @@ public class ContactMessage
     public const int NameMaxLength = 100;
     public const int EmailMaxLength = 254;
     public const int MessageMaxLength = 1000;
+    public const int NotesMaxLength = 2000;
 
     // Keep in sync with SUBJECT_OPTIONS in frontend/src/ContactPage.jsx.
     public static readonly string[] AllowedSubjects =
@@ -23,4 +24,10 @@ public class ContactMessage
     public string Subject { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Managed from the admin dashboard; never taken from the public contact form.
+    public bool IsRead { get; set; }
+    public bool IsArchived { get; set; }
+    /// <summary>Internal notes of the team (who answered, what was decided). Never shown publicly.</summary>
+    public string? Notes { get; set; }
 }

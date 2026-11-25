@@ -1,6 +1,5 @@
 using Backend.Data;
 using Backend.Models;
-using Backend.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,64 +70,5 @@ public class EventsController : ControllerBase
         return Ok(partners);
     }
 
-    // POST: api/events (admin only: requires the X-Admin-Key header)
-    [RequireAdminKey]
-    [HttpPost]
-    public async Task<ActionResult<EventItem>> PostEvent(EventItem eventItem)
-    {
-        _context.Events.Add(eventItem);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetEvent), new { id = eventItem.Id }, eventItem);
-    }
-
-    // PUT: api/events/5 (admin only: requires the X-Admin-Key header)
-    [RequireAdminKey]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutEvent(int id, EventItem eventItem)
-    {
-        if (id != eventItem.Id)
-        {
-            return BadRequest();
-        }
-
-        _context.Entry(eventItem).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!EventExists(id))
-            {
-                return NotFound();
-            }
-            throw;
-        }
-
-        return NoContent();
-    }
-
-    // DELETE: api/events/5 (admin only: requires the X-Admin-Key header)
-    [RequireAdminKey]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEvent(int id)
-    {
-        var eventItem = await _context.Events.FindAsync(id);
-        if (eventItem == null)
-        {
-            return NotFound();
-        }
-
-        _context.Events.Remove(eventItem);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private bool EventExists(int id)
-    {
-        return _context.Events.Any(e => e.Id == id);
-    }
+    // Creating, editing and deleting events: see Controllers/Admin/AdminEventsController.cs (api/admin/events).
 }

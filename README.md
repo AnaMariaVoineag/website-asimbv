@@ -18,11 +18,26 @@ cp .env.example .env
 ```
 *(Optionally adjust ports or passwords in `.env` if needed).*
 
-To read contact messages and newsletter subscribers, or to create, edit and delete events through the API, set `ADMIN_API_KEY` in `.env` and send it as a header. Without a key, these endpoints reject every request:
+**Admin dashboard.** Contact messages, events, partners and newsletter subscribers are managed at
+[http://localhost:5173/admin](http://localhost:5173/admin). Sign in with `ADMIN_EMAIL` (asociatiainfomatebv@gmail.com)
+and the password you put in `ADMIN_PASSWORD` in `.env` (at least 12 characters; not the Gmail password).
+While `ADMIN_PASSWORD` is empty, admin login is disabled.
+
+When running the backend without Docker (`dotnet run`), set the password with user-secrets instead:
 
 ```bash
-curl -H "X-Admin-Key: <your key>" http://localhost:5197/api/contact
-curl -H "X-Admin-Key: <your key>" http://localhost:5197/api/newsletter/subscribers
+cd backend/Backend/Backend
+dotnet user-secrets init
+dotnet user-secrets set "Admin:Password" "<your password>"
+```
+
+The admin API is also usable directly: `POST /api/admin/login` with `{ "email", "password" }` returns a token
+that is valid for 12 hours, sent as `Authorization: Bearer <token>`:
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:5197/api/admin/login -H "Content-Type: application/json" \
+  -d '{"email":"asociatiainfomatebv@gmail.com","password":"<your password>"}' | jq -r .token)
+curl -H "Authorization: Bearer $TOKEN" http://localhost:5197/api/admin/messages
 ```
 
 ---

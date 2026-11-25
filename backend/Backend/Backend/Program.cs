@@ -1,6 +1,10 @@
+using System.Threading.RateLimiting;
+using Backend.Controllers.Admin;
 using Backend.Data;
+using Backend.Security;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddSingleton<RecentSubmissions>();
+
+// Admin dashboard account (Admin:Email / Admin:Password) and its encrypted session tokens.
+builder.Services.AddDataProtection();
+builder.Services.AddSingleton<AdminAuth>();
+
+// At most 5 login attempts per minute per IP address, so the password can't be guessed by brute force.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = (context, cancellationToken) =>
+        new ValueTask(context.HttpContext.Response.WriteAsJsonAsync(
+            new { message = "Prea multe încercări. Așteaptă un minut și încearcă din nou." }, cancellationToken));
+    options.AddPolicy(AdminAuthController.LoginRateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1) }));
+});
+
+// Images uploaded from the admin dashboard. In Docker this folder is a volume (see docker-compose.yml).
+var uploadsRoot = builder.Configuration["Uploads:Path"];
+if (string.IsNullOrWhiteSpace(uploadsRoot))
+    uploadsRoot = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+builder.Services.AddSingleton(new UploadStorage(uploadsRoot));
 
 
 // Configure Database (Dual-Provider: PostgreSQL when configured, SQLite fallback)
@@ -46,7 +73,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(allowedOrigins)
-              .WithMethods("GET", "POST", "PUT", "DELETE")
+              .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
               .WithHeaders("Content-Type", "Authorization");
     });
 });
@@ -63,6 +90,7 @@ using (var scope = app.Services.CreateScope())
 
     // Create DB + seed data if it doesn't exist at all
     dbContext.Database.EnsureCreated();
+    DataSyncMarkers.EnsureTable(dbContext);
 
     // EnsureCreated() never alters an existing table, so add the LongDescription column
     // to Postgres databases created before it existed.
@@ -82,6 +110,11 @@ using (var scope = app.Services.CreateScope())
     // SQLite fallback tables if DB was created before these models existed
     if (dbContext.Database.IsSqlite())
     {
+        // The data fix-ups below used to run on every startup and would undo admin edits
+        // (e.g. delete any event titled "...Feedback..."), so they now run once per database.
+        const string legacyFixesMarker = "legacy-sqlite-fixes-v1";
+        var legacyFixesApplied = DataSyncMarkers.IsApplied(dbContext, legacyFixesMarker);
+
         dbContext.Database.ExecuteSqlRaw(@"
             CREATE TABLE IF NOT EXISTS NewsletterSubscribers (
                 Id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -151,40 +184,45 @@ using (var scope = app.Services.CreateScope())
                 alterLongCmd.ExecuteNonQuery();
             }
 
-            // --- Ensure CNDOS FormUrl is set ---
-            using var updateFormUrlCmd = connection.CreateCommand();
-            updateFormUrlCmd.CommandText = @"
-                UPDATE Events 
-                SET FormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfCEd2yubl7p6Zh-fH2nwbRa0A2lX3ecQldH_Kiq-fvC-mdgw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio'
-                WHERE (Title LIKE '%CNDOS%' OR Id = 12) AND (FormUrl IS NULL OR FormUrl = '');";
-            updateFormUrlCmd.ExecuteNonQuery();
-
-            // --- Remove Recrutări and Feedback Profesori events ---
-            using var deleteCmd = connection.CreateCommand();
-            deleteCmd.CommandText = "DELETE FROM Events WHERE Id IN (3, 5) OR Title LIKE '%Recrut%' OR Title LIKE '%Feedback%';";
-            deleteCmd.ExecuteNonQuery();
-
-            // --- Populate Images for all events (only where Images is NULL or empty) ---
-            var imageUpdates = new Dictionary<int, string>
+            if (!legacyFixesApplied)
             {
-                [1]  = "[\"/poze_evenimente/Infiintare_ASIMBV.png\"]",
-                [2]  = "[\"/poze_evenimente/Student_Login_2025/img1.png\",\"/poze_evenimente/Student_Login_2025/img2.png\",\"/poze_evenimente/Student_Login_2025/img3.png\",\"/poze_evenimente/Student_Login_2025/img4.png\"]",
-                [4]  = "[\"/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img1.png\",\"/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img2.png\"]",
-                [6]  = "[\"/poze_evenimente/Promovare_targ_practica_anul_II/img1.png\",\"/poze_evenimente/Promovare_targ_practica_anul_II/img2.png\",\"/poze_evenimente/Promovare_targ_practica_anul_II/img3.png\"]",
-                [7]  = "[\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img1.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img2.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img3.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img4.png\"]",
-                [8]  = "[\"/poze_evenimente/workshop_asimbv_best/img1.png\"]",
-                [9]  = "[\"/poze_evenimente/AG_UNI_Bucuresti/img1.png\",\"/poze_evenimente/AG_UNI_Bucuresti/img2.png\"]",
-                [10] = "[\"/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img1.png\",\"/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img2.png\"]",
-                [11] = "[\"/poze_evenimente/bootcamp_uni_centru_vest/img1.png\",\"/poze_evenimente/bootcamp_uni_centru_vest/img2.png\"]",
-                [13] = "[\"/poze_evenimente/AG_UNI_Alba_Iulia/img1.png\"]",
-                [14] = "[\"/poze_evenimente/Student_Login_2026/img2.png\",\"/poze_evenimente/Student_Login_2026/img3.png\"]",
-            };
+                // --- Ensure CNDOS FormUrl is set ---
+                using var updateFormUrlCmd = connection.CreateCommand();
+                updateFormUrlCmd.CommandText = @"
+                    UPDATE Events 
+                    SET FormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfCEd2yubl7p6Zh-fH2nwbRa0A2lX3ecQldH_Kiq-fvC-mdgw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio'
+                    WHERE (Title LIKE '%CNDOS%' OR Id = 12) AND (FormUrl IS NULL OR FormUrl = '');";
+                updateFormUrlCmd.ExecuteNonQuery();
 
-            foreach (var (id, images) in imageUpdates)
-            {
-                using var imgCmd = connection.CreateCommand();
-                imgCmd.CommandText = $"UPDATE Events SET Images = '{images.Replace("'", "''")}' WHERE Id = {id} AND (Images IS NULL OR Images = '');";
-                imgCmd.ExecuteNonQuery();
+                // --- Remove Recrutări and Feedback Profesori events ---
+                using var deleteCmd = connection.CreateCommand();
+                deleteCmd.CommandText = "DELETE FROM Events WHERE Id IN (3, 5) OR Title LIKE '%Recrut%' OR Title LIKE '%Feedback%';";
+                deleteCmd.ExecuteNonQuery();
+
+                // --- Populate Images for all events (only where Images is NULL or empty) ---
+                var imageUpdates = new Dictionary<int, string>
+                {
+                    [1]  = "[\"/poze_evenimente/Infiintare_ASIMBV.png\"]",
+                    [2]  = "[\"/poze_evenimente/Student_Login_2025/img1.png\",\"/poze_evenimente/Student_Login_2025/img2.png\",\"/poze_evenimente/Student_Login_2025/img3.png\",\"/poze_evenimente/Student_Login_2025/img4.png\"]",
+                    [4]  = "[\"/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img1.png\",\"/poze_evenimente/Afiliere_Uniunea_Studenților_din_România_UNI/img2.png\"]",
+                    [6]  = "[\"/poze_evenimente/Promovare_targ_practica_anul_II/img1.png\",\"/poze_evenimente/Promovare_targ_practica_anul_II/img2.png\",\"/poze_evenimente/Promovare_targ_practica_anul_II/img3.png\"]",
+                    [7]  = "[\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img1.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img2.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img3.png\",\"/poze_evenimente/voluntariat_Hackathon_Transilvania_Codestorm@MI/img4.png\"]",
+                    [8]  = "[\"/poze_evenimente/workshop_asimbv_best/img1.png\"]",
+                    [9]  = "[\"/poze_evenimente/AG_UNI_Bucuresti/img1.png\",\"/poze_evenimente/AG_UNI_Bucuresti/img2.png\"]",
+                    [10] = "[\"/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img1.png\",\"/poze_evenimente/voluntariat_Zilele_UNI_x_ASIMBv_x_ASSM/img2.png\"]",
+                    [11] = "[\"/poze_evenimente/bootcamp_uni_centru_vest/img1.png\",\"/poze_evenimente/bootcamp_uni_centru_vest/img2.png\"]",
+                    [13] = "[\"/poze_evenimente/AG_UNI_Alba_Iulia/img1.png\"]",
+                    [14] = "[\"/poze_evenimente/Student_Login_2026/img2.png\",\"/poze_evenimente/Student_Login_2026/img3.png\"]",
+                };
+
+                foreach (var (id, images) in imageUpdates)
+                {
+                    using var imgCmd = connection.CreateCommand();
+                    imgCmd.CommandText = $"UPDATE Events SET Images = '{images.Replace("'", "''")}' WHERE Id = {id} AND (Images IS NULL OR Images = '');";
+                    imgCmd.ExecuteNonQuery();
+                }
+
+                DataSyncMarkers.MarkApplied(dbContext, legacyFixesMarker);
             }
         }
         catch (Exception ex)
@@ -199,6 +237,9 @@ using (var scope = app.Services.CreateScope())
 using (var syncScope = app.Services.CreateScope())
 {
     var syncDb = syncScope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Columns added after the tables were first created (message status, English event texts).
+    SchemaUpgrade.Apply(syncDb);
     EventContentSync.Apply(syncDb);
     PartnerSync.Apply(syncDb);
 
@@ -225,7 +266,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 
+app.UseRateLimiter();
+
 app.UseHttpsRedirection();
+
+// Serves the uploaded images under /api/uploads/..., next to the API so the same proxy reaches both.
+var uploadStorage = app.Services.GetRequiredService<UploadStorage>();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadStorage.RootPath),
+    RequestPath = UploadStorage.RequestPath,
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+        // File names are unique per upload, so a file never changes once written.
+        ctx.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+    }
+});
 
 app.UseAuthorization();
 

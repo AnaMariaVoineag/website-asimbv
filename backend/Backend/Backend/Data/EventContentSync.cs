@@ -11,6 +11,10 @@ namespace Backend.Data;
 /// </summary>
 public static class EventContentSync
 {
+    // Runs once per database, so texts edited later from the admin dashboard are kept.
+    // Changed or new texts below need a new marker name to reach databases that already ran this.
+    private const string Marker = "event-content-v1";
+
     // Title/Date/Category/Images are only used when the event does not exist yet (it is inserted).
     // For existing events only Description and LongDescription are written.
     private sealed record EventContent(
@@ -156,6 +160,8 @@ public static class EventContentSync
     /// </summary>
     public static void Apply(AppDbContext db)
     {
+        if (DataSyncMarkers.IsApplied(db, Marker)) return;
+
         using var transaction = db.Database.BeginTransaction();
         try
         {
@@ -203,6 +209,7 @@ public static class EventContentSync
                     "SELECT setval(pg_get_serial_sequence('\"Events\"', 'Id'), (SELECT COALESCE(MAX(\"Id\"), 1) FROM \"Events\"))");
             }
 
+            DataSyncMarkers.MarkApplied(db, Marker);
             transaction.Commit();
         }
         catch (Exception ex)

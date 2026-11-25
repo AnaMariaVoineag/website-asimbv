@@ -19,4 +19,10 @@ public class EventItem
     /// </summary>
     public string? Images { get; set; }
     public string? FormUrl { get; set; }
+
+    // English texts, edited from the admin dashboard. When empty, the frontend falls back to the
+    // built-in translations in eventTranslations.js and then to the Romanian text.
+    public string? TitleEn { get; set; }
+    public string? DescriptionEn { get; set; }
+    public string? LongDescriptionEn { get; set; }
 }

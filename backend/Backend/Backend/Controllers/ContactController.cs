@@ -65,6 +65,11 @@ public class ContactController : ControllerBase
         if (!_recentSubmissions.TryRegister(submissionKey))
             return MessageReceived();
 
+        // Only the form fields come from the visitor; id and admin-managed fields are always reset.
+        message.Id = 0;
+        message.IsRead = false;
+        message.IsArchived = false;
+        message.Notes = null;
         message.CreatedAt = DateTime.UtcNow;
         _context.ContactMessages.Add(message);
         try
@@ -120,8 +125,8 @@ public class ContactController : ControllerBase
         return MessageReceived();
     }
 
-    // GET: api/contact (admin only: requires the X-Admin-Key header)
-    [RequireAdminKey]
+    // GET: api/contact (admin only: requires a dashboard session, see AdminAuth)
+    [RequireAdmin]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ContactMessage>>> GetMessages()
     {

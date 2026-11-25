@@ -177,8 +177,8 @@ public class NewsletterController : ControllerBase
     }
 
     // ── GET api/newsletter/subscribers ───────────────────────────────────────
-    // Returns all active subscribers (admin only: requires the X-Admin-Key header).
-    [RequireAdminKey]
+    // Returns all active subscribers (admin only: requires a dashboard session, see AdminAuth).
+    [RequireAdmin]
     [HttpGet("subscribers")]
     public async Task<ActionResult<IEnumerable<object>>> GetSubscribers()
     {

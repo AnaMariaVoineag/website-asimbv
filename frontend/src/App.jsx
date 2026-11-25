@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
@@ -13,7 +14,26 @@ import UnsubscribePage from './pages/UnsubscribePage/UnsubscribePage';
 import FeedbackRedirectPage from './pages/FeedbackRedirectPage/FeedbackRedirectPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
-const App = () => (
+// Loaded only when /admin is opened, so visitors of the public site never download it.
+const AdminApp = lazy(() => import('./admin/AdminApp'));
+
+const isAdminPath = (pathname) => pathname === ROUTES.admin || pathname.startsWith(`${ROUTES.admin}/`);
+
+const App = () => {
+  const { pathname } = useLocation();
+
+  if (isAdminPath(pathname)) {
+    return (
+      <Suspense fallback={null}>
+        <AdminApp />
+      </Suspense>
+    );
+  }
+
+  return <PublicSite />;
+};
+
+const PublicSite = () => (
   <>
     <ScrollToTop />
     <Navbar />

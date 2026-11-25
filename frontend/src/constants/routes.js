@@ -9,6 +9,7 @@ export const ROUTES = {
   unsubscribe: '/dezabonare',
   feedback: '/feedback',
   privacyPolicy: '/privacy-policy',
+  admin: '/admin',
 };
 
 export const EVENT_DETAILS_PATTERN = '/event-details/:id';

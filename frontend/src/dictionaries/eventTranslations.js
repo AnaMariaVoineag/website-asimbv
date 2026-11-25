@@ -1,6 +1,7 @@
-// The database stores event texts in Romanian only. English versions live here, keyed by event id.
-// An event without an entry here (for example one just added to the database) simply stays in
-// Romanian until its English text is added below, so nothing ever breaks or goes blank.
+// English event texts. The admin dashboard (/admin) stores them in the database (titleEn,
+// descriptionEn, longDescriptionEn), and those win. The entries below, keyed by event id, are the
+// translations written before that existed; they are used when the database has no English text.
+// Without either, the event simply stays in Romanian, so nothing ever breaks or goes blank.
 
 const EVENTS_EN = {
   1: {
@@ -127,7 +128,13 @@ export const translateDate = (date, lang) => {
   return date.replace(/[a-zăâîșț]+/gi, (word) => MONTHS_EN[word.toLowerCase()] ?? word);
 };
 
+// Roles with an English translation above; suggested in the admin event editor.
+export const KNOWN_ROLES = Object.keys(ROLES_EN);
+
 export const translateRole = (role, lang) => (lang === 'en' ? ROLES_EN[role] ?? role : role);
+
+// Built-in English texts of an event (used by the admin editor to pre-fill the English fields).
+export const getBuiltInEnglish = (id) => EVENTS_EN[id] ?? null;
 
 // Returns the event with its texts in the chosen language. Untranslated fields keep the Romanian text.
 export const localizeEvent = (event, lang) => {
@@ -135,9 +142,9 @@ export const localizeEvent = (event, lang) => {
   const english = EVENTS_EN[event.id];
   return {
     ...event,
-    title: english?.title ?? event.title,
-    description: english?.description ?? event.description,
-    longDescription: english?.longDescription ?? event.longDescription,
+    title: event.titleEn || english?.title || event.title,
+    description: event.descriptionEn || english?.description || event.description,
+    longDescription: event.longDescriptionEn || english?.longDescription || event.longDescription,
     date: translateDate(event.date, lang),
   };
 };

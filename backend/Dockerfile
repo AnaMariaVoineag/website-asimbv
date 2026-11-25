@@ -15,6 +15,8 @@ RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+# Folder for images uploaded from the admin dashboard (mounted as a volume in docker-compose.yml).
+RUN mkdir -p /app/uploads && chown -R ${APP_UID:-1654} /app/uploads
 
 EXPOSE 5197
 ENV ASPNETCORE_URLS=http://+:5197

@@ -254,6 +254,9 @@ ASALocalRun/
 # ASP.NET Secrets
 secrets.json
 
+# Images uploaded from the admin dashboard when running the backend locally
+backend/Backend/Backend/uploads/
+
 # ============================================
 # COMMON - OS / EDITORS / MISC
 # ============================================
