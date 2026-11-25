@@ -16,6 +16,8 @@ public static class SchemaUpgrade
         ("Events",          "TitleEn",           "text",                           "TEXT"),
         ("Events",          "DescriptionEn",     "text",                           "TEXT"),
         ("Events",          "LongDescriptionEn", "text",                           "TEXT"),
+        ("Partners",        "Label",             "text",                           "TEXT"),
+        ("Partners",        "LabelEn",           "text",                           "TEXT"),
     ];
 
     public static void Apply(AppDbContext db)

@@ -49,6 +49,18 @@ public static class PartnerSync
         new("Waters", "/parteneri/waters.svg", "https://www.waters.com/nextgen/us/en.html"),
     ];
 
+    // Partners added after the first seed. Each batch runs once per database (its own marker), so it reaches
+    // databases that already ran the first seed, and a partner deleted later from the admin dashboard stays deleted.
+    // To add more partners from code, append a new batch with a new marker name.
+    private static readonly (string Marker, PartnerSeed[] Seeds)[] LaterPartners =
+    [
+        ("partner-unitbv-v1",
+        [
+            // Logo: put the file at frontend/public/parteneri/unitbv.png (until then the bar shows the name).
+            new("Universitatea Transilvania din Brașov", "/parteneri/unitbv.png", "https://www.unitbv.ro", PartnerTypes.Educational, DisplayOrder: 0),
+        ]),
+    ];
+
     // Display order on an event page follows this list.
     private static readonly (int EventId, string Role, string[] Names)[] Links =
     [
@@ -66,7 +78,9 @@ public static class PartnerSync
             "IsFeatured" boolean NOT NULL,
             "DisplayOrder" integer NOT NULL,
             "LogoUrl" text,
-            "WebsiteUrl" text
+            "WebsiteUrl" text,
+            "Label" text,
+            "LabelEn" text
         );
         """;
 
@@ -78,7 +92,9 @@ public static class PartnerSync
             "IsFeatured" INTEGER NOT NULL,
             "DisplayOrder" INTEGER NOT NULL,
             "LogoUrl" TEXT,
-            "WebsiteUrl" TEXT
+            "WebsiteUrl" TEXT,
+            "Label" TEXT,
+            "LabelEn" TEXT
         );
         """;
 
@@ -103,66 +119,34 @@ public static class PartnerSync
         {
             db.Database.ExecuteSqlRaw((db.Database.IsNpgsql() ? PostgresSchema : SqliteSchema) + SharedSchema);
 
-            if (DataSyncMarkers.IsApplied(db, Marker))
+            if (!DataSyncMarkers.IsApplied(db, Marker))
             {
-                transaction.Commit();
-                return;
+                SeedInitial(db);
+                DataSyncMarkers.MarkApplied(db, Marker);
             }
 
-            var partners = db.Partners.ToDictionary(p => p.Name);
-            foreach (var seed in Partners)
+            foreach (var (marker, seeds) in LaterPartners)
             {
-                if (!partners.TryGetValue(seed.Name, out var partner))
+                if (DataSyncMarkers.IsApplied(db, marker)) continue;
+
+                var existingNames = db.Partners.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                foreach (var seed in seeds.Where(s => !existingNames.Contains(s.Name)))
                 {
-                    partner = new Partner
+                    db.Partners.Add(new Partner
                     {
                         Name = seed.Name,
+                        Type = seed.Type,
                         IsFeatured = seed.IsFeatured,
                         DisplayOrder = seed.DisplayOrder,
-                    };
-                    db.Partners.Add(partner);
-                    partners[seed.Name] = partner;
-                }
-
-                // Empty values are filled in, e.g. a logo added here after the partner already exists.
-                if (string.IsNullOrEmpty(partner.Type)) partner.Type = seed.Type;
-                if (string.IsNullOrEmpty(partner.LogoUrl)) partner.LogoUrl = seed.LogoUrl;
-                if (string.IsNullOrEmpty(partner.WebsiteUrl)) partner.WebsiteUrl = seed.WebsiteUrl;
-            }
-
-            // Saved first so that new partners have their generated ids for the links below.
-            db.SaveChanges();
-
-            var eventIds = db.Events.Select(e => e.Id).ToHashSet();
-            var existingLinks = db.EventPartners
-                .Select(l => new { l.EventId, l.PartnerId })
-                .AsEnumerable()
-                .Select(l => (l.EventId, l.PartnerId))
-                .ToHashSet();
-
-            var position = 0;
-            foreach (var (eventId, role, names) in Links)
-            {
-                foreach (var name in names)
-                {
-                    position++;
-                    if (!eventIds.Contains(eventId)) continue; // the event was removed on purpose
-
-                    var partnerId = partners[name].Id;
-                    if (existingLinks.Contains((eventId, partnerId))) continue;
-
-                    db.EventPartners.Add(new EventPartner
-                    {
-                        EventId = eventId,
-                        PartnerId = partnerId,
-                        Role = role,
-                        DisplayOrder = position,
+                        LogoUrl = seed.LogoUrl,
+                        WebsiteUrl = seed.WebsiteUrl,
                     });
                 }
+
+                db.SaveChanges();
+                DataSyncMarkers.MarkApplied(db, marker);
             }
 
-            db.SaveChanges();
-            DataSyncMarkers.MarkApplied(db, Marker);
             transaction.Commit();
         }
         catch (Exception ex)
@@ -170,5 +154,63 @@ public static class PartnerSync
             transaction.Rollback();
             Console.WriteLine($"[Partner Sync] Rolled back, nothing was changed: {ex.Message}");
         }
+    }
+
+    // The original partners and their event links (runs once per database, inside Apply's transaction).
+    private static void SeedInitial(AppDbContext db)
+    {
+        var partners = db.Partners.ToDictionary(p => p.Name);
+        foreach (var seed in Partners)
+        {
+            if (!partners.TryGetValue(seed.Name, out var partner))
+            {
+                partner = new Partner
+                {
+                    Name = seed.Name,
+                    IsFeatured = seed.IsFeatured,
+                    DisplayOrder = seed.DisplayOrder,
+                };
+                db.Partners.Add(partner);
+                partners[seed.Name] = partner;
+            }
+
+            // Empty values are filled in, e.g. a logo added here after the partner already exists.
+            if (string.IsNullOrEmpty(partner.Type)) partner.Type = seed.Type;
+            if (string.IsNullOrEmpty(partner.LogoUrl)) partner.LogoUrl = seed.LogoUrl;
+            if (string.IsNullOrEmpty(partner.WebsiteUrl)) partner.WebsiteUrl = seed.WebsiteUrl;
+        }
+
+        // Saved first so that new partners have their generated ids for the links below.
+        db.SaveChanges();
+
+        var eventIds = db.Events.Select(e => e.Id).ToHashSet();
+        var existingLinks = db.EventPartners
+            .Select(l => new { l.EventId, l.PartnerId })
+            .AsEnumerable()
+            .Select(l => (l.EventId, l.PartnerId))
+            .ToHashSet();
+
+        var position = 0;
+        foreach (var (eventId, role, names) in Links)
+        {
+            foreach (var name in names)
+            {
+                position++;
+                if (!eventIds.Contains(eventId)) continue; // the event was removed on purpose
+
+                var partnerId = partners[name].Id;
+                if (existingLinks.Contains((eventId, partnerId))) continue;
+
+                db.EventPartners.Add(new EventPartner
+                {
+                    EventId = eventId,
+                    PartnerId = partnerId,
+                    Role = role,
+                    DisplayOrder = position,
+                });
+            }
+        }
+
+        db.SaveChanges();
     }
 }

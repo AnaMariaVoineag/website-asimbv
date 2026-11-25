@@ -178,6 +178,10 @@
 .adm-field-hint { color: var(--adm-muted); font-size: 0.8rem; }
 .adm-hint-box { display: block; margin: -0.25rem 0 1rem; padding: 0.6rem 0.8rem; background: var(--slate-50); border-radius: 8px; }
 .adm-field-narrow { max-width: 120px; margin-bottom: 0; }
+.adm-form-row-top { align-items: flex-start; flex-wrap: nowrap; }
+.adm-form-row-top > .adm-field { flex: 1; margin-bottom: 0; }
+.adm-form-row-top > .adm-field-narrow { flex: 0 0 100px; }
+.adm-small { font-size: 0.78rem; margin-top: 0.2rem; }
 
 .adm-input {
   width: 100%;

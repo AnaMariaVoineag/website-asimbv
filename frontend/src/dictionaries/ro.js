@@ -10,7 +10,6 @@ const ro = {
     logoAlt: 'ASIMBV Logo',
     home: 'Acasă',
     events: 'Evenimente',
-    partners: 'Parteneri',
     support: 'Susține',
     contact: 'Contactează-ne',
     toggleMenu: 'Deschide/închide meniul',
@@ -128,21 +127,16 @@ const ro = {
     allEvents: '← Toate evenimentele',
   },
 
-  partners: {
-    pageTitle: 'ASIMBV | Parteneri',
-    title: 'Partenerii noștri',
-    subtitle: 'Organizațiile alături de care construim o comunitate mai puternică pentru studenți.',
-    loading: 'Se încarcă partenerii...',
-    error: 'Nu s-au putut prelua partenerii. Reîncearcă mai târziu.',
-    sections: {
-      educational: 'Parteneri educaționali',
-      affiliation: 'Afiliați la',
-      association: 'Asociații cu care am colaborat',
-      company: 'Parteneri și sponsori',
+  partnersBar: {
+    title: 'Partenerii și sponsorii noștri',
+    cta: 'Devino partener',
+    // Text under a logo when the partner has no label of its own (set from the admin dashboard).
+    types: {
+      educational: 'Partener educațional',
+      affiliation: 'Afiliere',
+      association: 'Asociație parteneră',
+      company: 'Partener & sponsor',
     },
-    ctaTitle: 'Vrei să devii partener ASIMBv?',
-    ctaText: 'Suntem deschiși la colaborări, sponsorizări și proiecte comune pentru studenții din Brașov.',
-    ctaButton: 'Contactează-ne',
   },
 
   footer: {
@@ -153,7 +147,6 @@ const ro = {
     events: 'Evenimente',
     redirect: 'Redirecționează 3.5%',
     contact: 'Contact',
-    partners: 'Parteneri',
     followUs: 'Follow Us',
     socialText: 'Fii la curent cu ultimele noutăți pe rețelele noastre sociale:',
     newsletter: 'Newsletter',
@@ -165,7 +158,6 @@ const ro = {
     subscribed: 'Te-ai abonat cu succes! Vei primi vești despre evenimentele și workshopurile ASIMBV.',
     duplicate: 'Această adresă de email este deja abonată.',
     networkError: 'Nu s-a putut conecta la server. Încearcă mai târziu.',
-    ourPartners: 'Partenerii noștri',
     copyright: '© {year} ASIM Brașov. Toate drepturile rezervate.',
     privacy: 'Privacy Policy',
   },

@@ -3,7 +3,7 @@ export const ROUTES = {
   events: '/events',
   eventDetails: (id) => `/event-details/${id}`,
   contact: '/contact',
-  partners: '/parteneri',
+  partners: '/parteneri', // redirects to the partners bar
   taxForm: '/formular-230',
   taxFormAlias: '/redirectioneaza-3.5',
   unsubscribe: '/dezabonare',

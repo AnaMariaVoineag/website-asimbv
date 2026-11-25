@@ -12,7 +12,6 @@ const SCROLL_THRESHOLD = 30;
 const NAV_LINKS = [
   { to: ROUTES.home, labelKey: 'nav.home' },
   { to: ROUTES.events, labelKey: 'nav.events' },
-  { to: ROUTES.partners, labelKey: 'nav.partners' },
   { to: ROUTES.taxForm, labelKey: 'nav.support' },
 ];
 

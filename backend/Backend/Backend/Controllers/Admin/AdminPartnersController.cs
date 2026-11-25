@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers.Admin;
 
-/// <summary>Type null = only credited on event pages, not shown on the partners page or in the footer.</summary>
-public record PartnerInput(string? Name, string? Type, bool IsFeatured, int DisplayOrder, string? LogoUrl, string? WebsiteUrl);
+/// <summary>Type null = only credited on event pages, not shown in the partners bar above the footer.</summary>
+public record PartnerInput(string? Name, string? Type, string? Label, string? LabelEn, int DisplayOrder, string? LogoUrl, string? WebsiteUrl);
 
-public record AdminPartnerDto(int Id, string Name, string? Type, bool IsFeatured, int DisplayOrder, string? LogoUrl, string? WebsiteUrl, int EventCount);
+public record AdminPartnerDto(int Id, string Name, string? Type, string? Label, string? LabelEn, int DisplayOrder, string? LogoUrl, string? WebsiteUrl, int EventCount);
 
 [ApiController]
 [Route("api/admin/partners")]
@@ -18,6 +18,7 @@ public record AdminPartnerDto(int Id, string Name, string? Type, bool IsFeatured
 public class AdminPartnersController : ControllerBase
 {
     private const int NameMaxLength = 150;
+    private const int LabelMaxLength = 60;
 
     private static readonly string[] Types =
         [PartnerTypes.Educational, PartnerTypes.Affiliation, PartnerTypes.Association, PartnerTypes.Company];
@@ -103,6 +104,9 @@ public class AdminPartnersController : ControllerBase
         if (!string.IsNullOrEmpty(input.Type) && !Types.Contains(input.Type))
             return "Tipul selectat nu este valid.";
 
+        if (AdminValidation.LengthOf(input.Label) > LabelMaxLength || AdminValidation.LengthOf(input.LabelEn) > LabelMaxLength)
+            return $"Eticheta poate avea cel mult {LabelMaxLength} de caractere.";
+
         if (!string.IsNullOrWhiteSpace(input.LogoUrl) && !AdminValidation.IsAssetPath(input.LogoUrl))
             return "Adresa logo-ului este invalidă.";
 
@@ -119,13 +123,13 @@ public class AdminPartnersController : ControllerBase
     {
         partner.Name = input.Name!.Trim();
         partner.Type = string.IsNullOrEmpty(input.Type) ? null : input.Type;
-        // Featured only means something for partners shown on the partners page.
-        partner.IsFeatured = partner.Type is not null && input.IsFeatured;
+        partner.Label = AdminValidation.Clean(input.Label);
+        partner.LabelEn = AdminValidation.Clean(input.LabelEn);
         partner.DisplayOrder = input.DisplayOrder;
         partner.LogoUrl = AdminValidation.Clean(input.LogoUrl);
         partner.WebsiteUrl = AdminValidation.Clean(input.WebsiteUrl);
     }
 
     private static AdminPartnerDto ToDto(Partner p, int eventCount) =>
-        new(p.Id, p.Name, p.Type, p.IsFeatured, p.DisplayOrder, p.LogoUrl, p.WebsiteUrl, eventCount);
+        new(p.Id, p.Name, p.Type, p.Label, p.LabelEn, p.DisplayOrder, p.LogoUrl, p.WebsiteUrl, eventCount);
 }

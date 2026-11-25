@@ -10,7 +10,7 @@ import './FeatureCards.css';
 const CARDS = [
   { id: 'events', link: ROUTES.events, Icon: CalendarDaysIcon },
   { id: 'volunteering', link: ROUTES.contact, Icon: HeartIcon },
-  { id: 'partners', link: ROUTES.partners, Icon: RocketIcon },
+  { id: 'partners', link: ROUTES.contact, Icon: RocketIcon },
 ];
 
 const FeatureCards = () => {

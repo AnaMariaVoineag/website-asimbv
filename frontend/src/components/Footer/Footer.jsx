@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import logoText from '../../assets/logo_asimbv.png';
 import { ROUTES } from '../../constants/routes';
 import { useI18n } from '../../context/I18nContext';
-import { useFeaturedPartners } from '../../hooks/useFeaturedPartners';
-import FooterPartners from './FooterPartners';
 import FooterSocialLinks from './FooterSocialLinks';
 import NewsletterForm from './NewsletterForm';
 import './Footer.css';
@@ -13,12 +11,10 @@ const QUICK_LINKS = [
   { to: ROUTES.events, labelKey: 'footer.events' },
   { to: ROUTES.taxForm, labelKey: 'footer.redirect' },
   { to: ROUTES.contact, labelKey: 'footer.contact' },
-  { to: ROUTES.partners, labelKey: 'footer.partners' },
 ];
 
 const Footer = () => {
   const { t } = useI18n();
-  const partners = useFeaturedPartners();
 
   return (
     <footer className="site-footer">
@@ -52,8 +48,6 @@ const Footer = () => {
             <NewsletterForm />
           </div>
         </div>
-
-        <FooterPartners partners={partners} />
 
         <div className="footer-bottom">
           <p className="footer-copyright">

@@ -6,18 +6,24 @@ import { matchesSearch } from '../format';
 import { PARTNER_TYPE_LABELS } from '../options';
 import { useAdminResource } from '../useAdminResource';
 import { assetUrl } from '../../utils/assetUrl';
+import ro from '../../dictionaries/ro';
+import en from '../../dictionaries/en';
 import PageHeader from '../components/PageHeader';
 import StateBlock from '../components/StateBlock';
 import Modal from '../components/Modal';
 import Field from '../components/Field';
 import ImageUploadButton from '../components/ImageUploadButton';
 
-const EMPTY = { name: '', type: '', isFeatured: false, displayOrder: 0, logoUrl: '', websiteUrl: '' };
+const EMPTY = { name: '', type: '', label: '', labelEn: '', displayOrder: 0, logoUrl: '', websiteUrl: '' };
+
+// Text shown under the logo when no custom label is set (same as the public site).
+const defaultLabel = (type, lang) => (type ? (lang === 'en' ? en : ro).partnersBar.types[type] : '');
 
 const toForm = (p) => ({
   name: p.name,
   type: p.type ?? '',
-  isFeatured: p.isFeatured,
+  label: p.label ?? '',
+  labelEn: p.labelEn ?? '',
   displayOrder: p.displayOrder,
   logoUrl: p.logoUrl ?? '',
   websiteUrl: p.websiteUrl ?? '',
@@ -69,23 +75,27 @@ const PartnerDialog = ({ partner, nextOrder, onClose, onSaved }) => {
           <input className="adm-input" value={form.name} maxLength={150} onChange={(e) => set('name', e.target.value)} autoFocus />
         </Field>
 
-        <Field label="Unde apare" hint="„Doar pe paginile evenimentelor”: e creditat la evenimente, dar nu apare pe pagina Parteneri sau în footer.">
+        <Field label="Unde apare" hint="Orice tip în afară de „Doar pe paginile evenimentelor” îl afișează în bara de parteneri de deasupra footer-ului.">
           <select className="adm-input" value={form.type} onChange={(e) => set('type', e.target.value)}>
             {Object.entries(PARTNER_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </Field>
 
-        <div className="adm-form-row">
-          <label className={`adm-check ${form.type ? '' : 'adm-disabled'}`}>
-            <input type="checkbox" checked={form.isFeatured && Boolean(form.type)} disabled={!form.type} onChange={(e) => set('isFeatured', e.target.checked)} />
-            Afișat în banda de parteneri din footer
-          </label>
-          <Field label="Ordine" className="adm-field-narrow" hint="Mai mic = mai sus">
-            <input className="adm-input" type="number" value={form.displayOrder} onChange={(e) => set('displayOrder', e.target.value)} />
-          </Field>
-        </div>
+        {form.type && (
+          <div className="adm-form-row adm-form-row-top">
+            <Field label="Eticheta sub logo (RO)" hint="Gol = eticheta implicită a tipului.">
+              <input className="adm-input" maxLength={60} value={form.label} placeholder={defaultLabel(form.type, 'ro')} onChange={(e) => set('label', e.target.value)} />
+            </Field>
+            <Field label="Label (EN)">
+              <input className="adm-input" maxLength={60} value={form.labelEn} placeholder={form.label || defaultLabel(form.type, 'en')} onChange={(e) => set('labelEn', e.target.value)} />
+            </Field>
+            <Field label="Ordine" className="adm-field-narrow" hint="Mai mic = mai în față">
+              <input className="adm-input" type="number" value={form.displayOrder} onChange={(e) => set('displayOrder', e.target.value)} />
+            </Field>
+          </div>
+        )}
 
-        <Field label="Logo" hint="PNG, JPG, WEBP sau GIF. Fără logo se afișează numele.">
+        <Field label="Logo" hint="PNG, JPG, WEBP sau GIF, ideal cu fundal transparent. Fără logo se afișează numele.">
           <div className="adm-logo-field">
             <span className="adm-logo-preview">
               {form.logoUrl ? <img src={assetUrl(form.logoUrl)} alt="" /> : <span className="adm-muted">fără logo</span>}
@@ -145,7 +155,7 @@ const PartnersPage = () => {
 
   return (
     <>
-      <PageHeader title="Parteneri" subtitle="Pagina Parteneri, banda din footer și partenerii de pe paginile evenimentelor.">
+      <PageHeader title="Parteneri" subtitle="Bara de parteneri de deasupra footer-ului și partenerii de pe paginile evenimentelor.">
         <button type="button" className="adm-btn adm-btn-primary" onClick={() => setEditing('new')}>+ Partener nou</button>
       </PageHeader>
 
@@ -187,7 +197,7 @@ const PartnersPage = () => {
                   </td>
                   <td>
                     <span className={`adm-tag ${p.type ? '' : 'adm-tag-muted'}`}>{PARTNER_TYPE_LABELS[p.type ?? '']}</span>
-                    {p.isFeatured && <span className="adm-tag adm-tag-ok" title="Apare în footer">★ footer</span>}
+                    {p.type && <div className="adm-muted adm-small">„{p.label || defaultLabel(p.type, 'ro')}”</div>}
                   </td>
                   <td>{p.type ? p.displayOrder : '—'}</td>
                   <td>{p.eventCount || '—'}</td>

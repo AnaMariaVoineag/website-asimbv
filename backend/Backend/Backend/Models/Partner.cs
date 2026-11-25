@@ -19,7 +19,7 @@ public class Partner
     /// took part in and is NOT a partner of ASIMBv itself, so it stays off the partners page and footer.
     /// </summary>
     public string? Type { get; set; }
-    /// <summary>Shown in the footer band. Only meaningful when <see cref="Type"/> is set.</summary>
+    /// <summary>Legacy flag of the old footer band; no longer used by the site.</summary>
     public bool IsFeatured { get; set; }
     public int DisplayOrder { get; set; }
     /// <summary>
@@ -28,6 +28,12 @@ public class Partner
     /// </summary>
     public string? LogoUrl { get; set; }
     public string? WebsiteUrl { get; set; }
+    /// <summary>
+    /// Text under the logo in the partners bar, e.g. "Sponsor principal". Null = the default label of its
+    /// <see cref="Type"/> (set in the frontend dictionaries).
+    /// </summary>
+    public string? Label { get; set; }
+    public string? LabelEn { get; set; }
 }
 
 /// <summary>Links a partner to an event. The role belongs here because it can differ per event.</summary>

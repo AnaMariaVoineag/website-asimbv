@@ -5,6 +5,7 @@ export const CATEGORY_LABELS = {
   Competition: 'Competiție',
 };
 
+// Where a partner appears. Any type except '' puts it in the partners bar above the footer.
 export const PARTNER_TYPE_LABELS = {
   '': 'Doar pe paginile evenimentelor',
   educational: 'Partener educațional',

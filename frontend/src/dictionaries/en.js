@@ -9,7 +9,6 @@ const en = {
     logoAlt: 'ASIMBV Logo',
     home: 'Home',
     events: 'Events',
-    partners: 'Partners',
     support: 'Support us',
     contact: 'Contact us',
     toggleMenu: 'Toggle navigation menu',
@@ -127,21 +126,15 @@ const en = {
     allEvents: '← All events',
   },
 
-  partners: {
-    pageTitle: 'ASIMBV | Partners',
-    title: 'Our Partners',
-    subtitle: 'The organisations alongside which we build a stronger community for students.',
-    loading: 'Loading partners...',
-    error: 'The partners could not be loaded. Please try again later.',
-    sections: {
-      educational: 'Educational partners',
-      affiliation: 'Affiliated with',
-      association: 'Associations we have worked with',
-      company: 'Partners and sponsors',
+  partnersBar: {
+    title: 'Our partners and sponsors',
+    cta: 'Become a partner',
+    types: {
+      educational: 'Educational partner',
+      affiliation: 'Affiliation',
+      association: 'Partner association',
+      company: 'Partner & sponsor',
     },
-    ctaTitle: 'Want to become an ASIMBv partner?',
-    ctaText: 'We are open to collaborations, sponsorships and joint projects for the students of Brașov.',
-    ctaButton: 'Contact us',
   },
 
   footer: {
@@ -152,7 +145,6 @@ const en = {
     events: 'Events',
     redirect: 'Redirect 3.5%',
     contact: 'Contact',
-    partners: 'Partners',
     followUs: 'Follow Us',
     socialText: 'Stay up to date with the latest news on our social media:',
     newsletter: 'Newsletter',
@@ -164,7 +156,6 @@ const en = {
     subscribed: 'You\u2019ve subscribed successfully! You\u2019ll get news about ASIMBV events and workshops.',
     duplicate: 'This email address is already subscribed.',
     networkError: 'Could not connect to the server. Please try again later.',
-    ourPartners: 'Our Partners',
     copyright: '© {year} ASIM Brașov. All rights reserved.',
     privacy: 'Privacy Policy',
   },

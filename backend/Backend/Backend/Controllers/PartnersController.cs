@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
-public record PartnerDto(string Name, string Type, string? LogoUrl, string? WebsiteUrl);
+public record PartnerDto(string Name, string Type, string? LogoUrl, string? WebsiteUrl, string? Label, string? LabelEn);
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,7 +17,7 @@ public class PartnersController : ControllerBase
         _context = context;
     }
 
-    // GET: api/partners and api/partners?featured=true
+    // GET: api/partners (the partners bar above the footer). ?featured=true is kept for old clients.
     // Organisations without a Type are only credited on their events, so they are left out here.
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PartnerDto>>> GetPartners([FromQuery] bool featured = false)
@@ -27,7 +27,7 @@ public class PartnersController : ControllerBase
             .Where(p => p.Type != null && (!featured || p.IsFeatured))
             .OrderBy(p => p.DisplayOrder)
             .ThenBy(p => p.Name)
-            .Select(p => new PartnerDto(p.Name, p.Type!, p.LogoUrl, p.WebsiteUrl))
+            .Select(p => new PartnerDto(p.Name, p.Type!, p.LogoUrl, p.WebsiteUrl, p.Label, p.LabelEn))
             .ToListAsync();
 
         return Ok(partners);
